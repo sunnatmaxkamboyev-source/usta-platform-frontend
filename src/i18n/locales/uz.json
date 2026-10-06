@@ -1,0 +1,558 @@
+{
+  "navbar": {
+    "home": "Bosh sahifa",
+    "masters": "Ustalar",
+    "about": "Biz haqimizda",
+    "blog": "Blog",
+    "login": "Kirish",
+    "register": "Ro‘yxatdan o‘tish",
+    "vacancies": "Vakansiyalar",
+    "services": "Xizmatlar",
+    "contact": "Aloqa",
+    "service24": "24/7 xizmat",
+    "masterPanel": "Usta paneli",
+    "masterLogin": "Usta sifatida kirish",
+    "language": "Til",
+    "menu": "Menyu"
+  },
+
+  "common": {
+    "search": "Qidirish",
+    "save": "Saqlash",
+    "cancel": "Bekor qilish",
+    "delete": "O‘chirish",
+    "edit": "Tahrirlash",
+    "view": "Ko‘rish",
+    "loading": "Yuklanmoqda...",
+    "next": "Keyingi",
+    "back": "Orqaga",
+    "welcome": "Xush kelibsiz",
+    "master": "Usta",
+    "negotiable": "Kelishiladi",
+    "viewDetail": "Batafsil ko‘rish",
+    "searchPlaceholder": "Xizmat yoki usta qidiring...",
+    "clearFilters": "Filtrlarni tozalash",
+    "errorFetchVacancies": "Vakansiyalarni olishda xatolik yuz berdi",
+    "loadingVacancies": "Vakansiyalar yuklanmoqda...",
+    "errorFetchVacancy": "Vakansiyani olishda xatolik yuz berdi",
+    "loadingVacancy": "Vakansiya yuklanmoqda..."
+  },
+
+  "home": {
+    "title": "Ishonchli ustalarni toping",
+    "subtitle": "Uy va biznesingiz uchun professional ustalarni oson toping.",
+    "searchPlaceholder": "Usta yoki xizmat qidiring...",
+    "popularMasters": "Mashhur ustalar",
+    "services": "Xizmatlar"
+  },
+
+  "hero": {
+    "smallText1": "Professional xizmatlar",
+    "smallText2": "Ishonchli ustalar",
+    "smallText3": "Sifatli natija",
+    "title": "Kerakli ustani",
+    "titleHighlight": "oson toping",
+    "description": "Uy va biznesingiz uchun ishonchli, tajribali va professional ustalarni toping.",
+    "benefitTrusted": "Ishonchli ustalar",
+    "benefitDirect": "To‘g‘ridan-to‘g‘ri aloqa",
+    "findMaster": "Usta topish",
+    "becomeMaster": "Usta bo‘lish",
+    "callUs": "Bog‘lanish",
+    "imageAlt": "Professional usta",
+    "badges": {
+      "trustedMasters": "Ishonchli ustalar",
+      "service24": "24/7 xizmat",
+      "localExperts": "Mahalliy mutaxassislar",
+      "convenientTime": "Qulay vaqt"
+    }
+  },
+
+  "auth": {
+    "login": "Kirish",
+    "register": "Ro‘yxatdan o‘tish",
+    "phone": "Telefon raqam",
+    "password": "Parol",
+    "name": "Ism",
+    "profession": "Kasb",
+    "logout": "Chiqish",
+    "loginError": "Telefon raqam yoki parol noto‘g‘ri",
+    "noPermission": "Sizda ushbu sahifaga kirish huquqi yo‘q",
+    "phoneRequired": "Telefon raqamingizni kiriting",
+    "passwordRequired": "Parolingizni kiriting",
+    "noAccount": "Akkauntingiz yo‘qmi?",
+    "masterRegister": "Usta sifatida ro‘yxatdan o‘tish",
+    "nameRequired": "Ismingizni kiriting",
+    "professionRequired": "Kasbingizni kiriting",
+    "professionPlaceholder": "Masalan: Santexnik",
+    "passwordPlaceholder": "Parolingizni kiriting",
+    "passwordMinLength": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak",
+    "haveAccount": "Akkauntingiz bormi?",
+    "registerError": "Ro‘yxatdan o‘tishda xatolik yuz berdi",
+    "registerSuccess": "Ro‘yxatdan muvaffaqiyatli o‘tdingiz"
+  },
+
+  "about": {
+    "badge": "Biz haqimizda",
+    "title": "Ustalarni topish endi yanada oson",
+    "description": "Usta Platform orqali turli sohalardagi professional ustalarni tez va qulay topishingiz mumkin.",
+    "features": {
+      "repairInstallation": "Ta’mirlash va o‘rnatish",
+      "plumbing": "Santexnika xizmatlari",
+      "electrical": "Elektrik xizmatlari",
+      "applianceRepair": "Maishiy texnika ta’miri",
+      "houseBuildingRepair": "Uy qurish va ta’mirlash",
+      "otherSpecialists": "Boshqa mutaxassislar"
+    },
+    "findMaster": "Usta topish",
+    "becomeMaster": "Usta bo‘lish",
+    "contactText": "Biz bilan bog‘laning",
+    "imageAlt": "Professional xizmat ko‘rsatuvchi usta",
+    "imageTitle": "Ishonchli ustalar"
+  },
+
+  "services": {
+    "title": "Xizmatlar",
+    "description": "Sizga kerak bo‘lgan xizmatni tanlang va mos ustalarni toping.",
+    "viewVacancies": "Vakansiyalarni ko‘rish",
+    "items": {
+      "plumbing": {
+        "title": "Santexnika",
+        "description": "Suv quvurlari, kranlar va boshqa santexnika ishlari."
+      },
+      "roofRepair": {
+        "title": "Tom ta’mirlash",
+        "description": "Tomni ta’mirlash va yangi tom konstruksiyalarini o‘rnatish."
+      },
+      "moldCleaning": {
+        "title": "Zamburug‘ tozalash",
+        "description": "Uy va binolardagi zamburug‘ va mog‘orni tozalash."
+      },
+      "treeCutting": {
+        "title": "Daraxt kesish",
+        "description": "Daraxtlarni kesish va hududni tozalash xizmatlari."
+      },
+      "applianceRepair": {
+        "title": "Maishiy texnika ta’miri",
+        "description": "Kir yuvish mashinasi, muzlatkich va boshqa texnikalarni ta’mirlash."
+      },
+      "bathroomRepair": {
+        "title": "Hammom ta’mirlash",
+        "description": "Hammom va sanitariya xonalarini ta’mirlash."
+      },
+      "locksmith": {
+        "title": "Qulfsoz",
+        "description": "Qulf ochish, almashtirish va o‘rnatish xizmatlari."
+      }
+    },
+    "other": {
+      "title": "Boshqa xizmatlar",
+      "description": "Boshqa turdagi professional xizmatlarni ham toping.",
+      "call": "Bog‘lanish"
+    }
+  },
+
+  "reviews": {
+    "title": "Mijozlar fikrlari",
+    "description": "Platformamizdan foydalangan mijozlarning fikrlari.",
+    "trusted": "Ishonchli xizmat",
+    "previous": "Oldingi",
+    "next": "Keyingi",
+    "goTo": "{{number}}-fikrga o‘tish",
+    "viewVacancies": "Vakansiyalarni ko‘rish",
+    "items": {
+      "kende": {
+        "text": "Ustani juda tez topdim. Xizmat sifati ham juda yaxshi bo‘ldi."
+      },
+      "dilnoza": {
+        "text": "Platformadan foydalanish juda qulay. Kerakli mutaxassisni osongina topdim."
+      },
+      "jasur": {
+        "text": "Usta bilan to‘g‘ridan-to‘g‘ri bog‘landim va ish tez bajarildi."
+      }
+    }
+  },
+
+  "newsletter": {
+    "title": "Yangiliklardan xabardor bo‘ling",
+    "description": "Yangi xizmatlar va foydali ma’lumotlarni birinchilardan bo‘lib oling.",
+    "placeholder": "Email manzilingiz",
+    "button": "Obuna bo‘lish",
+    "invalidEmail": "Email manzilni to‘g‘ri kiriting",
+    "alreadySubscribed": "Bu email allaqachon obuna bo‘lgan",
+    "success": "Siz muvaffaqiyatli obuna bo‘ldingiz",
+    "error": "Obuna bo‘lishda xatolik yuz berdi",
+    "successTitle": "Rahmat!",
+    "successDescription": "Siz yangiliklarimizga muvaffaqiyatli obuna bo‘ldingiz."
+  },
+
+  "howItWorks": {
+    "smallTitle": "Qanday ishlaydi?",
+    "title": "Kerakli ustani bir necha qadamda toping",
+    "description": "Bizning platformamiz orqali kerakli mutaxassisni topish juda oson.",
+    "button": "Usta topish",
+    "badge": "Oddiy va qulay",
+    "badgeTitle": "Ustani tez toping",
+    "imageAlt": "Usta bilan ishlash jarayoni",
+    "steps": {
+      "find": {
+        "title": "Ustani toping",
+        "description": "Kerakli xizmat yoki mutaxassisni qidiring."
+      },
+      "contact": {
+        "title": "Bog‘laning",
+        "description": "Usta bilan telefon yoki Telegram orqali bog‘laning."
+      },
+      "agree": {
+        "title": "Kelishing",
+        "description": "Ish shartlari, narx va vaqtni kelishib oling."
+      }
+    }
+  },
+
+  "guarantee": {
+    "badge": "Bizning afzalliklarimiz",
+    "title": "Siz uchun qulay va ishonchli platforma",
+    "description": "Usta Platform ustalar va mijozlar o‘rtasida to‘g‘ridan-to‘g‘ri aloqa yaratadi.",
+    "items": {
+      "masterInfo": {
+        "title": "Usta ma’lumotlari",
+        "description": "Usta haqida kerakli ma’lumotlarni ko‘rishingiz mumkin."
+      },
+      "detailedVacancies": {
+        "title": "Batafsil vakansiyalar",
+        "description": "Har bir vakansiyada ish haqida batafsil ma’lumot mavjud."
+      },
+      "localMasters": {
+        "title": "Mahalliy ustalar",
+        "description": "O‘zingizga yaqin hududdagi ustalarni toping."
+      },
+      "quickContact": {
+        "title": "Tezkor aloqa",
+        "description": "Usta bilan bevosita bog‘laning."
+      },
+      "agreedTime": {
+        "title": "Kelishilgan vaqt",
+        "description": "Ish vaqtini usta bilan o‘zingiz kelishasiz."
+      },
+      "directCommunication": {
+        "title": "To‘g‘ridan-to‘g‘ri muloqot",
+        "description": "Ortiqcha vositachilarsiz usta bilan gaplashing."
+      }
+    }
+  },
+
+  "footer": {
+    "description": "Professional ustalarni topish va xizmatlarni boshqarish uchun zamonaviy platforma.",
+    "platformTitle": "Platforma",
+    "companyTitle": "Kompaniya",
+    "contactTitle": "Biz bilan bog‘laning",
+    "contactDescription": "Savollaringiz bo‘lsa, biz bilan bog‘laning.",
+    "contactButton": "Bog‘lanish",
+    "platform": {
+      "vacancies": "Vakansiyalar",
+      "becomeMaster": "Usta bo‘lish",
+      "masterLogin": "Usta paneli"
+    },
+    "links": {
+      "about": "Biz haqimizda",
+      "services": "Xizmatlar",
+      "blog": "Blog",
+      "contact": "Aloqa"
+    },
+    "legal": {
+      "terms": "Foydalanish shartlari",
+      "privacy": "Maxfiylik siyosati",
+      "cookies": "Cookie siyosati",
+      "license": "Litsenziya"
+    },
+    "copyright": "© 2026 Usta Platform. Barcha huquqlar himoyalangan."
+  },
+
+  "faq": {
+    "badge": "Ko‘p beriladigan savollar",
+    "title": "Savollaringizga javoblar",
+    "description": "Usta Platform haqida eng ko‘p beriladigan savollar.",
+    "items": {
+      "platform": {
+        "question": "Usta Platform nima?",
+        "answer": "Usta Platform professional ustalar va xizmatlarni topish uchun yaratilgan platforma."
+      },
+      "registration": {
+        "question": "Usta qanday ro‘yxatdan o‘tadi?",
+        "answer": "Usta ro‘yxatdan o‘tish sahifasida kerakli ma’lumotlarni kiritib akkaunt yaratadi."
+      },
+      "contact": {
+        "question": "Usta bilan qanday bog‘lanaman?",
+        "answer": "Vakansiya sahifasidagi telefon yoki Telegram orqali usta bilan bog‘lanishingiz mumkin."
+      },
+      "becomeMaster": {
+        "question": "Qanday qilib usta bo‘lish mumkin?",
+        "answer": "Ro‘yxatdan o‘tib, usta sifatida profilingizni yaratishingiz va vakansiyalar joylashingiz mumkin."
+      },
+      "editVacancy": {
+        "question": "Vakansiyani o‘zgartirish mumkinmi?",
+        "answer": "Ha, usta panelidan o‘z vakansiyangizni tahrirlashingiz mumkin."
+      },
+      "payment": {
+        "question": "Platformada to‘lov qanday amalga oshiriladi?",
+        "answer": "Xizmat narxi va to‘lov shartlari usta bilan bevosita kelishiladi."
+      }
+    },
+    "actions": {
+      "findMaster": {
+        "title": "Usta qidiryapsizmi?",
+        "description": "Kerakli mutaxassisni hoziroq toping.",
+        "button": "Usta topish"
+      },
+      "becomeMaster": {
+        "title": "Ustamisiz?",
+        "description": "Xizmatlaringizni platformada taqdim eting.",
+        "button": "Usta bo‘lish"
+      },
+      "contact": {
+        "title": "Savolingiz bormi?",
+        "description": "Biz bilan bog‘laning.",
+        "button": "Bog‘lanish"
+      }
+    }
+  },
+
+  "cta": {
+    "title": "Kerakli ustani hoziroq toping",
+    "description": "Professional ustalar bilan tez va qulay bog‘laning.",
+    "benefits": {
+      "availableVacancies": "Mavjud vakansiyalar",
+      "directContact": "To‘g‘ridan-to‘g‘ri aloqa"
+    },
+    "findMaster": "Usta topish",
+    "becomeMaster": "Usta bo‘lish",
+    "phoneLabel": "Telefon",
+    "imageAlt": "Professional usta"
+  },
+
+  "blog": {
+    "badge": "Bizning blog",
+    "title": "Foydali ma’lumotlar",
+    "description": "Uy ta’miri, xizmatlar va ustalar haqida foydali maqolalar.",
+    "readMore": "Batafsil o‘qish",
+    "viewAll": "Barchasini ko‘rish",
+    "posts": {
+      "technicalService": {
+        "category": "Texnik xizmat",
+        "title": "Uyda texnik xizmat ko‘rsatish bo‘yicha maslahatlar",
+        "description": "Uy jihozlarini to‘g‘ri ishlatish va ta’mirlash bo‘yicha foydali maslahatlar."
+      },
+      "homeRepair": {
+        "category": "Uy ta’miri",
+        "title": "Uy ta’mirini qanday to‘g‘ri rejalashtirish kerak?",
+        "description": "Ta’mirlash ishlarini samarali rejalashtirish bo‘yicha tavsiyalar."
+      },
+      "masterTips": {
+        "category": "Ustalar uchun",
+        "title": "Professional usta bo‘lish bo‘yicha maslahatlar",
+        "description": "Mijozlar bilan ishlash va xizmat sifatini yaxshilash bo‘yicha maslahatlar."
+      }
+    }
+  },
+
+  "vacancies": {
+    "subtitle": "Professional ustalar tomonidan joylashtirilgan vakansiyalarni toping.",
+    "latestTitle": "So‘nggi vakansiyalar",
+    "latestDescription": "Ustalar tomonidan joylashtirilgan eng so‘nggi vakansiyalarni ko‘ring.",
+    "viewAll": "Barcha vakansiyalarni ko‘rish",
+    "categories": {
+      "all": "Barchasi",
+      "electrician": "Elektrik",
+      "welder": "Payvandchi",
+      "builder": "Quruvchi",
+      "furnitureMaker": "Mebelchi",
+      "painter": "Bo‘yoqchi",
+      "other": "Boshqa"
+    },
+    "available": "Mavjud vakansiyalar",
+    "count": "{{count}} ta vakansiya",
+    "emptyNoVacancies": "Hozircha vakansiyalar mavjud emas",
+    "emptyNoResults": "Qidiruvingiz bo‘yicha vakansiya topilmadi",
+    "postedBy": "Joylashtirdi:",
+    "notFoundTitle": "Vakansiya topilmadi",
+    "notFoundDescription": "Siz qidirayotgan vakansiya mavjud emas yoki o‘chirib yuborilgan.",
+    "backToVacancies": "Vakansiyalarga qaytish",
+    "noPhone": "Telefon raqami mavjud emas",
+    "noTelegram": "Telegram mavjud emas",
+    "detailsTitle": "Vakansiya tafsilotlari",
+    "serviceType": "Xizmat turi",
+    "address": "Manzil",
+    "price": "Narx",
+    "phone": "Telefon",
+    "fullDescription": "To‘liq tavsif",
+    "contactMaster": "Usta bilan bog‘lanish",
+    "callButton": "Qo‘ng‘iroq qilish",
+    "telegramButton": "Telegram"
+  },
+
+  "newVacancy": {
+    "title": "Yangi vakansiya yaratish",
+    "loginRequired": "Avval tizimga kiring",
+    "sessionExpired": "Sessiya tugagan. Qaytadan login qiling.",
+    "createError": "Vakansiyani yaratishda xatolik yuz berdi",
+    "success": "Vakansiya muvaffaqiyatli joylandi!",
+    "fields": {
+      "title": "Vakansiya nomi",
+      "titlePlaceholder": "Masalan: Uyga elektrik kerak",
+      "category": "Xizmat turi",
+      "categoryPlaceholder": "Xizmat turini tanlang",
+      "location": "Manzil",
+      "locationPlaceholder": "Masalan: Chirchiq, Toshkent viloyati",
+      "price": "Narx",
+      "pricePlaceholder": "300 000 so‘m yoki Kelishiladi",
+      "contactPhone": "Telefon raqam",
+      "contactPhonePlaceholder": "+998 90 123 45 67",
+      "telegram": "Telegram username",
+      "telegramPlaceholder": "username",
+      "description": "Vakansiya tavsifi",
+      "descriptionPlaceholder": "Ish haqida batafsil ma'lumot yozing..."
+    },
+    "validation": {
+      "titleRequired": "Vakansiya nomini kiriting",
+      "categoryRequired": "Xizmat turini tanlang",
+      "locationRequired": "Manzilni kiriting",
+      "phoneRequired": "Telefon raqamingizni kiriting",
+      "telegramRequired": "Telegram username kiriting",
+      "descriptionRequired": "Vakansiya tavsifini yozing"
+    },
+    "buttons": {
+      "cancel": "Bekor qilish",
+      "submit": "Vakansiyani joylash"
+    },
+    "categories": {
+      "plumber": "Santexnik",
+      "electrician": "Elektrik",
+      "welder": "Payvandchi",
+      "builder": "Quruvchi",
+      "furnitureMaker": "Mebelchi",
+      "painter": "Bo‘yoqchi",
+      "roofRepair": "Tom ta’mirlash",
+      "moldCleaning": "Zamburug‘ tozalash",
+      "treeCutting": "Daraxt kesish",
+      "applianceRepair": "Maishiy texnika ta’miri",
+      "bathroomRepair": "Hammom ta’mirlash",
+      "locksmith": "Qulfsoz",
+      "other": "Boshqa"
+    }
+  },
+
+  "editVacancy": {
+    "title": "Vakansiyani tahrirlash",
+    "loading": "Vakansiya yuklanmoqda...",
+    "messages": {
+      "fetchError": "Vakansiyani olishda xatolik yuz berdi",
+      "notFound": "Vakansiya topilmadi",
+      "loadError": "Vakansiyani yuklashda xatolik yuz berdi",
+      "loginRequired": "Avval tizimga kiring",
+      "updateError": "Vakansiyani yangilashda xatolik yuz berdi",
+      "updateSuccess": "Vakansiya muvaffaqiyatli yangilandi!"
+    },
+    "form": {
+      "title": "Vakansiya nomi",
+      "titlePlaceholder": "Masalan: Uyga elektrik kerak",
+      "category": "Xizmat turi",
+      "categoryPlaceholder": "Xizmat turini tanlang",
+      "location": "Manzil",
+      "locationPlaceholder": "Masalan: Chirchiq, Toshkent viloyati",
+      "price": "Narx",
+      "pricePlaceholder": "300 000 so‘m yoki Kelishiladi",
+      "phone": "Telefon raqam",
+      "phonePlaceholder": "+998 90 123 45 67",
+      "telegram": "Telegram username",
+      "telegramPlaceholder": "username",
+      "description": "Vakansiya tavsifi",
+      "descriptionPlaceholder": "Ish haqida batafsil ma'lumot yozing..."
+    },
+    "validation": {
+      "titleRequired": "Vakansiya nomini kiriting",
+      "categoryRequired": "Xizmat turini tanlang",
+      "locationRequired": "Manzilni kiriting",
+      "phoneRequired": "Telefon raqamingizni kiriting",
+      "telegramRequired": "Telegram username kiriting",
+      "descriptionRequired": "Vakansiya tavsifini yozing"
+    },
+    "buttons": {
+      "cancel": "Bekor qilish",
+      "save": "O‘zgarishlarni saqlash"
+    }
+  },
+
+  "ustaDashboard": {
+    "loading": "Usta paneli yuklanmoqda...",
+    "title": "Usta paneli",
+    "description": "Vakansiyalaringizni shu yerdan boshqaring.",
+    "newVacancy": "Yangi vakansiya",
+    "empty": "Siz hali vakansiya qo‘shmagansiz",
+    "firstVacancy": "Birinchi vakansiyani qo‘shish",
+    "profile": {
+      "defaultName": "Usta",
+      "noProfession": "Kasb ko‘rsatilmagan",
+      "noPhone": "Telefon ko‘rsatilmagan",
+      "edit": "Profilni tahrirlash"
+    },
+    "messages": {
+      "sessionExpired": "Sessiya tugagan. Qaytadan login qiling.",
+      "userFetchError": "User ma'lumotlarini olishda xatolik",
+      "vacanciesFetchError": "Vakansiyalarni olishda xatolik yuz berdi",
+      "dashboardFetchError": "Dashboard ma'lumotlarini olishda xatolik",
+      "logoutSuccess": "Tizimdan muvaffaqiyatli chiqdingiz",
+      "profileUpdateError": "Profilni yangilashda xatolik yuz berdi",
+      "profileUpdateSuccess": "Profil muvaffaqiyatli yangilandi.",
+      "passwordUpdateError": "Parolni o‘zgartirishda xatolik yuz berdi",
+      "passwordUpdateSuccess": "Parol muvaffaqiyatli o‘zgartirildi.",
+      "deletePermission": "Bu vakansiyani o‘chirish huquqingiz yo‘q.",
+      "deleteVacancyError": "Vakansiyani o‘chirishda xatolik yuz berdi",
+      "deleteSuccess": "Vakansiya o‘chirildi."
+    },
+    "deleteConfirm": {
+      "title": "Vakansiyani o‘chirmoqchimisiz?",
+      "description": "Vakansiya o‘chiriladi.",
+      "yes": "Ha",
+      "no": "Yo‘q"
+    },
+    "vacancy": {
+      "price": "Narx"
+    },
+    "profileModal": {
+      "title": "Profil va xavfsizlik",
+      "personalTitle": "Shaxsiy ma'lumotlar",
+      "personalDescription": "Profil ma'lumotlaringizni yangilang."
+    },
+    "form": {
+      "name": "Ism",
+      "namePlaceholder": "Ismingiz",
+      "phone": "Telefon raqam",
+      "profession": "Kasb",
+      "professionPlaceholder": "Masalan: Santexnik",
+      "saveProfile": "Profilni saqlash"
+    },
+    "validation": {
+      "nameRequired": "Ismingizni kiriting",
+      "nameMin": "Ism kamida 2 ta belgidan iborat bo‘lishi kerak",
+      "phoneRequired": "Telefon raqamingizni kiriting",
+      "professionRequired": "Kasbingizni kiriting",
+      "professionMin": "Kasb kamida 2 ta belgidan iborat bo‘lishi kerak",
+      "currentPasswordRequired": "Joriy parolni kiriting",
+      "newPasswordRequired": "Yangi parolni kiriting",
+      "newPasswordMin": "Yangi parol kamida 6 ta belgidan iborat bo‘lishi kerak",
+      "confirmPasswordRequired": "Yangi parolni qayta kiriting",
+      "passwordMismatch": "Parollar bir xil emas"
+    },
+    "password": {
+      "title": "Parolni o‘zgartirish",
+      "description": "Akkauntingiz xavfsizligi uchun yangi parol belgilang.",
+      "current": "Joriy parol",
+      "currentPlaceholder": "Joriy parolingiz",
+      "new": "Yangi parol",
+      "newPlaceholder": "Yangi parolingiz",
+      "confirm": "Yangi parolni tasdiqlang",
+      "confirmPlaceholder": "Yangi parolni qayta kiriting",
+      "change": "Parolni o‘zgartirish"
+    }
+  }
+}

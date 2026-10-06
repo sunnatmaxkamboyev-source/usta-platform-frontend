@@ -1,0 +1,558 @@
+{
+  "navbar": {
+    "home": "Home",
+    "masters": "Masters",
+    "about": "About Us",
+    "blog": "Blog",
+    "login": "Login",
+    "register": "Register",
+    "vacancies": "Vacancies",
+    "services": "Services",
+    "contact": "Contact",
+    "service24": "24/7 Service",
+    "masterPanel": "Master Panel",
+    "masterLogin": "Login as Master",
+    "language": "Language",
+    "menu": "Menu"
+  },
+
+  "common": {
+    "search": "Search",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "loading": "Loading...",
+    "next": "Next",
+    "back": "Back",
+    "welcome": "Welcome",
+    "master": "Master",
+    "negotiable": "Negotiable",
+    "viewDetail": "View Details",
+    "searchPlaceholder": "Search for a service or master...",
+    "clearFilters": "Clear Filters",
+    "errorFetchVacancies": "An error occurred while fetching vacancies",
+    "loadingVacancies": "Loading vacancies...",
+    "errorFetchVacancy": "An error occurred while fetching the vacancy",
+    "loadingVacancy": "Loading vacancy..."
+  },
+
+  "home": {
+    "title": "Find Reliable Masters",
+    "subtitle": "Easily find professional masters for your home and business.",
+    "searchPlaceholder": "Search for a master or service...",
+    "popularMasters": "Popular Masters",
+    "services": "Services"
+  },
+
+  "hero": {
+    "smallText1": "Professional Services",
+    "smallText2": "Reliable Masters",
+    "smallText3": "Quality Results",
+    "title": "Easily",
+    "titleHighlight": "Find the Right Master",
+    "description": "Find reliable, experienced and professional masters for your home and business.",
+    "benefitTrusted": "Reliable Masters",
+    "benefitDirect": "Direct Contact",
+    "findMaster": "Find a Master",
+    "becomeMaster": "Become a Master",
+    "callUs": "Contact Us",
+    "imageAlt": "Professional master",
+    "badges": {
+      "trustedMasters": "Reliable Masters",
+      "service24": "24/7 Service",
+      "localExperts": "Local Experts",
+      "convenientTime": "Convenient Time"
+    }
+  },
+
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "phone": "Phone Number",
+    "password": "Password",
+    "name": "Name",
+    "profession": "Profession",
+    "logout": "Logout",
+    "loginError": "Incorrect phone number or password",
+    "noPermission": "You do not have permission to access this page",
+    "phoneRequired": "Enter your phone number",
+    "passwordRequired": "Enter your password",
+    "noAccount": "Don't have an account?",
+    "masterRegister": "Register as a Master",
+    "nameRequired": "Enter your name",
+    "professionRequired": "Enter your profession",
+    "professionPlaceholder": "Example: Plumber",
+    "passwordPlaceholder": "Enter your password",
+    "passwordMinLength": "Password must contain at least 6 characters",
+    "haveAccount": "Already have an account?",
+    "registerError": "An error occurred during registration",
+    "registerSuccess": "Registration successful"
+  },
+
+  "about": {
+    "badge": "About Us",
+    "title": "Finding a Master Is Now Even Easier",
+    "description": "With Usta Platform, you can quickly and conveniently find professional masters in various fields.",
+    "features": {
+      "repairInstallation": "Repair and Installation",
+      "plumbing": "Plumbing Services",
+      "electrical": "Electrical Services",
+      "applianceRepair": "Appliance Repair",
+      "houseBuildingRepair": "House Construction and Repair",
+      "otherSpecialists": "Other Specialists"
+    },
+    "findMaster": "Find a Master",
+    "becomeMaster": "Become a Master",
+    "contactText": "Contact Us",
+    "imageAlt": "Professional service master",
+    "imageTitle": "Reliable Masters"
+  },
+
+  "services": {
+    "title": "Services",
+    "description": "Choose the service you need and find suitable masters.",
+    "viewVacancies": "View Vacancies",
+    "items": {
+      "plumbing": {
+        "title": "Plumbing",
+        "description": "Water pipes, faucets and other plumbing work."
+      },
+      "roofRepair": {
+        "title": "Roof Repair",
+        "description": "Roof repair and installation of new roofing structures."
+      },
+      "moldCleaning": {
+        "title": "Mold Removal",
+        "description": "Removing fungus and mold from homes and buildings."
+      },
+      "treeCutting": {
+        "title": "Tree Cutting",
+        "description": "Tree cutting and territory cleaning services."
+      },
+      "applianceRepair": {
+        "title": "Appliance Repair",
+        "description": "Repair of washing machines, refrigerators and other appliances."
+      },
+      "bathroomRepair": {
+        "title": "Bathroom Repair",
+        "description": "Bathroom and sanitary room renovation."
+      },
+      "locksmith": {
+        "title": "Locksmith",
+        "description": "Lock opening, replacement and installation services."
+      }
+    },
+    "other": {
+      "title": "Other Services",
+      "description": "Find other types of professional services.",
+      "call": "Contact"
+    }
+  },
+
+  "reviews": {
+    "title": "Customer Reviews",
+    "description": "Reviews from customers who have used our platform.",
+    "trusted": "Reliable Service",
+    "previous": "Previous",
+    "next": "Next",
+    "goTo": "Go to review {{number}}",
+    "viewVacancies": "View Vacancies",
+    "items": {
+      "kende": {
+        "text": "I found a master very quickly. The service quality was also excellent."
+      },
+      "dilnoza": {
+        "text": "The platform is very convenient to use. I easily found the specialist I needed."
+      },
+      "jasur": {
+        "text": "I contacted the master directly and the work was completed quickly."
+      }
+    }
+  },
+
+  "newsletter": {
+    "title": "Stay Updated",
+    "description": "Be the first to receive information about new services and useful content.",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "invalidEmail": "Enter a valid email address",
+    "alreadySubscribed": "This email is already subscribed",
+    "success": "You have successfully subscribed",
+    "error": "An error occurred while subscribing",
+    "successTitle": "Thank You!",
+    "successDescription": "You have successfully subscribed to our newsletter."
+  },
+
+  "howItWorks": {
+    "smallTitle": "How It Works",
+    "title": "Find the Right Master in a Few Steps",
+    "description": "Finding the specialist you need is very easy with our platform.",
+    "button": "Find a Master",
+    "badge": "Simple and Convenient",
+    "badgeTitle": "Find a Master Quickly",
+    "imageAlt": "Working with a master",
+    "steps": {
+      "find": {
+        "title": "Find a Master",
+        "description": "Search for the service or specialist you need."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "Contact the master by phone or Telegram."
+      },
+      "agree": {
+        "title": "Agree",
+        "description": "Agree on the work conditions, price and time."
+      }
+    }
+  },
+
+  "guarantee": {
+    "badge": "Our Advantages",
+    "title": "A Convenient and Reliable Platform for You",
+    "description": "Usta Platform creates direct communication between masters and customers.",
+    "items": {
+      "masterInfo": {
+        "title": "Master Information",
+        "description": "You can view the necessary information about the master."
+      },
+      "detailedVacancies": {
+        "title": "Detailed Vacancies",
+        "description": "Each vacancy contains detailed information about the job."
+      },
+      "localMasters": {
+        "title": "Local Masters",
+        "description": "Find masters in a convenient area near you."
+      },
+      "quickContact": {
+        "title": "Quick Contact",
+        "description": "Contact the master directly."
+      },
+      "agreedTime": {
+        "title": "Agreed Time",
+        "description": "You agree on the work time directly with the master."
+      },
+      "directCommunication": {
+        "title": "Direct Communication",
+        "description": "Talk to the master without unnecessary intermediaries."
+      }
+    }
+  },
+
+  "footer": {
+    "description": "A modern platform for finding professional masters and managing services.",
+    "platformTitle": "Platform",
+    "companyTitle": "Company",
+    "contactTitle": "Contact Us",
+    "contactDescription": "If you have any questions, feel free to contact us.",
+    "contactButton": "Contact",
+    "platform": {
+      "vacancies": "Vacancies",
+      "becomeMaster": "Become a Master",
+      "masterLogin": "Master Panel"
+    },
+    "links": {
+      "about": "About Us",
+      "services": "Services",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "legal": {
+      "terms": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy",
+      "license": "License"
+    },
+    "copyright": "© 2026 Usta Platform. All rights reserved."
+  },
+
+  "faq": {
+    "badge": "Frequently Asked Questions",
+    "title": "Answers to Your Questions",
+    "description": "Frequently asked questions about Usta Platform.",
+    "items": {
+      "platform": {
+        "question": "What is Usta Platform?",
+        "answer": "Usta Platform is a platform created to find professional masters and services."
+      },
+      "registration": {
+        "question": "How does a master register?",
+        "answer": "The master enters the required information on the registration page and creates an account."
+      },
+      "contact": {
+        "question": "How can I contact a master?",
+        "answer": "You can contact the master by phone or Telegram on the vacancy page."
+      },
+      "becomeMaster": {
+        "question": "How can I become a master?",
+        "answer": "Register, create your master profile and post vacancies."
+      },
+      "editVacancy": {
+        "question": "Can I edit a vacancy?",
+        "answer": "Yes, you can edit your vacancy from the master panel."
+      },
+      "payment": {
+        "question": "How is payment handled on the platform?",
+        "answer": "The service price and payment terms are agreed directly with the master."
+      }
+    },
+    "actions": {
+      "findMaster": {
+        "title": "Looking for a Master?",
+        "description": "Find the specialist you need right now.",
+        "button": "Find a Master"
+      },
+      "becomeMaster": {
+        "title": "Are You a Master?",
+        "description": "Offer your services on the platform.",
+        "button": "Become a Master"
+      },
+      "contact": {
+        "title": "Have a Question?",
+        "description": "Contact us.",
+        "button": "Contact"
+      }
+    }
+  },
+
+  "cta": {
+    "title": "Find the Right Master Now",
+    "description": "Connect with professional masters quickly and conveniently.",
+    "benefits": {
+      "availableVacancies": "Available Vacancies",
+      "directContact": "Direct Contact"
+    },
+    "findMaster": "Find a Master",
+    "becomeMaster": "Become a Master",
+    "phoneLabel": "Phone",
+    "imageAlt": "Professional master"
+  },
+
+  "blog": {
+    "badge": "Our Blog",
+    "title": "Useful Information",
+    "description": "Useful articles about home repair, services and masters.",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "posts": {
+      "technicalService": {
+        "category": "Technical Service",
+        "title": "Tips for Home Technical Maintenance",
+        "description": "Useful tips for properly using and repairing home appliances."
+      },
+      "homeRepair": {
+        "category": "Home Repair",
+        "title": "How to Properly Plan a Home Renovation?",
+        "description": "Recommendations for effectively planning repair work."
+      },
+      "masterTips": {
+        "category": "For Masters",
+        "title": "Tips for Becoming a Professional Master",
+        "description": "Tips for working with customers and improving service quality."
+      }
+    }
+  },
+
+  "vacancies": {
+    "subtitle": "Find vacancies posted by professional masters.",
+    "latestTitle": "Latest Vacancies",
+    "latestDescription": "View the latest vacancies posted by our masters.",
+    "viewAll": "View All Vacancies",
+    "categories": {
+      "all": "All",
+      "electrician": "Electrician",
+      "welder": "Welder",
+      "builder": "Builder",
+      "furnitureMaker": "Furniture Maker",
+      "painter": "Painter",
+      "other": "Other"
+    },
+    "available": "Available Vacancies",
+    "count": "{{count}} vacancies",
+    "emptyNoVacancies": "There are no vacancies yet",
+    "emptyNoResults": "No vacancies found for your search",
+    "postedBy": "Posted by:",
+    "notFoundTitle": "Vacancy Not Found",
+    "notFoundDescription": "The vacancy you are looking for does not exist or has been deleted.",
+    "backToVacancies": "Back to Vacancies",
+    "noPhone": "Phone number is not available",
+    "noTelegram": "Telegram is not available",
+    "detailsTitle": "Vacancy Details",
+    "serviceType": "Service Type",
+    "address": "Address",
+    "price": "Price",
+    "phone": "Phone",
+    "fullDescription": "Full Description",
+    "contactMaster": "Contact Master",
+    "callButton": "Call",
+    "telegramButton": "Telegram"
+  },
+
+  "newVacancy": {
+    "title": "Create New Vacancy",
+    "loginRequired": "Please log in first",
+    "sessionExpired": "Session expired. Please log in again.",
+    "createError": "An error occurred while creating the vacancy",
+    "success": "Vacancy successfully posted!",
+    "fields": {
+      "title": "Vacancy Title",
+      "titlePlaceholder": "Example: Electrician needed for a house",
+      "category": "Service Type",
+      "categoryPlaceholder": "Select a service type",
+      "location": "Address",
+      "locationPlaceholder": "Example: Chirchiq, Tashkent Region",
+      "price": "Price",
+      "pricePlaceholder": "300,000 UZS or Negotiable",
+      "contactPhone": "Phone Number",
+      "contactPhonePlaceholder": "+998 90 123 45 67",
+      "telegram": "Telegram Username",
+      "telegramPlaceholder": "username",
+      "description": "Vacancy Description",
+      "descriptionPlaceholder": "Write detailed information about the job..."
+    },
+    "validation": {
+      "titleRequired": "Enter the vacancy title",
+      "categoryRequired": "Select a service type",
+      "locationRequired": "Enter the address",
+      "phoneRequired": "Enter your phone number",
+      "telegramRequired": "Enter your Telegram username",
+      "descriptionRequired": "Write the vacancy description"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "submit": "Post Vacancy"
+    },
+    "categories": {
+      "plumber": "Plumber",
+      "electrician": "Electrician",
+      "welder": "Welder",
+      "builder": "Builder",
+      "furnitureMaker": "Furniture Maker",
+      "painter": "Painter",
+      "roofRepair": "Roof Repair",
+      "moldCleaning": "Mold Removal",
+      "treeCutting": "Tree Cutting",
+      "applianceRepair": "Appliance Repair",
+      "bathroomRepair": "Bathroom Repair",
+      "locksmith": "Locksmith",
+      "other": "Other"
+    }
+  },
+
+  "editVacancy": {
+    "title": "Edit Vacancy",
+    "loading": "Loading vacancy...",
+    "messages": {
+      "fetchError": "An error occurred while fetching the vacancy",
+      "notFound": "Vacancy not found",
+      "loadError": "An error occurred while loading the vacancy",
+      "loginRequired": "Please log in first",
+      "updateError": "An error occurred while updating the vacancy",
+      "updateSuccess": "Vacancy successfully updated!"
+    },
+    "form": {
+      "title": "Vacancy Title",
+      "titlePlaceholder": "Example: Electrician needed for a house",
+      "category": "Service Type",
+      "categoryPlaceholder": "Select a service type",
+      "location": "Address",
+      "locationPlaceholder": "Example: Chirchiq, Tashkent Region",
+      "price": "Price",
+      "pricePlaceholder": "300,000 UZS or Negotiable",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+998 90 123 45 67",
+      "telegram": "Telegram Username",
+      "telegramPlaceholder": "username",
+      "description": "Vacancy Description",
+      "descriptionPlaceholder": "Write detailed information about the job..."
+    },
+    "validation": {
+      "titleRequired": "Enter the vacancy title",
+      "categoryRequired": "Select a service type",
+      "locationRequired": "Enter the address",
+      "phoneRequired": "Enter your phone number",
+      "telegramRequired": "Enter your Telegram username",
+      "descriptionRequired": "Write the vacancy description"
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save Changes"
+    }
+  },
+
+  "ustaDashboard": {
+    "loading": "Master panel is loading...",
+    "title": "Master Panel",
+    "description": "Manage your vacancies here.",
+    "newVacancy": "New Vacancy",
+    "empty": "You haven't added any vacancies yet",
+    "firstVacancy": "Add First Vacancy",
+    "profile": {
+      "defaultName": "Master",
+      "noProfession": "Profession not specified",
+      "noPhone": "Phone not specified",
+      "edit": "Edit Profile"
+    },
+    "messages": {
+      "sessionExpired": "Session expired. Please log in again.",
+      "userFetchError": "Error while getting user information",
+      "vacanciesFetchError": "An error occurred while getting vacancies",
+      "dashboardFetchError": "Error while getting dashboard information",
+      "logoutSuccess": "You have successfully logged out",
+      "profileUpdateError": "An error occurred while updating the profile",
+      "profileUpdateSuccess": "Profile successfully updated.",
+      "passwordUpdateError": "An error occurred while changing the password",
+      "passwordUpdateSuccess": "Password successfully changed.",
+      "deletePermission": "You do not have permission to delete this vacancy.",
+      "deleteVacancyError": "An error occurred while deleting the vacancy",
+      "deleteSuccess": "Vacancy deleted."
+    },
+    "deleteConfirm": {
+      "title": "Delete this vacancy?",
+      "description": "The vacancy will be deleted.",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "vacancy": {
+      "price": "Price"
+    },
+    "profileModal": {
+      "title": "Profile and Security",
+      "personalTitle": "Personal Information",
+      "personalDescription": "Update your profile information."
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "phone": "Phone Number",
+      "profession": "Profession",
+      "professionPlaceholder": "Example: Plumber",
+      "saveProfile": "Save Profile"
+    },
+    "validation": {
+      "nameRequired": "Enter your name",
+      "nameMin": "Name must contain at least 2 characters",
+      "phoneRequired": "Enter your phone number",
+      "professionRequired": "Enter your profession",
+      "professionMin": "Profession must contain at least 2 characters",
+      "currentPasswordRequired": "Enter your current password",
+      "newPasswordRequired": "Enter your new password",
+      "newPasswordMin": "New password must contain at least 6 characters",
+      "confirmPasswordRequired": "Enter the new password again",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "password": {
+      "title": "Change Password",
+      "description": "Set a new password to keep your account secure.",
+      "current": "Current Password",
+      "currentPlaceholder": "Your current password",
+      "new": "New Password",
+      "newPlaceholder": "Your new password",
+      "confirm": "Confirm New Password",
+      "confirmPlaceholder": "Enter the new password again",
+      "change": "Change Password"
+    }
+  }
+}
