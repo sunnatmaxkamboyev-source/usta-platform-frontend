@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+
 import { Card, Button, Tag, Spin, Empty } from "antd";
+
 import {
   EnvironmentOutlined,
   DollarOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
+
 import { useNavigate } from "react-router-dom";
+
 import { useTranslation } from "react-i18next";
 
 export default function HomeVacancies() {
@@ -25,7 +29,7 @@ export default function HomeVacancies() {
         setLoading(true);
 
         const response = await fetch(
-          "http://localhost:5000/api/vacancies"
+          "https://usta-platform-backend.onrender.com/api/vacancies"
         );
 
         const data = await response.json();
@@ -96,7 +100,6 @@ export default function HomeVacancies() {
   return (
     <section className="py-16 px-4 bg-gray-50">
       <div className="max-w-6xl mx-auto">
-
         {/* =========================
             HEADER
         ========================== */}

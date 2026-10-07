@@ -9,7 +9,7 @@ export default function Register() {
   const onFinish = async (values) => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/register",
+        "https://usta-platform-backend.onrender.com/api/auth/register",
         {
           method: "POST",
           headers: {
@@ -140,7 +140,7 @@ export default function Register() {
 
           {/* LOGIN */}
           <div className="text-center text-sm text-gray-500">
-            {t("auth.haveAccount")} {t("auth.login")}
+            {t("auth.haveAccount")}{" "}
             <Link
               to="/login"
               className="text-blue-600 font-medium"

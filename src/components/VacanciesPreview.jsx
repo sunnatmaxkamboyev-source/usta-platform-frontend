@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
+
 import { Card, Button, Tag, Spin, message } from "antd";
+
 import {
   EnvironmentOutlined,
   DollarOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
+
 import { useNavigate } from "react-router-dom";
+
 import { useTranslation } from "react-i18next";
 
 export default function VacanciesPreview() {
@@ -21,7 +25,7 @@ export default function VacanciesPreview() {
         setLoading(true);
 
         const response = await fetch(
-          "http://localhost:5000/api/vacancies"
+          "https://usta-platform-backend.onrender.com/api/vacancies"
         );
 
         const data = await response.json();
@@ -104,7 +108,6 @@ export default function VacanciesPreview() {
               {/* LOCATION */}
               <div className="flex items-center gap-2 text-gray-500 mt-4">
                 <EnvironmentOutlined />
-
                 <span>{vacancy.location}</span>
               </div>
 
@@ -154,7 +157,6 @@ export default function VacanciesPreview() {
           ))}
         </div>
 
-        
         <div className="flex justify-center mt-10">
           <Button
             size="large"

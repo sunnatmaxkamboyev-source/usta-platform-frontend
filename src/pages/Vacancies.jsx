@@ -47,7 +47,7 @@ export default function Vacancies() {
         setLoading(true);
 
         const response = await fetch(
-          "http://localhost:5000/api/vacancies"
+          "https://usta-platform-backend.onrender.com/api/vacancies"
         );
 
         const data = await response.json();
@@ -161,11 +161,9 @@ export default function Vacancies() {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10">
       <div className="max-w-6xl mx-auto">
-
         {/* =========================
             HEADER
         ========================== */}
-
         <div className="text-center mb-10">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
             {t("navbar.vacancies")}
@@ -179,16 +177,15 @@ export default function Vacancies() {
         {/* =========================
             SEARCH
         ========================== */}
-
         <Card className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
             {/* SEARCH */}
-
             <Input
               size="large"
               prefix={<SearchOutlined />}
-              placeholder={t("common.searchPlaceholder")}
+              placeholder={t(
+                "common.searchPlaceholder"
+              )}
               value={search}
               onChange={(e) =>
                 setSearch(e.target.value)
@@ -196,7 +193,6 @@ export default function Vacancies() {
             />
 
             {/* CATEGORY */}
-
             <Select
               size="large"
               value={category}
@@ -205,65 +201,92 @@ export default function Vacancies() {
               options={[
                 {
                   value: "all",
-                  label: t("vacancies.categories.all"),
+                  label: t(
+                    "vacancies.categories.all"
+                  ),
                 },
                 {
                   value: "santexnik",
-                  label: t("services.items.plumbing.title"),
+                  label: t(
+                    "services.items.plumbing.title"
+                  ),
                 },
                 {
                   value: "tom-tamirlash",
-                  label: t("services.items.roofRepair.title"),
+                  label: t(
+                    "services.items.roofRepair.title"
+                  ),
                 },
                 {
                   value: "zamburug-tozalash",
-                  label: t("services.items.moldCleaning.title"),
+                  label: t(
+                    "services.items.moldCleaning.title"
+                  ),
                 },
                 {
                   value: "daraxt-kesish",
-                  label: t("services.items.treeCutting.title"),
+                  label: t(
+                    "services.items.treeCutting.title"
+                  ),
                 },
                 {
                   value: "maishiy-texnika",
-                  label: t("services.items.applianceRepair.title"),
+                  label: t(
+                    "services.items.applianceRepair.title"
+                  ),
                 },
                 {
                   value: "hammom",
-                  label: t("services.items.bathroomRepair.title"),
+                  label: t(
+                    "services.items.bathroomRepair.title"
+                  ),
                 },
                 {
                   value: "qulfsoz",
-                  label: t("services.items.locksmith.title"),
+                  label: t(
+                    "services.items.locksmith.title"
+                  ),
                 },
                 {
                   value: "elektrik",
-                  label: t("vacancies.categories.electrician"),
+                  label: t(
+                    "vacancies.categories.electrician"
+                  ),
                 },
                 {
                   value: "payvandchi",
-                  label: t("vacancies.categories.welder"),
+                  label: t(
+                    "vacancies.categories.welder"
+                  ),
                 },
                 {
                   value: "quruvchi",
-                  label: t("vacancies.categories.builder"),
+                  label: t(
+                    "vacancies.categories.builder"
+                  ),
                 },
                 {
                   value: "mebelchi",
-                  label: t("vacancies.categories.furnitureMaker"),
+                  label: t(
+                    "vacancies.categories.furnitureMaker"
+                  ),
                 },
                 {
                   value: "boyoqchi",
-                  label: t("vacancies.categories.painter"),
+                  label: t(
+                    "vacancies.categories.painter"
+                  ),
                 },
                 {
                   value: "boshqa",
-                  label: t("vacancies.categories.other"),
+                  label: t(
+                    "vacancies.categories.other"
+                  ),
                 },
               ]}
             />
 
             {/* CLEAR */}
-
             <Button
               size="large"
               onClick={clearFilters}
@@ -276,7 +299,6 @@ export default function Vacancies() {
         {/* =========================
             RESULT HEADER
         ========================== */}
-
         <div className="flex items-center justify-between mb-5">
           <div>
             <h2 className="text-xl font-semibold text-gray-800">
@@ -284,7 +306,8 @@ export default function Vacancies() {
             </h2>
 
             <p className="text-sm text-gray-500 mt-1">
-              {filteredVacancies.length} {t("vacancies.count")}
+              {filteredVacancies.length}{" "}
+              {t("vacancies.count")}
             </p>
           </div>
         </div>
@@ -292,20 +315,22 @@ export default function Vacancies() {
         {/* =========================
             VACANCIES
         ========================== */}
-
         {filteredVacancies.length === 0 ? (
           <Card>
             <Empty
               description={
                 vacancies.length === 0
-                  ? t("vacancies.emptyNoVacancies")
-                  : t("vacancies.emptyNoResults")
+                  ? t(
+                      "vacancies.emptyNoVacancies"
+                    )
+                  : t(
+                      "vacancies.emptyNoResults"
+                    )
               }
             />
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
             {filteredVacancies.map(
               (vacancy) => (
                 <Card
@@ -313,21 +338,17 @@ export default function Vacancies() {
                   hoverable
                   className="h-full"
                 >
-
                   {/* CATEGORY */}
-
                   <Tag color="blue">
                     {vacancy.category}
                   </Tag>
 
                   {/* TITLE */}
-
                   <h2 className="text-xl font-semibold text-gray-800 mt-4 line-clamp-2">
                     {vacancy.title}
                   </h2>
 
                   {/* LOCATION */}
-
                   <div className="flex items-center gap-2 text-gray-500 mt-4">
                     <EnvironmentOutlined />
 
@@ -337,7 +358,6 @@ export default function Vacancies() {
                   </div>
 
                   {/* PRICE */}
-
                   <div className="flex items-center gap-2 text-gray-700 mt-3">
                     <DollarOutlined />
 
@@ -348,15 +368,12 @@ export default function Vacancies() {
                   </div>
 
                   {/* DESCRIPTION */}
-
                   <p className="text-gray-500 mt-4 line-clamp-3">
                     {vacancy.description}
                   </p>
 
                   {/* USTA */}
-
                   <div className="mt-5 pt-4 border-t border-gray-100">
-
                     <p className="text-sm text-gray-400">
                       {t("vacancies.postedBy")}
                     </p>
@@ -365,11 +382,9 @@ export default function Vacancies() {
                       {vacancy.usta?.name ||
                         t("common.master")}
                     </p>
-
                   </div>
 
                   {/* DETAIL BUTTON */}
-
                   <Button
                     type="primary"
                     block
@@ -386,16 +401,12 @@ export default function Vacancies() {
                   >
                     {t("common.viewDetail")}
                   </Button>
-
                 </Card>
               )
             )}
-
           </div>
         )}
-
       </div>
     </div>
   );
 }
-

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -31,31 +32,19 @@ export default function AdminMasters() {
   // ========================================
 
   const [search, setSearch] = useState("");
-
-  const [selectedMaster, setSelectedMaster] =
-    useState(null);
-
+  const [selectedMaster, setSelectedMaster] = useState(null);
   const [users, setUsers] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
-  const [detailLoading, setDetailLoading] =
-    useState(false);
-
-  const [deleteLoading, setDeleteLoading] =
-    useState(false);
-
-  const [deletingId, setDeletingId] =
-    useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   // ========================================
   // ADMIN TOKEN
   // ========================================
 
   const getToken = () => {
-    return localStorage.getItem(
-      "admin_token"
-    );
+    return localStorage.getItem("admin_token");
   };
 
   // ========================================
@@ -63,15 +52,9 @@ export default function AdminMasters() {
   // ========================================
 
   const handleAdminSessionExpired = () => {
-    localStorage.removeItem(
-      "admin_token"
-    );
-
+    localStorage.removeItem("admin_token");
     localStorage.removeItem("admin");
-
-    localStorage.removeItem(
-      "admin_role"
-    );
+    localStorage.removeItem("admin_role");
 
     message.error(
       "Admin sessiyasi tugagan. Qayta kiring."
@@ -96,15 +79,13 @@ export default function AdminMasters() {
         );
 
         navigate("/admin/login");
-
         return;
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/admin/masters",
+        "https://usta-platform-backend.onrender.com/api/admin/masters",
         {
           method: "GET",
-
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -119,7 +100,6 @@ export default function AdminMasters() {
 
       if (response.status === 401) {
         handleAdminSessionExpired();
-
         return;
       }
 
@@ -167,9 +147,7 @@ export default function AdminMasters() {
   // ========================================
 
   const filteredMasters = useMemo(() => {
-    const value = search
-      .trim()
-      .toLowerCase();
+    const value = search.trim().toLowerCase();
 
     if (!value) {
       return users;
@@ -180,11 +158,9 @@ export default function AdminMasters() {
         master.name
           ?.toLowerCase()
           .includes(value) ||
-
         master.phone
           ?.toLowerCase()
           .includes(value) ||
-
         master.profession
           ?.toLowerCase()
           .includes(value)
@@ -204,15 +180,13 @@ export default function AdminMasters() {
 
       if (!token) {
         handleAdminSessionExpired();
-
         return;
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/admin/masters/${id}`,
+        `https://usta-platform-backend.onrender.com/api/admin/masters/${id}`,
         {
           method: "GET",
-
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -227,7 +201,6 @@ export default function AdminMasters() {
 
       if (response.status === 401) {
         handleAdminSessionExpired();
-
         return;
       }
 
@@ -243,9 +216,7 @@ export default function AdminMasters() {
       }
 
       // Backenddan kelgan usta
-      setSelectedMaster(
-        data.master
-      );
+      setSelectedMaster(data.master);
     } catch (error) {
       console.error(
         "Get master detail error:",
@@ -283,30 +254,26 @@ export default function AdminMasters() {
       onOk: async () => {
         try {
           setDeleteLoading(true);
-
           setDeletingId(id);
 
           const token = getToken();
 
           if (!token) {
             handleAdminSessionExpired();
-
             return;
           }
 
           const response = await fetch(
-            `http://localhost:5000/api/admin/masters/${id}`,
+            `https://usta-platform-backend.onrender.com/api/admin/masters/${id}`,
             {
               method: "DELETE",
-
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
 
-          const data =
-            await response.json();
+          const data = await response.json();
 
           // ========================================
           // TOKEN XATOSI
@@ -314,7 +281,6 @@ export default function AdminMasters() {
 
           if (response.status === 401) {
             handleAdminSessionExpired();
-
             return;
           }
 
@@ -335,8 +301,7 @@ export default function AdminMasters() {
 
           setUsers((prevUsers) =>
             prevUsers.filter(
-              (user) =>
-                user._id !== id
+              (user) => user._id !== id
             )
           );
 
@@ -358,7 +323,6 @@ export default function AdminMasters() {
           );
         } finally {
           setDeleteLoading(false);
-
           setDeletingId(null);
         }
       },
@@ -417,9 +381,7 @@ export default function AdminMasters() {
                 <button
                   type="button"
                   onClick={() =>
-                    navigate(
-                      "/admin/dashboard"
-                    )
+                    navigate("/admin/dashboard")
                   }
                   className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-500 hover:text-brand hover:border-brand transition-colors"
                   aria-label="Dashboardga qaytish"
@@ -462,9 +424,7 @@ export default function AdminMasters() {
               placeholder="Usta nomi, telefon yoki kasb bo‘yicha qidiring..."
               value={search}
               onChange={(event) =>
-                setSearch(
-                  event.target.value
-                )
+                setSearch(event.target.value)
               }
               allowClear
             />
@@ -581,9 +541,7 @@ export default function AdminMasters() {
                             <div className="flex items-center justify-end gap-2">
                               <Button
                                 type="text"
-                                icon={
-                                  <FaEye />
-                                }
+                                icon={<FaEye />}
                                 loading={
                                   detailLoading &&
                                   selectedMaster?._id ===
@@ -601,9 +559,7 @@ export default function AdminMasters() {
                               <Button
                                 danger
                                 type="text"
-                                icon={
-                                  <FaTrash />
-                                }
+                                icon={<FaTrash />}
                                 loading={
                                   deleteLoading &&
                                   deletingId ===
@@ -666,9 +622,7 @@ export default function AdminMasters() {
 
                       <div className="flex gap-2 mt-5">
                         <Button
-                          icon={
-                            <FaEye />
-                          }
+                          icon={<FaEye />}
                           loading={
                             detailLoading &&
                             selectedMaster?._id ===
@@ -685,9 +639,7 @@ export default function AdminMasters() {
 
                         <Button
                           danger
-                          icon={
-                            <FaTrash />
-                          }
+                          icon={<FaTrash />}
                           loading={
                             deleteLoading &&
                             deletingId ===
@@ -818,4 +770,3 @@ export default function AdminMasters() {
     </div>
   );
 }
-

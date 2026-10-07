@@ -145,22 +145,12 @@ export default function AdminVacancies() {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
-
-  const [category, setCategory] =
-    useState("all");
-
-  const [status, setStatus] =
-    useState("all");
-
+  const [category, setCategory] = useState("all");
+  const [status, setStatus] = useState("all");
   const [selectedVacancy, setSelectedVacancy] =
     useState(null);
-
-  const [vacancies, setVacancies] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
+  const [vacancies, setVacancies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [deleteLoading, setDeleteLoading] =
     useState(false);
 
@@ -172,10 +162,9 @@ export default function AdminVacancies() {
     try {
       setLoading(true);
 
-      const token =
-        localStorage.getItem(
-          "admin_token"
-        );
+      const token = localStorage.getItem(
+        "admin_token"
+      );
 
       if (!token) {
         message.error(
@@ -183,44 +172,32 @@ export default function AdminVacancies() {
         );
 
         navigate("/admin/login");
-
         return;
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/admin/vacancies",
+        "https://usta-platform-backend.onrender.com/api/admin/vacancies",
         {
           method: "GET",
-
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       // TOKEN EXPIRED
       if (response.status === 401) {
-        localStorage.removeItem(
-          "admin_token"
-        );
-
-        localStorage.removeItem(
-          "admin"
-        );
-
-        localStorage.removeItem(
-          "admin_role"
-        );
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin");
+        localStorage.removeItem("admin_role");
 
         message.error(
           "Admin sessiyasi tugagan. Qayta kiring."
         );
 
         navigate("/admin/login");
-
         return;
       }
 
@@ -231,9 +208,7 @@ export default function AdminVacancies() {
         );
       }
 
-      setVacancies(
-        data.vacancies || []
-      );
+      setVacancies(data.vacancies || []);
     } catch (error) {
       console.error(
         "Fetch admin vacancies error:",
@@ -262,56 +237,55 @@ export default function AdminVacancies() {
   // ========================================
 
   const filteredVacancies = useMemo(() => {
-    const searchValue =
-      search.trim().toLowerCase();
+    const searchValue = search
+      .trim()
+      .toLowerCase();
 
-    return vacancies.filter(
-      (vacancy) => {
-        const ustaName =
-          vacancy.usta?.name || "";
+    return vacancies.filter((vacancy) => {
+      const ustaName =
+        vacancy.usta?.name || "";
 
-        const ustaProfession =
-          vacancy.usta?.profession || "";
+      const ustaProfession =
+        vacancy.usta?.profession || "";
 
-        const ustaPhone =
-          vacancy.usta?.phone || "";
+      const ustaPhone =
+        vacancy.usta?.phone || "";
 
-        const matchesSearch =
-          !searchValue ||
-          vacancy.title
-            ?.toLowerCase()
-            .includes(searchValue) ||
-          vacancy.description
-            ?.toLowerCase()
-            .includes(searchValue) ||
-          vacancy.location
-            ?.toLowerCase()
-            .includes(searchValue) ||
-          ustaName
-            .toLowerCase()
-            .includes(searchValue) ||
-          ustaProfession
-            .toLowerCase()
-            .includes(searchValue) ||
-          ustaPhone
-            .toLowerCase()
-            .includes(searchValue);
+      const matchesSearch =
+        !searchValue ||
+        vacancy.title
+          ?.toLowerCase()
+          .includes(searchValue) ||
+        vacancy.description
+          ?.toLowerCase()
+          .includes(searchValue) ||
+        vacancy.location
+          ?.toLowerCase()
+          .includes(searchValue) ||
+        ustaName
+          .toLowerCase()
+          .includes(searchValue) ||
+        ustaProfession
+          .toLowerCase()
+          .includes(searchValue) ||
+        ustaPhone
+          .toLowerCase()
+          .includes(searchValue);
 
-        const matchesCategory =
-          category === "all" ||
-          vacancy.category === category;
+      const matchesCategory =
+        category === "all" ||
+        vacancy.category === category;
 
-        const matchesStatus =
-          status === "all" ||
-          vacancy.status === status;
+      const matchesStatus =
+        status === "all" ||
+        vacancy.status === status;
 
-        return (
-          matchesSearch &&
-          matchesCategory &&
-          matchesStatus
-        );
-      }
-    );
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesStatus
+      );
+    });
   }, [
     vacancies,
     search,
@@ -327,10 +301,9 @@ export default function AdminVacancies() {
     try {
       setDeleteLoading(true);
 
-      const token =
-        localStorage.getItem(
-          "admin_token"
-        );
+      const token = localStorage.getItem(
+        "admin_token"
+      );
 
       if (!token) {
         message.error(
@@ -338,44 +311,32 @@ export default function AdminVacancies() {
         );
 
         navigate("/admin/login");
-
         return;
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/admin/vacancies/${id}`,
+        `https://usta-platform-backend.onrender.com/api/admin/vacancies/${id}`,
         {
           method: "DELETE",
-
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       // TOKEN EXPIRED
       if (response.status === 401) {
-        localStorage.removeItem(
-          "admin_token"
-        );
-
-        localStorage.removeItem(
-          "admin"
-        );
-
-        localStorage.removeItem(
-          "admin_role"
-        );
+        localStorage.removeItem("admin_token");
+        localStorage.removeItem("admin");
+        localStorage.removeItem("admin_role");
 
         message.error(
           "Admin sessiyasi tugagan. Qayta kiring."
         );
 
         navigate("/admin/login");
-
         return;
       }
 
@@ -388,17 +349,15 @@ export default function AdminVacancies() {
 
       // Local state'da ham
       // statusni deleted qilamiz
-      setVacancies(
-        (previousVacancies) =>
-          previousVacancies.map(
-            (vacancy) =>
-              vacancy._id === id
-                ? {
-                    ...vacancy,
-                    status: "deleted",
-                  }
-                : vacancy
-          )
+      setVacancies((previousVacancies) =>
+        previousVacancies.map((vacancy) =>
+          vacancy._id === id
+            ? {
+                ...vacancy,
+                status: "deleted",
+              }
+            : vacancy
+        )
       );
 
       setSelectedVacancy(null);
@@ -466,26 +425,21 @@ export default function AdminVacancies() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* SIDEBAR */}
-
       <AdminSidebar />
 
       {/* MAIN */}
-
       <div className="flex-1 min-w-0">
         <AdminHeader />
 
         <main className="p-6">
           {/* PAGE HEADER */}
-
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-7">
             <div>
               <div className="flex items-center gap-3">
                 <button
                   type="button"
                   onClick={() =>
-                    navigate(
-                      "/admin/dashboard"
-                    )
+                    navigate("/admin/dashboard")
                   }
                   className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-500 hover:text-brand hover:border-brand transition-colors"
                   aria-label="Dashboardga qaytish"
@@ -505,7 +459,6 @@ export default function AdminVacancies() {
             </div>
 
             {/* TOTAL */}
-
             <div className="bg-white border border-gray-100 rounded-xl px-5 py-3">
               <p className="text-xs text-gray-400">
                 Jami vakansiyalar
@@ -518,10 +471,8 @@ export default function AdminVacancies() {
           </div>
 
           {/* STATUS SUMMARY */}
-
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             {/* ACTIVE */}
-
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <div className="flex items-center justify-between">
                 <div>
@@ -547,7 +498,6 @@ export default function AdminVacancies() {
             </div>
 
             {/* INACTIVE */}
-
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <div className="flex items-center justify-between">
                 <div>
@@ -573,7 +523,6 @@ export default function AdminVacancies() {
             </div>
 
             {/* DELETED */}
-
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <div className="flex items-center justify-between">
                 <div>
@@ -600,7 +549,6 @@ export default function AdminVacancies() {
           </div>
 
           {/* FILTERS */}
-
           <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-[1fr_220px_220px_auto] gap-4">
               <Input
@@ -644,7 +592,6 @@ export default function AdminVacancies() {
           </div>
 
           {/* RESULT COUNT */}
-
           <div className="mb-4">
             <p className="text-sm text-gray-500">
               {filteredVacancies.length} ta
@@ -653,17 +600,14 @@ export default function AdminVacancies() {
           </div>
 
           {/* VACANCIES */}
-
-          {filteredVacancies.length ===
-          0 ? (
+          {filteredVacancies.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 p-12">
               <Empty
                 image={
                   <FaBriefcase className="text-gray-200 text-5xl mx-auto" />
                 }
                 description={
-                  vacancies.length ===
-                  0
+                  vacancies.length === 0
                     ? "Hozircha vakansiyalar mavjud emas."
                     : "Qidiruv bo‘yicha vakansiya topilmadi."
                 }
@@ -672,7 +616,6 @@ export default function AdminVacancies() {
           ) : (
             <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
               {/* DESKTOP */}
-
               <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -713,13 +656,10 @@ export default function AdminVacancies() {
 
                         return (
                           <tr
-                            key={
-                              vacancy._id
-                            }
+                            key={vacancy._id}
                             className="border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors"
                           >
                             {/* VACANCY */}
-
                             <td className="px-6 py-5">
                               <div className="max-w-xs">
                                 <div className="flex items-center gap-2 mb-2">
@@ -745,7 +685,6 @@ export default function AdminVacancies() {
                             </td>
 
                             {/* USTA */}
-
                             <td className="px-6 py-5">
                               <div className="flex items-center gap-3">
                                 <div className="w-9 h-9 rounded-full bg-blue-50 text-brand flex items-center justify-center">
@@ -775,7 +714,6 @@ export default function AdminVacancies() {
                             </td>
 
                             {/* LOCATION */}
-
                             <td className="px-6 py-5">
                               <div className="flex items-center gap-2 text-gray-600">
                                 <FaMapMarkerAlt className="text-brand" />
@@ -789,7 +727,6 @@ export default function AdminVacancies() {
                             </td>
 
                             {/* PRICE */}
-
                             <td className="px-6 py-5">
                               <span className="font-semibold text-brand">
                                 {vacancy.price ||
@@ -798,7 +735,6 @@ export default function AdminVacancies() {
                             </td>
 
                             {/* STATUS */}
-
                             <td className="px-6 py-5">
                               <Tag
                                 color={
@@ -815,7 +751,6 @@ export default function AdminVacancies() {
                             </td>
 
                             {/* ACTIONS */}
-
                             <td className="px-6 py-5">
                               <div className="flex items-center justify-end gap-2">
                                 <Button
@@ -860,7 +795,6 @@ export default function AdminVacancies() {
               </div>
 
               {/* MOBILE / TABLET */}
-
               <div className="lg:hidden divide-y divide-gray-100">
                 {filteredVacancies.map(
                   (vacancy) => {
@@ -871,9 +805,7 @@ export default function AdminVacancies() {
 
                     return (
                       <div
-                        key={
-                          vacancy._id
-                        }
+                        key={vacancy._id}
                         className="p-5"
                       >
                         <div className="flex items-start justify-between gap-4">
@@ -916,8 +848,7 @@ export default function AdminVacancies() {
                           <div className="flex items-center gap-2">
                             <FaUserTie />
 
-                            {vacancy
-                              .usta
+                            {vacancy.usta
                               ?.name ||
                               "Usta"}
                           </div>
@@ -979,7 +910,6 @@ export default function AdminVacancies() {
       </div>
 
       {/* DETAIL MODAL */}
-
       <Modal
         open={!!selectedVacancy}
         title="Vakansiya ma'lumotlari"
@@ -992,7 +922,6 @@ export default function AdminVacancies() {
         {selectedVacancy && (
           <div>
             {/* TITLE */}
-
             <div>
               <div className="flex items-center gap-2">
                 <Tag color="blue">
@@ -1017,17 +946,13 @@ export default function AdminVacancies() {
               </div>
 
               <h2 className="text-2xl font-bold text-navy mt-3">
-                {
-                  selectedVacancy.title
-                }
+                {selectedVacancy.title}
               </h2>
             </div>
 
             {/* DETAILS */}
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
               {/* USTA */}
-
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-brand mb-2">
                   <FaUserTie />
@@ -1038,20 +963,18 @@ export default function AdminVacancies() {
                 </div>
 
                 <p className="font-medium text-gray-700">
-                  {selectedVacancy
-                    .usta?.name ||
-                    "Usta"}
+                  {selectedVacancy.usta
+                    ?.name || "Usta"}
                 </p>
 
                 <p className="text-sm text-gray-400 mt-1">
-                  {selectedVacancy
-                    .usta?.profession ||
+                  {selectedVacancy.usta
+                    ?.profession ||
                     selectedVacancy.category}
                 </p>
               </div>
 
               {/* LOCATION */}
-
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-brand mb-2">
                   <FaMapMarkerAlt />
@@ -1069,7 +992,6 @@ export default function AdminVacancies() {
               </div>
 
               {/* PRICE */}
-
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-brand mb-2">
                   <FaMoneyBillWave />
@@ -1086,7 +1008,6 @@ export default function AdminVacancies() {
               </div>
 
               {/* PHONE */}
-
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-brand mb-2">
                   <FaPhone />
@@ -1097,8 +1018,7 @@ export default function AdminVacancies() {
                 </div>
 
                 <p className="font-medium text-gray-700">
-                  {selectedVacancy
-                    .contactPhone ||
+                  {selectedVacancy.contactPhone ||
                     selectedVacancy.usta
                       ?.phone ||
                     "Ko‘rsatilmagan"}
@@ -1106,7 +1026,6 @@ export default function AdminVacancies() {
               </div>
 
               {/* VIEWS */}
-
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-brand mb-2">
                   <FaEye />
@@ -1123,7 +1042,6 @@ export default function AdminVacancies() {
               </div>
 
               {/* CREATED DATE */}
-
               <div className="bg-gray-50 rounded-xl p-4">
                 <div className="flex items-center gap-2 text-brand mb-2">
                   <FaBriefcase />
@@ -1146,7 +1064,6 @@ export default function AdminVacancies() {
             </div>
 
             {/* DESCRIPTION */}
-
             <div className="mt-6">
               <h3 className="font-semibold text-navy mb-3">
                 Tavsif
@@ -1161,7 +1078,6 @@ export default function AdminVacancies() {
             </div>
 
             {/* TELEGRAM */}
-
             <div className="mt-5 flex items-center gap-2 text-gray-600">
               <FaTelegramPlane className="text-brand" />
 
@@ -1176,7 +1092,6 @@ export default function AdminVacancies() {
             </div>
 
             {/* ACTION */}
-
             <div className="border-t border-gray-100 mt-6 pt-5 flex justify-end">
               {selectedVacancy.status !==
                 "deleted" && (

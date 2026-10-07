@@ -35,7 +35,7 @@ export default function EditVacancy() {
         setLoading(true);
 
         const response = await fetch(
-          `http://localhost:5000/api/vacancies/${id}`
+          `https://usta-platform-backend.onrender.com/api/vacancies/${id}`
         );
 
         const data = await response.json();
@@ -44,14 +44,17 @@ export default function EditVacancy() {
 
         if (!response.ok) {
           throw new Error(
-            data.message || t("editVacancy.messages.fetchError")
+            data.message ||
+              t("editVacancy.messages.fetchError")
           );
         }
 
         const vacancy = data.vacancy;
 
         if (!vacancy) {
-          throw new Error(t("editVacancy.messages.notFound"));
+          throw new Error(
+            t("editVacancy.messages.notFound")
+          );
         }
 
         // =========================
@@ -68,10 +71,14 @@ export default function EditVacancy() {
           description: vacancy.description,
         });
       } catch (error) {
-        console.error("Get vacancy for edit error:", error);
+        console.error(
+          "Get vacancy for edit error:",
+          error
+        );
 
         message.error(
-          error.message || t("editVacancy.messages.loadError")
+          error.message ||
+            t("editVacancy.messages.loadError")
         );
 
         navigate("/dashboard");
@@ -94,15 +101,19 @@ export default function EditVacancy() {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        message.error(t("editVacancy.messages.loginRequired"));
+        message.error(
+          t("editVacancy.messages.loginRequired")
+        );
+
         navigate("/login");
+
         return;
       }
 
       setSaving(true);
 
       const response = await fetch(
-        `http://localhost:5000/api/vacancies/${id}`,
+        `https://usta-platform-backend.onrender.com/api/vacancies/${id}`,
         {
           method: "PUT",
           headers: {
@@ -123,22 +134,32 @@ export default function EditVacancy() {
 
       const data = await response.json();
 
-      console.log("Update vacancy response:", data);
+      console.log(
+        "Update vacancy response:",
+        data
+      );
 
       if (!response.ok) {
         throw new Error(
-          data.message || t("editVacancy.messages.updateError")
+          data.message ||
+            t("editVacancy.messages.updateError")
         );
       }
 
-      message.success(t("editVacancy.messages.updateSuccess"));
+      message.success(
+        t("editVacancy.messages.updateSuccess")
+      );
 
       navigate("/dashboard");
     } catch (error) {
-      console.error("Update vacancy error:", error);
+      console.error(
+        "Update vacancy error:",
+        error
+      );
 
       message.error(
-        error.message || t("editVacancy.messages.updateError")
+        error.message ||
+          t("editVacancy.messages.updateError")
       );
     } finally {
       setSaving(false);
@@ -187,13 +208,17 @@ export default function EditVacancy() {
               rules={[
                 {
                   required: true,
-                  message: t("editVacancy.validation.titleRequired"),
+                  message: t(
+                    "editVacancy.validation.titleRequired"
+                  ),
                 },
               ]}
             >
               <Input
                 size="large"
-                placeholder={t("editVacancy.form.titlePlaceholder")}
+                placeholder={t(
+                  "editVacancy.form.titlePlaceholder"
+                )}
               />
             </Form.Item>
 
@@ -221,31 +246,45 @@ export default function EditVacancy() {
                 options={[
                   {
                     value: "santexnik",
-                    label: t("newVacancy.categories.plumber"),
+                    label: t(
+                      "newVacancy.categories.plumber"
+                    ),
                   },
                   {
                     value: "elektrik",
-                    label: t("newVacancy.categories.electrician"),
+                    label: t(
+                      "newVacancy.categories.electrician"
+                    ),
                   },
                   {
                     value: "payvandchi",
-                    label: t("newVacancy.categories.welder"),
+                    label: t(
+                      "newVacancy.categories.welder"
+                    ),
                   },
                   {
                     value: "quruvchi",
-                    label: t("newVacancy.categories.builder"),
+                    label: t(
+                      "newVacancy.categories.builder"
+                    ),
                   },
                   {
                     value: "mebelchi",
-                    label: t("newVacancy.categories.furnitureMaker"),
+                    label: t(
+                      "newVacancy.categories.furnitureMaker"
+                    ),
                   },
                   {
                     value: "boyoqchi",
-                    label: t("newVacancy.categories.painter"),
+                    label: t(
+                      "newVacancy.categories.painter"
+                    ),
                   },
                   {
                     value: "boshqa",
-                    label: t("newVacancy.categories.other"),
+                    label: t(
+                      "newVacancy.categories.other"
+                    ),
                   },
                 ]}
               />
@@ -371,7 +410,9 @@ export default function EditVacancy() {
             <div className="flex gap-3">
               <Button
                 size="large"
-                onClick={() => navigate("/dashboard")}
+                onClick={() =>
+                  navigate("/dashboard")
+                }
                 disabled={saving}
               >
                 {t("editVacancy.buttons.cancel")}

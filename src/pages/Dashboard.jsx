@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+
 import { useTranslation } from "react-i18next";
 
 import {
@@ -69,7 +71,7 @@ export default function Dashboard() {
         // ========================================
 
         const userResponse = await fetch(
-          "http://localhost:5000/api/auth/me",
+          "https://usta-platform-backend.onrender.com/api/auth/me",
           {
             method: "GET",
             headers: {
@@ -118,7 +120,7 @@ export default function Dashboard() {
         // ========================================
 
         const vacancyResponse = await fetch(
-          "http://localhost:5000/api/vacancies/my",
+          "https://usta-platform-backend.onrender.com/api/vacancies/my",
           {
             method: "GET",
             headers: {
@@ -147,7 +149,9 @@ export default function Dashboard() {
         if (!vacancyResponse.ok) {
           throw new Error(
             vacancyData.message ||
-              t("ustaDashboard.messages.vacanciesFetchError")
+              t(
+                "ustaDashboard.messages.vacanciesFetchError"
+              )
           );
         }
 
@@ -162,7 +166,9 @@ export default function Dashboard() {
 
         message.error(
           error.message ||
-            t("ustaDashboard.messages.dashboardFetchError")
+            t(
+              "ustaDashboard.messages.dashboardFetchError"
+            )
         );
       } finally {
         setLoading(false);
@@ -245,7 +251,7 @@ export default function Dashboard() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/profile",
+        "https://usta-platform-backend.onrender.com/api/auth/profile",
         {
           method: "PUT",
           headers: {
@@ -282,7 +288,9 @@ export default function Dashboard() {
       if (!response.ok) {
         throw new Error(
           data.message ||
-            t("ustaDashboard.messages.profileUpdateError")
+            t(
+              "ustaDashboard.messages.profileUpdateError"
+            )
         );
       }
 
@@ -299,7 +307,9 @@ export default function Dashboard() {
       );
 
       message.success(
-        t("ustaDashboard.messages.profileUpdateSuccess")
+        t(
+          "ustaDashboard.messages.profileUpdateSuccess"
+        )
       );
     } catch (error) {
       console.error(
@@ -309,7 +319,9 @@ export default function Dashboard() {
 
       message.error(
         error.message ||
-          t("ustaDashboard.messages.profileUpdateError")
+          t(
+            "ustaDashboard.messages.profileUpdateError"
+          )
       );
     } finally {
       setProfileLoading(false);
@@ -340,7 +352,7 @@ export default function Dashboard() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/auth/password",
+        "https://usta-platform-backend.onrender.com/api/auth/password",
         {
           method: "PUT",
           headers: {
@@ -369,7 +381,9 @@ export default function Dashboard() {
 
         message.error(
           data.message ||
-            t("ustaDashboard.messages.sessionExpired")
+            t(
+              "ustaDashboard.messages.sessionExpired"
+            )
         );
 
         navigate("/login", {
@@ -386,7 +400,9 @@ export default function Dashboard() {
       if (!response.ok) {
         throw new Error(
           data.message ||
-            t("ustaDashboard.messages.passwordUpdateError")
+            t(
+              "ustaDashboard.messages.passwordUpdateError"
+            )
         );
       }
 
@@ -397,7 +413,9 @@ export default function Dashboard() {
       passwordForm.resetFields();
 
       message.success(
-        t("ustaDashboard.messages.passwordUpdateSuccess")
+        t(
+          "ustaDashboard.messages.passwordUpdateSuccess"
+        )
       );
     } catch (error) {
       console.error(
@@ -407,7 +425,9 @@ export default function Dashboard() {
 
       message.error(
         error.message ||
-          t("ustaDashboard.messages.passwordUpdateError")
+          t(
+            "ustaDashboard.messages.passwordUpdateError"
+          )
       );
     } finally {
       setPasswordLoading(false);
@@ -436,7 +456,7 @@ export default function Dashboard() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/api/vacancies/${id}`,
+        `https://usta-platform-backend.onrender.com/api/vacancies/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -464,7 +484,9 @@ export default function Dashboard() {
 
       if (response.status === 403) {
         message.error(
-          t("ustaDashboard.messages.deletePermission")
+          t(
+            "ustaDashboard.messages.deletePermission"
+          )
         );
 
         return;
@@ -473,7 +495,9 @@ export default function Dashboard() {
       if (!response.ok) {
         throw new Error(
           data.message ||
-            t("ustaDashboard.messages.deleteVacancyError")
+            t(
+              "ustaDashboard.messages.deleteVacancyError"
+            )
         );
       }
 
@@ -486,7 +510,9 @@ export default function Dashboard() {
       );
 
       message.success(
-        t("ustaDashboard.messages.deleteSuccess")
+        t(
+          "ustaDashboard.messages.deleteSuccess"
+        )
       );
     } catch (error) {
       console.error(
@@ -496,7 +522,9 @@ export default function Dashboard() {
 
       message.error(
         error.message ||
-          t("ustaDashboard.messages.deleteVacancyError")
+          t(
+            "ustaDashboard.messages.deleteVacancyError"
+          )
       );
     } finally {
       setDeleteLoading(false);
@@ -571,17 +599,23 @@ export default function Dashboard() {
               <div>
                 <h2 className="text-xl font-semibold text-gray-800">
                   {user?.name ||
-                    t("ustaDashboard.profile.defaultName")}
+                    t(
+                      "ustaDashboard.profile.defaultName"
+                    )}
                 </h2>
 
                 <p className="text-gray-500">
                   {user?.profession ||
-                    t("ustaDashboard.profile.noProfession")}
+                    t(
+                      "ustaDashboard.profile.noProfession"
+                    )}
                 </p>
 
                 <p className="text-gray-400 text-sm">
                   {user?.phone ||
-                    t("ustaDashboard.profile.noPhone")}
+                    t(
+                      "ustaDashboard.profile.noPhone"
+                    )}
                 </p>
               </div>
             </div>
@@ -593,7 +627,9 @@ export default function Dashboard() {
                   handleOpenProfile
                 }
               >
-                {t("ustaDashboard.profile.edit")}
+                {t(
+                  "ustaDashboard.profile.edit"
+                )}
               </Button>
 
               <Button
@@ -618,7 +654,9 @@ export default function Dashboard() {
             </h1>
 
             <p className="text-gray-500 mt-1">
-              {t("ustaDashboard.description")}
+              {t(
+                "ustaDashboard.description"
+              )}
             </p>
           </div>
 
@@ -628,7 +666,9 @@ export default function Dashboard() {
             icon={<PlusOutlined />}
             onClick={handleCreate}
           >
-            {t("ustaDashboard.newVacancy")}
+            {t(
+              "ustaDashboard.newVacancy"
+            )}
           </Button>
         </div>
 
@@ -648,7 +688,9 @@ export default function Dashboard() {
                 icon={<PlusOutlined />}
                 onClick={handleCreate}
               >
-                {t("ustaDashboard.firstVacancy")}
+                {t(
+                  "ustaDashboard.firstVacancy"
+                )}
               </Button>
             </div>
           </Card>
@@ -660,7 +702,6 @@ export default function Dashboard() {
                   key={vacancy._id}
                   className="shadow-sm"
                 >
-
                   {/* TITLE */}
 
                   <div className="flex items-start justify-between gap-3">
@@ -725,12 +766,16 @@ export default function Dashboard() {
 
                   <div className="mt-3">
                     <span className="text-sm text-gray-400">
-                      {t("ustaDashboard.vacancy.price")}
+                      {t(
+                        "ustaDashboard.vacancy.price"
+                      )}
                     </span>
 
                     <p className="text-lg font-semibold text-blue-600">
                       {vacancy.price ||
-                        t("common.negotiable")}
+                        t(
+                          "common.negotiable"
+                        )}
                     </p>
                   </div>
 
@@ -790,7 +835,9 @@ export default function Dashboard() {
                         )
                       }
                     >
-                      {t("common.viewDetail")}
+                      {t(
+                        "common.viewDetail"
+                      )}
                     </Button>
                   </div>
                 </Card>
@@ -812,7 +859,6 @@ export default function Dashboard() {
         destroyOnHidden
         width={520}
       >
-
         {/* PROFILE SECTION */}
 
         <div className="mb-5">
@@ -837,7 +883,6 @@ export default function Dashboard() {
           }
           requiredMark={false}
         >
-
           {/* NAME */}
 
           <Form.Item
@@ -971,7 +1016,6 @@ export default function Dashboard() {
           }
           requiredMark={false}
         >
-
           {/* CURRENT PASSWORD */}
 
           <Form.Item
@@ -1101,4 +1145,3 @@ export default function Dashboard() {
     </div>
   );
 }
-

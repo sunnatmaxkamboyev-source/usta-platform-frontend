@@ -6,7 +6,6 @@ import {
   Select,
   message,
 } from "antd";
-
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -79,13 +78,12 @@ export default function NewVacancy() {
         message.error(
           t("newVacancy.messages.loginRequired")
         );
-
         navigate("/login");
         return;
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/vacancies",
+        "https://usta-platform-backend.onrender.com/api/vacancies",
         {
           method: "POST",
           headers: {
@@ -149,17 +147,13 @@ export default function NewVacancy() {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10">
       <div className="max-w-2xl mx-auto">
-
         <Card title={t("newVacancy.title")}>
-
           <Form
             layout="vertical"
             onFinish={onFinish}
             autoComplete="off"
           >
-
             {/* VAKANSIYA NOMI */}
-
             <Form.Item
               label={t("newVacancy.form.title")}
               name="title"
@@ -181,7 +175,6 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* XIZMAT TURI */}
-
             <Form.Item
               label={t("newVacancy.form.category")}
               name="category"
@@ -204,7 +197,6 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* MANZIL */}
-
             <Form.Item
               label={t("newVacancy.form.location")}
               name="location"
@@ -226,7 +218,6 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* NARX */}
-
             <Form.Item
               label={t("newVacancy.form.price")}
               name="price"
@@ -240,7 +231,6 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* TELEFON */}
-
             <Form.Item
               label={t("newVacancy.form.phone")}
               name="contactPhone"
@@ -260,7 +250,6 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* TELEGRAM */}
-
             <Form.Item
               label={t("newVacancy.form.telegram")}
               name="telegram"
@@ -281,7 +270,6 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* TAVSIF */}
-
             <Form.Item
               label={t("newVacancy.form.description")}
               name="description"
@@ -303,9 +291,7 @@ export default function NewVacancy() {
             </Form.Item>
 
             {/* BUTTONS */}
-
             <div className="flex gap-3">
-
               <Button
                 size="large"
                 onClick={() =>
@@ -322,9 +308,7 @@ export default function NewVacancy() {
               >
                 {t("newVacancy.submit")}
               </Button>
-
             </div>
-
           </Form>
         </Card>
       </div>

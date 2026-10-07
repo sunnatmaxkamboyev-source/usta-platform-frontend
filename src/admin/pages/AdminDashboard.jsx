@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -54,12 +55,11 @@ export default function AdminDashboard() {
           );
 
           navigate("/admin/login");
-
           return;
         }
 
         const response = await fetch(
-          "http://localhost:5000/api/admin/dashboard",
+          "https://usta-platform-backend.onrender.com/api/admin/dashboard",
           {
             method: "GET",
             headers: {
@@ -84,7 +84,6 @@ export default function AdminDashboard() {
           );
 
           navigate("/admin/login");
-
           return;
         }
 
@@ -217,11 +216,9 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* SIDEBAR */}
-
       <AdminSidebar />
 
       {/* MAIN */}
-
       <div className="flex-1 min-w-0">
         <AdminHeader />
 
@@ -328,9 +325,7 @@ export default function AdminDashboard() {
                           <p className="text-xs text-gray-400 mt-1">
                             {vacancy.usta?.name ||
                               "Usta"}
-
                             {" • "}
-
                             {vacancy.location}
                           </p>
                         </div>
@@ -504,4 +499,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-

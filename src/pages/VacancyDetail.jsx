@@ -25,7 +25,6 @@ import { useTranslation } from "react-i18next";
 
 export default function VacancyDetail() {
   const { t } = useTranslation();
-
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -36,7 +35,6 @@ export default function VacancyDetail() {
   // =========================
   // BACKENDDAN VAKANSIYA OLISH
   // =========================
-
   useEffect(() => {
     const fetchVacancy = async () => {
       try {
@@ -44,12 +42,15 @@ export default function VacancyDetail() {
         setNotFound(false);
 
         const response = await fetch(
-          `http://localhost:5000/api/vacancies/${id}`
+          `https://usta-platform-backend.onrender.com/api/vacancies/${id}`
         );
 
         const data = await response.json();
 
-        console.log("Vacancy detail response:", data);
+        console.log(
+          "Vacancy detail response:",
+          data
+        );
 
         if (!response.ok) {
           setNotFound(true);
@@ -58,7 +59,10 @@ export default function VacancyDetail() {
 
         setVacancy(data.vacancy);
       } catch (error) {
-        console.error("Get vacancy detail error:", error);
+        console.error(
+          "Get vacancy detail error:",
+          error
+        );
 
         message.error(
           t("common.errorFetchVacancy")
@@ -78,7 +82,6 @@ export default function VacancyDetail() {
   // =========================
   // LOADING
   // =========================
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -96,7 +99,6 @@ export default function VacancyDetail() {
   // =========================
   // VAKANSIYA TOPILMADI
   // =========================
-
   if (notFound || !vacancy) {
     return (
       <div className="min-h-screen bg-gray-50 px-4 py-10">
@@ -108,7 +110,9 @@ export default function VacancyDetail() {
               </h1>
 
               <p className="text-gray-500 mt-2">
-                {t("vacancies.notFoundDescription")}
+                {t(
+                  "vacancies.notFoundDescription"
+                )}
               </p>
 
               <Button
@@ -130,13 +134,11 @@ export default function VacancyDetail() {
   // =========================
   // TELEFON
   // =========================
-
   const handleCall = () => {
     if (!vacancy.contactPhone) {
       message.warning(
         t("vacancies.noPhone")
       );
-
       return;
     }
 
@@ -147,13 +149,11 @@ export default function VacancyDetail() {
   // =========================
   // TELEGRAM
   // =========================
-
   const handleTelegram = () => {
     if (!vacancy.telegram) {
       message.warning(
         t("vacancies.noTelegram")
       );
-
       return;
     }
 
@@ -169,7 +169,6 @@ export default function VacancyDetail() {
   // =========================
   // CATEGORY TARJIMASI
   // =========================
-
   const translatedCategory = t(
     `vacancies.categories.${vacancy.category}`,
     {
@@ -180,7 +179,6 @@ export default function VacancyDetail() {
   // =========================
   // USTA MA'LUMOTI
   // =========================
-
   const ustaName =
     vacancy.usta?.name ||
     t("common.master");
@@ -192,13 +190,10 @@ export default function VacancyDetail() {
   // =========================
   // PAGE
   // =========================
-
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-10">
       <div className="max-w-4xl mx-auto">
-
         {/* ORQAGA */}
-
         <Button
           type="text"
           icon={<ArrowLeftOutlined />}
@@ -211,14 +206,10 @@ export default function VacancyDetail() {
         </Button>
 
         {/* ASOSIY CARD */}
-
         <Card>
-
           {/* HEADER */}
-
           <div className="flex items-start justify-between gap-5 flex-wrap">
             <div>
-
               <Tag
                 color="blue"
                 className="mb-3"
@@ -237,28 +228,24 @@ export default function VacancyDetail() {
                   {vacancy.location}
                 </span>
               </div>
-
             </div>
           </div>
 
           <Divider />
 
           {/* USTA */}
-
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-4">
               {t("vacancies.postedBy")}
             </h2>
 
             <div className="flex items-center gap-4">
-
               <Avatar
                 size={60}
                 icon={<UserOutlined />}
               />
 
               <div>
-
                 <p className="font-semibold text-gray-800 text-lg">
                   {ustaName}
                 </p>
@@ -266,7 +253,6 @@ export default function VacancyDetail() {
                 <p className="text-gray-500">
                   {ustaProfession}
                 </p>
-
               </div>
             </div>
           </div>
@@ -274,23 +260,18 @@ export default function VacancyDetail() {
           <Divider />
 
           {/* VAKANSIYA MA'LUMOTLARI */}
-
           <h2 className="text-lg font-semibold text-gray-800 mb-5">
             {t("vacancies.detailsTitle")}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
             {/* XIZMAT */}
-
             <div className="flex items-start gap-3">
-
               <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                 <AppstoreOutlined />
               </div>
 
               <div>
-
                 <p className="text-sm text-gray-400">
                   {t("vacancies.serviceType")}
                 </p>
@@ -298,20 +279,16 @@ export default function VacancyDetail() {
                 <p className="font-medium text-gray-800">
                   {translatedCategory}
                 </p>
-
               </div>
             </div>
 
             {/* MANZIL */}
-
             <div className="flex items-start gap-3">
-
               <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                 <EnvironmentOutlined />
               </div>
 
               <div>
-
                 <p className="text-sm text-gray-400">
                   {t("vacancies.address")}
                 </p>
@@ -319,20 +296,16 @@ export default function VacancyDetail() {
                 <p className="font-medium text-gray-800">
                   {vacancy.location}
                 </p>
-
               </div>
             </div>
 
             {/* NARX */}
-
             <div className="flex items-start gap-3">
-
               <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                 <DollarOutlined />
               </div>
 
               <div>
-
                 <p className="text-sm text-gray-400">
                   {t("vacancies.price")}
                 </p>
@@ -341,20 +314,16 @@ export default function VacancyDetail() {
                   {vacancy.price ||
                     t("common.negotiable")}
                 </p>
-
               </div>
             </div>
 
             {/* TELEFON */}
-
             <div className="flex items-start gap-3">
-
               <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
                 <PhoneOutlined />
               </div>
 
               <div>
-
                 <p className="text-sm text-gray-400">
                   {t("vacancies.phone")}
                 </p>
@@ -362,16 +331,13 @@ export default function VacancyDetail() {
                 <p className="font-medium text-gray-800">
                   {vacancy.contactPhone}
                 </p>
-
               </div>
             </div>
-
           </div>
 
           <Divider />
 
           {/* TAVSIF */}
-
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             {t("vacancies.fullDescription")}
           </h2>
@@ -383,15 +349,12 @@ export default function VacancyDetail() {
           <Divider />
 
           {/* USTA BILAN BOG'LANISH */}
-
           <h2 className="text-lg font-semibold text-gray-800 mb-4">
             {t("vacancies.contactMaster")}
           </h2>
 
           <div className="flex flex-wrap gap-3">
-
             {/* TELEFON */}
-
             <Button
               type="primary"
               size="large"
@@ -402,7 +365,6 @@ export default function VacancyDetail() {
             </Button>
 
             {/* TELEGRAM */}
-
             <Button
               size="large"
               icon={<SendOutlined />}
@@ -410,9 +372,7 @@ export default function VacancyDetail() {
             >
               {t("vacancies.telegramButton")}
             </Button>
-
           </div>
-
         </Card>
       </div>
     </div>

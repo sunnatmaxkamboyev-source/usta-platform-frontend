@@ -1,6 +1,9 @@
 import { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
+
 import { Form, Input, Button, Card, message } from "antd";
+
 import {
   UserOutlined,
   LockOutlined,
@@ -17,7 +20,7 @@ const AdminLogin = () => {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:5000/api/admin/login",
+        "https://usta-platform-backend.onrender.com/api/admin/login",
         {
           method: "POST",
           headers: {
