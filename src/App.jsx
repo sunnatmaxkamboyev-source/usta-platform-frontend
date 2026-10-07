@@ -29,35 +29,22 @@ import AdminMasters from "./admin/pages/AdminMasters";
 import AdminVacancies from "./admin/pages/AdminVacancies";
 import AdminLogin from "./admin/pages/AdminLogin";
 import AdminProtectedRoute from "./admin/components/AdminProtectedRoute";
-import AdminSettings from "./admin/pages/AdminSettings";
 
 function HomePage() {
   return (
     <>
       <Header />
-
       <Hero />
-
       <AboutServices />
-
       <ServicesGrid />
-
       <HomeVacancies />
-
       <GuaranteeBox />
-
       <HowItWorks />
-
       <Reviews />
-
       <Blog />
-
       <FAQ />
-
       <CTABanner />
-
       <Newsletter />
-
       <Footer />
     </>
   );
@@ -167,15 +154,6 @@ export default function App() {
         element={
           <AdminProtectedRoute>
             <AdminVacancies />
-          </AdminProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/admin/settings"
-        element={
-          <AdminProtectedRoute>
-            <AdminSettings />
           </AdminProtectedRoute>
         }
       />
