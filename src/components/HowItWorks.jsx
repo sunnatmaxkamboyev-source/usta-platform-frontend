@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import {
   FaCheck,
@@ -10,7 +9,6 @@ import {
 
 export default function HowItWorks() {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const steps = [
     {
@@ -79,15 +77,6 @@ export default function HowItWorks() {
             <p className="text-gray-500 leading-7 max-w-xl">
               {t("howItWorks.description")}
             </p>
-
-            <button
-              type="button"
-              onClick={() => navigate("/vakansiyalar")}
-              className="mt-7 inline-flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
-            >
-              {t("howItWorks.button")}
-              <span>→</span>
-            </button>
           </div>
         </div>
 

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 import {
   FaChevronDown,
-  FaSearch,
   FaUserTie,
   FaPhoneAlt,
 } from "react-icons/fa";
@@ -121,29 +120,6 @@ export default function FAQ() {
 
         {/* QUICK ACTIONS */}
         <div className="grid md:grid-cols-3 gap-5 mt-12">
-          {/* FIND MASTER */}
-          <button
-            type="button"
-            onClick={() => navigate("/vakansiyalar")}
-            className="group text-left bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
-          >
-            <div className="w-11 h-11 rounded-xl bg-navy text-white flex items-center justify-center mb-5">
-              <FaSearch />
-            </div>
-
-            <h3 className="font-bold text-navy mb-2">
-              {t("faq.actions.findMaster.title")}
-            </h3>
-
-            <p className="text-sm text-gray-500 leading-6">
-              {t("faq.actions.findMaster.description")}
-            </p>
-
-            <span className="inline-block mt-4 text-sm font-semibold text-brand group-hover:translate-x-1 transition-transform">
-              {t("faq.actions.findMaster.button")} →
-            </span>
-          </button>
-
           {/* BECOME MASTER */}
           <button
             type="button"
