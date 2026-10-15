@@ -15,7 +15,6 @@
     "language": "Language",
     "menu": "Menu"
   },
-
   "common": {
     "search": "Search",
     "save": "Save",
@@ -37,7 +36,6 @@
     "errorFetchVacancy": "An error occurred while fetching the vacancy",
     "loadingVacancy": "Loading vacancy..."
   },
-
   "home": {
     "title": "Find Reliable Masters",
     "subtitle": "Easily find professional masters for your home and business.",
@@ -45,7 +43,6 @@
     "popularMasters": "Popular Masters",
     "services": "Services"
   },
-
   "hero": {
     "smallText1": "Professional Services",
     "smallText2": "Reliable Masters",
@@ -66,9 +63,9 @@
       "convenientTime": "Convenient Time"
     }
   },
-
   "auth": {
     "login": "Login",
+    "masterLogin": "Login as Master",
     "register": "Register",
     "phone": "Phone Number",
     "password": "Password",
@@ -90,7 +87,6 @@
     "registerError": "An error occurred during registration",
     "registerSuccess": "Registration successful"
   },
-
   "about": {
     "badge": "About Us",
     "title": "Finding a Master Is Now Even Easier",
@@ -109,7 +105,6 @@
     "imageAlt": "Professional service master",
     "imageTitle": "Reliable Masters"
   },
-
   "services": {
     "title": "Services",
     "description": "Choose the service you need and find suitable masters.",
@@ -129,7 +124,7 @@
       },
       "treeCutting": {
         "title": "Tree Cutting",
-        "description": "Tree cutting and territory cleaning services."
+        "description": "Tree cutting and property cleanup services."
       },
       "applianceRepair": {
         "title": "Appliance Repair",
@@ -137,7 +132,7 @@
       },
       "bathroomRepair": {
         "title": "Bathroom Repair",
-        "description": "Bathroom and sanitary room renovation."
+        "description": "Bathroom and washroom renovation."
       },
       "locksmith": {
         "title": "Locksmith",
@@ -146,11 +141,10 @@
     },
     "other": {
       "title": "Other Services",
-      "description": "Find other types of professional services.",
+      "description": "Find professionals offering other types of services.",
       "call": "Contact"
     }
   },
-
   "reviews": {
     "title": "Customer Reviews",
     "description": "Reviews from customers who have used our platform.",
@@ -161,20 +155,19 @@
     "viewVacancies": "View Vacancies",
     "items": {
       "kende": {
-        "text": "I found a master very quickly. The service quality was also excellent."
+        "text": "I found a master very quickly, and the quality of the service was excellent."
       },
       "dilnoza": {
         "text": "The platform is very convenient to use. I easily found the specialist I needed."
       },
       "jasur": {
-        "text": "I contacted the master directly and the work was completed quickly."
+        "text": "I contacted the master directly, and the work was completed quickly."
       }
     }
   },
-
   "newsletter": {
     "title": "Stay Updated",
-    "description": "Be the first to receive information about new services and useful content.",
+    "description": "Be the first to receive news about new services and useful content.",
     "placeholder": "Your email address",
     "button": "Subscribe",
     "invalidEmail": "Enter a valid email address",
@@ -184,11 +177,10 @@
     "successTitle": "Thank You!",
     "successDescription": "You have successfully subscribed to our newsletter."
   },
-
   "howItWorks": {
     "smallTitle": "How It Works",
     "title": "Find the Right Master in a Few Steps",
-    "description": "Finding the specialist you need is very easy with our platform.",
+    "description": "Finding the specialist you need is easy with our platform.",
     "button": "Find a Master",
     "badge": "Simple and Convenient",
     "badgeTitle": "Find a Master Quickly",
@@ -199,24 +191,23 @@
         "description": "Search for the service or specialist you need."
       },
       "contact": {
-        "title": "Contact",
+        "title": "Get in Touch",
         "description": "Contact the master by phone or Telegram."
       },
       "agree": {
-        "title": "Agree",
-        "description": "Agree on the work conditions, price and time."
+        "title": "Agree on the Details",
+        "description": "Agree on the work conditions, price and schedule."
       }
     }
   },
-
   "guarantee": {
     "badge": "Our Advantages",
     "title": "A Convenient and Reliable Platform for You",
-    "description": "Usta Platform creates direct communication between masters and customers.",
+    "description": "Usta Platform connects masters and customers directly.",
     "items": {
       "masterInfo": {
         "title": "Master Information",
-        "description": "You can view the necessary information about the master."
+        "description": "View important information about a master before contacting them."
       },
       "detailedVacancies": {
         "title": "Detailed Vacancies",
@@ -231,18 +222,17 @@
         "description": "Contact the master directly."
       },
       "agreedTime": {
-        "title": "Agreed Time",
-        "description": "You agree on the work time directly with the master."
+        "title": "Flexible Scheduling",
+        "description": "Agree on a convenient work schedule directly with the master."
       },
       "directCommunication": {
         "title": "Direct Communication",
-        "description": "Talk to the master without unnecessary intermediaries."
+        "description": "Communicate with the master without unnecessary intermediaries."
       }
     }
   },
-
   "footer": {
-    "description": "A modern platform for finding professional masters and managing services.",
+    "description": "A modern platform for finding professional masters and services.",
     "platformTitle": "Platform",
     "companyTitle": "Company",
     "contactTitle": "Contact Us",
@@ -267,7 +257,6 @@
     },
     "copyright": "© 2026 Usta Platform. All rights reserved."
   },
-
   "faq": {
     "badge": "Frequently Asked Questions",
     "title": "Answers to Your Questions",
@@ -275,7 +264,7 @@
     "items": {
       "platform": {
         "question": "What is Usta Platform?",
-        "answer": "Usta Platform is a platform created to find professional masters and services."
+        "answer": "Usta Platform helps people find professional masters and services."
       },
       "registration": {
         "question": "How does a master register?",
@@ -283,11 +272,11 @@
       },
       "contact": {
         "question": "How can I contact a master?",
-        "answer": "You can contact the master by phone or Telegram on the vacancy page."
+        "answer": "You can contact the master by phone or Telegram using the contact details on the vacancy page."
       },
       "becomeMaster": {
         "question": "How can I become a master?",
-        "answer": "Register, create your master profile and post vacancies."
+        "answer": "Register, complete your master profile and post vacancies."
       },
       "editVacancy": {
         "question": "Can I edit a vacancy?",
@@ -316,7 +305,6 @@
       }
     }
   },
-
   "cta": {
     "title": "Find the Right Master Now",
     "description": "Connect with professional masters quickly and conveniently.",
@@ -329,36 +317,34 @@
     "phoneLabel": "Phone",
     "imageAlt": "Professional master"
   },
-
   "blog": {
     "badge": "Our Blog",
     "title": "Useful Information",
-    "description": "Useful articles about home repair, services and masters.",
+    "description": "Useful articles about home repair, services and working with masters.",
     "readMore": "Read More",
     "viewAll": "View All",
     "posts": {
       "technicalService": {
-        "category": "Technical Service",
-        "title": "Tips for Home Technical Maintenance",
-        "description": "Useful tips for properly using and repairing home appliances."
+        "category": "Home Maintenance",
+        "title": "Tips for Home Maintenance",
+        "description": "Useful tips for properly using and maintaining household appliances."
       },
       "homeRepair": {
-        "category": "Home Repair",
-        "title": "How to Properly Plan a Home Renovation?",
-        "description": "Recommendations for effectively planning repair work."
+        "category": "Home Renovation",
+        "title": "How to Plan a Home Renovation",
+        "description": "Recommendations for planning renovation work effectively."
       },
       "masterTips": {
         "category": "For Masters",
-        "title": "Tips for Becoming a Professional Master",
+        "title": "Tips for Professional Masters",
         "description": "Tips for working with customers and improving service quality."
       }
     }
   },
-
   "vacancies": {
     "subtitle": "Find vacancies posted by professional masters.",
     "latestTitle": "Latest Vacancies",
-    "latestDescription": "View the latest vacancies posted by our masters.",
+    "latestDescription": "View the latest vacancies posted by masters.",
     "viewAll": "View All Vacancies",
     "categories": {
       "all": "All",
@@ -389,7 +375,6 @@
     "callButton": "Call",
     "telegramButton": "Telegram"
   },
-
   "newVacancy": {
     "title": "Create New Vacancy",
     "loginRequired": "Please log in first",
@@ -404,7 +389,7 @@
       "location": "Address",
       "locationPlaceholder": "Example: Chirchiq, Tashkent Region",
       "price": "Price",
-      "pricePlaceholder": "300,000 UZS or Negotiable",
+      "pricePlaceholder": "300,000 UZS or negotiable",
       "contactPhone": "Phone Number",
       "contactPhonePlaceholder": "+998 90 123 45 67",
       "telegram": "Telegram Username",
@@ -440,7 +425,6 @@
       "other": "Other"
     }
   },
-
   "editVacancy": {
     "title": "Edit Vacancy",
     "loading": "Loading vacancy...",
@@ -460,7 +444,7 @@
       "location": "Address",
       "locationPlaceholder": "Example: Chirchiq, Tashkent Region",
       "price": "Price",
-      "pricePlaceholder": "300,000 UZS or Negotiable",
+      "pricePlaceholder": "300,000 UZS or negotiable",
       "phone": "Phone Number",
       "phonePlaceholder": "+998 90 123 45 67",
       "telegram": "Telegram Username",
@@ -481,7 +465,6 @@
       "save": "Save Changes"
     }
   },
-
   "ustaDashboard": {
     "loading": "Master panel is loading...",
     "title": "Master Panel",
@@ -492,14 +475,14 @@
     "profile": {
       "defaultName": "Master",
       "noProfession": "Profession not specified",
-      "noPhone": "Phone not specified",
+      "noPhone": "Phone number not specified",
       "edit": "Edit Profile"
     },
     "messages": {
       "sessionExpired": "Session expired. Please log in again.",
-      "userFetchError": "Error while getting user information",
-      "vacanciesFetchError": "An error occurred while getting vacancies",
-      "dashboardFetchError": "Error while getting dashboard information",
+      "userFetchError": "Error retrieving user information",
+      "vacanciesFetchError": "An error occurred while fetching vacancies",
+      "dashboardFetchError": "Error retrieving dashboard information",
       "logoutSuccess": "You have successfully logged out",
       "profileUpdateError": "An error occurred while updating the profile",
       "profileUpdateSuccess": "Profile successfully updated.",
@@ -511,7 +494,7 @@
     },
     "deleteConfirm": {
       "title": "Delete this vacancy?",
-      "description": "The vacancy will be deleted.",
+      "description": "This vacancy will be deleted.",
       "yes": "Yes",
       "no": "No"
     },
@@ -547,11 +530,11 @@
       "title": "Change Password",
       "description": "Set a new password to keep your account secure.",
       "current": "Current Password",
-      "currentPlaceholder": "Your current password",
+      "currentPlaceholder": "Enter your current password",
       "new": "New Password",
-      "newPlaceholder": "Your new password",
+      "newPlaceholder": "Enter your new password",
       "confirm": "Confirm New Password",
-      "confirmPlaceholder": "Enter the new password again",
+      "confirmPlaceholder": "Enter your new password again",
       "change": "Change Password"
     }
   }

@@ -25,38 +25,34 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || t("auth.loginError")
-        );
+        throw new Error(data.message || t("auth.loginError"));
       }
 
-      // JWT tokenni saqlaymiz
+      if (!data.token || !data.user) {
+        throw new Error(t("auth.loginError"));
+      }
+
+      // Token va foydalanuvchi ma'lumotlarini saqlash
       localStorage.setItem("token", data.token);
-
-      // User ma'lumotlarini saqlaymiz
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data.user)
-      );
-
-      // Role'ni saqlaymiz
-      localStorage.setItem(
-        "role",
-        data.user.role
-      );
+      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("role", data.user.role);
 
       message.success(t("common.welcome"));
 
-      // Usta dashboardiga o'tkazamiz
+      // Faqat usta paneliga kirish
       if (data.user.role === "usta") {
         navigate("/dashboard", { replace: true });
         return;
       }
 
-      // Agar boshqa role bo'lsa
+      // Ruxsat berilmagan foydalanuvchi
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
+
       message.error(t("auth.noPermission"));
     } catch (error) {
-      message.error(error.message);
+      message.error(error.message || t("auth.loginError"));
     }
   };
 
@@ -64,14 +60,15 @@ export default function Login() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
       <Card
         className="w-full max-w-md"
-        title={t("auth.masterLogin")}
+        title={t("auth.masterLogin", {
+          defaultValue: "Usta sifatida kirish",
+        })}
       >
         <Form
           layout="vertical"
           onFinish={onFinish}
           autoComplete="off"
         >
-          {/* TELEFON */}
           <Form.Item
             label={t("auth.phone")}
             name="phone"
@@ -88,7 +85,6 @@ export default function Login() {
             />
           </Form.Item>
 
-          {/* PAROL */}
           <Form.Item
             label={t("auth.password")}
             name="password"
@@ -105,7 +101,6 @@ export default function Login() {
             />
           </Form.Item>
 
-          {/* TUGMA */}
           <Form.Item>
             <Button
               type="primary"
@@ -117,7 +112,6 @@ export default function Login() {
             </Button>
           </Form.Item>
 
-          {/* REGISTER */}
           <div className="text-center text-sm text-gray-500">
             {t("auth.noAccount")}{" "}
             <Link
@@ -132,3 +126,4 @@ export default function Login() {
     </div>
   );
 }
+

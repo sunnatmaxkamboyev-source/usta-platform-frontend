@@ -6,6 +6,7 @@ import {
   Select,
   message,
 } from "antd";
+
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -42,27 +43,27 @@ export default function NewVacancy() {
     },
     {
       value: "tom-tamirlash",
-      label: t("services.items.roofRepair.title"),
+      label: t("newVacancy.categories.roofRepair"),
     },
     {
       value: "zamburug-tozalash",
-      label: t("services.items.moldCleaning.title"),
+      label: t("newVacancy.categories.moldCleaning"),
     },
     {
       value: "daraxt-kesish",
-      label: t("services.items.treeCutting.title"),
+      label: t("newVacancy.categories.treeCutting"),
     },
     {
       value: "maishiy-texnika",
-      label: t("services.items.applianceRepair.title"),
+      label: t("newVacancy.categories.applianceRepair"),
     },
     {
       value: "hammom",
-      label: t("services.items.bathroomRepair.title"),
+      label: t("newVacancy.categories.bathroomRepair"),
     },
     {
       value: "qulfsoz",
-      label: t("services.items.locksmith.title"),
+      label: t("newVacancy.categories.locksmith"),
     },
     {
       value: "boshqa",
@@ -75,9 +76,7 @@ export default function NewVacancy() {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        message.error(
-          t("newVacancy.messages.loginRequired")
-        );
+        message.error(t("newVacancy.loginRequired"));
         navigate("/login");
         return;
       }
@@ -95,7 +94,7 @@ export default function NewVacancy() {
             category: values.category,
             location: values.location,
             price:
-              values.price ||
+              values.price?.trim() ||
               t("common.negotiable"),
             contactPhone: values.contactPhone,
             telegram: values.telegram,
@@ -112,7 +111,7 @@ export default function NewVacancy() {
         localStorage.removeItem("role");
 
         message.error(
-          t("newVacancy.messages.sessionExpired")
+          t("newVacancy.sessionExpired")
         );
 
         navigate("/login");
@@ -122,24 +121,19 @@ export default function NewVacancy() {
       if (!response.ok) {
         throw new Error(
           data.message ||
-            t("newVacancy.messages.createError")
+            t("newVacancy.createError")
         );
       }
 
-      message.success(
-        t("newVacancy.messages.success")
-      );
+      message.success(t("newVacancy.success"));
 
       navigate("/dashboard");
     } catch (error) {
-      console.error(
-        "Create vacancy error:",
-        error
-      );
+      console.error("Create vacancy error:", error);
 
       message.error(
         error.message ||
-          t("newVacancy.messages.createError")
+          t("newVacancy.createError")
       );
     }
   };
@@ -155,13 +149,13 @@ export default function NewVacancy() {
           >
             {/* VAKANSIYA NOMI */}
             <Form.Item
-              label={t("newVacancy.form.title")}
+              label={t("newVacancy.fields.title")}
               name="title"
               rules={[
                 {
                   required: true,
                   message: t(
-                    "newVacancy.validation.title"
+                    "newVacancy.validation.titleRequired"
                   ),
                 },
               ]}
@@ -169,20 +163,20 @@ export default function NewVacancy() {
               <Input
                 size="large"
                 placeholder={t(
-                  "newVacancy.form.titlePlaceholder"
+                  "newVacancy.fields.titlePlaceholder"
                 )}
               />
             </Form.Item>
 
             {/* XIZMAT TURI */}
             <Form.Item
-              label={t("newVacancy.form.category")}
+              label={t("newVacancy.fields.category")}
               name="category"
               rules={[
                 {
                   required: true,
                   message: t(
-                    "newVacancy.validation.category"
+                    "newVacancy.validation.categoryRequired"
                   ),
                 },
               ]}
@@ -190,7 +184,7 @@ export default function NewVacancy() {
               <Select
                 size="large"
                 placeholder={t(
-                  "newVacancy.form.categoryPlaceholder"
+                  "newVacancy.fields.categoryPlaceholder"
                 )}
                 options={categoryOptions}
               />
@@ -198,13 +192,13 @@ export default function NewVacancy() {
 
             {/* MANZIL */}
             <Form.Item
-              label={t("newVacancy.form.location")}
+              label={t("newVacancy.fields.location")}
               name="location"
               rules={[
                 {
                   required: true,
                   message: t(
-                    "newVacancy.validation.location"
+                    "newVacancy.validation.locationRequired"
                   ),
                 },
               ]}
@@ -212,52 +206,54 @@ export default function NewVacancy() {
               <Input
                 size="large"
                 placeholder={t(
-                  "newVacancy.form.locationPlaceholder"
+                  "newVacancy.fields.locationPlaceholder"
                 )}
               />
             </Form.Item>
 
             {/* NARX */}
             <Form.Item
-              label={t("newVacancy.form.price")}
+              label={t("newVacancy.fields.price")}
               name="price"
             >
               <Input
                 size="large"
                 placeholder={t(
-                  "newVacancy.form.pricePlaceholder"
+                  "newVacancy.fields.pricePlaceholder"
                 )}
               />
             </Form.Item>
 
             {/* TELEFON */}
             <Form.Item
-              label={t("newVacancy.form.phone")}
+              label={t("newVacancy.fields.contactPhone")}
               name="contactPhone"
               rules={[
                 {
                   required: true,
                   message: t(
-                    "newVacancy.validation.phone"
+                    "newVacancy.validation.phoneRequired"
                   ),
                 },
               ]}
             >
               <Input
                 size="large"
-                placeholder="+998 90 123 45 67"
+                placeholder={t(
+                  "newVacancy.fields.contactPhonePlaceholder"
+                )}
               />
             </Form.Item>
 
             {/* TELEGRAM */}
             <Form.Item
-              label={t("newVacancy.form.telegram")}
+              label={t("newVacancy.fields.telegram")}
               name="telegram"
               rules={[
                 {
                   required: true,
                   message: t(
-                    "newVacancy.validation.telegram"
+                    "newVacancy.validation.telegramRequired"
                   ),
                 },
               ]}
@@ -265,19 +261,21 @@ export default function NewVacancy() {
               <Input
                 size="large"
                 addonBefore="@"
-                placeholder="username"
+                placeholder={t(
+                  "newVacancy.fields.telegramPlaceholder"
+                )}
               />
             </Form.Item>
 
             {/* TAVSIF */}
             <Form.Item
-              label={t("newVacancy.form.description")}
+              label={t("newVacancy.fields.description")}
               name="description"
               rules={[
                 {
                   required: true,
                   message: t(
-                    "newVacancy.validation.description"
+                    "newVacancy.validation.descriptionRequired"
                   ),
                 },
               ]}
@@ -285,18 +283,16 @@ export default function NewVacancy() {
               <TextArea
                 rows={6}
                 placeholder={t(
-                  "newVacancy.form.descriptionPlaceholder"
+                  "newVacancy.fields.descriptionPlaceholder"
                 )}
               />
             </Form.Item>
 
-            {/* BUTTONS */}
+            {/* TUGMALAR */}
             <div className="flex gap-3">
               <Button
                 size="large"
-                onClick={() =>
-                  navigate("/dashboard")
-                }
+                onClick={() => navigate("/dashboard")}
               >
                 {t("common.cancel")}
               </Button>
@@ -306,7 +302,7 @@ export default function NewVacancy() {
                 htmlType="submit"
                 size="large"
               >
-                {t("newVacancy.submit")}
+                {t("newVacancy.buttons.submit")}
               </Button>
             </div>
           </Form>
