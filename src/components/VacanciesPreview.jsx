@@ -1,15 +1,12 @@
+
 import { useEffect, useState } from "react";
-
-import { Card, Button, Tag, Spin, message } from "antd";
-
+import { Button, Tag, Spin, message } from "antd";
 import {
   EnvironmentOutlined,
   DollarOutlined,
   ArrowRightOutlined,
 } from "@ant-design/icons";
-
 import { useNavigate } from "react-router-dom";
-
 import { useTranslation } from "react-i18next";
 
 export default function VacanciesPreview() {
@@ -22,8 +19,6 @@ export default function VacanciesPreview() {
   useEffect(() => {
     const fetchVacancies = async () => {
       try {
-        setLoading(true);
-
         const response = await fetch(
           "https://usta-platform-backend.onrender.com/api/vacancies"
         );
@@ -39,7 +34,6 @@ export default function VacanciesPreview() {
         setVacancies(data.vacancies || []);
       } catch (error) {
         console.error("Get preview vacancies error:", error);
-
         message.error(
           error.message || t("common.errorFetchVacancies")
         );
@@ -59,113 +53,100 @@ export default function VacanciesPreview() {
     )
     .slice(0, 3);
 
-  if (loading) {
-    return (
-      <section className="py-16 px-4">
-        <div className="max-w-6xl mx-auto flex justify-center">
-          <Spin size="large" />
-        </div>
-      </section>
-    );
-  }
-
-  if (latestVacancies.length === 0) {
-    return null;
-  }
-
   return (
-    <section className="py-16 px-4 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
+    <section className="bg-slate-50 px-5 py-12 sm:px-6 sm:py-16">
+      <div className="mx-auto max-w-7xl">
         {/* HEADER */}
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+        <div className="mb-8 text-center">
+          <h2 className="text-2xl font-extrabold text-slate-900 sm:text-3xl">
             {t("vacancies.latestTitle")}
           </h2>
 
-          <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-500">
             {t("vacancies.latestDescription")}
           </p>
         </div>
 
-        {/* VACANCIES */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {latestVacancies.map((vacancy) => (
-            <Card
-              key={vacancy._id}
-              hoverable
-              className="h-full"
-            >
-              {/* CATEGORY */}
-              <Tag color="blue">
-                {vacancy.category}
-              </Tag>
+        {/* LOADING */}
+        {loading ? (
+          <div className="flex justify-center py-10">
+            <Spin size="large" />
+          </div>
+        ) : latestVacancies.length === 0 ? (
+          <p className="py-8 text-center text-sm text-slate-500">
+            {t("common.noVacancies", {
+              defaultValue: "Hozircha e'lonlar mavjud emas.",
+            })}
+          </p>
+        ) : (
+          <>
+            {/* VACANCIES */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {latestVacancies.map((vacancy) => (
+                <article
+                  key={vacancy._id}
+                  className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 transition-all duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+                >
+                  <div className="mb-3">
+                    <Tag color="blue">{vacancy.category}</Tag>
+                  </div>
 
-              {/* TITLE */}
-              <h3 className="text-xl font-semibold text-gray-800 mt-4 line-clamp-2">
-                {vacancy.title}
-              </h3>
+                  <h3 className="line-clamp-2 text-lg font-bold text-slate-900">
+                    {vacancy.title}
+                  </h3>
 
-              {/* LOCATION */}
-              <div className="flex items-center gap-2 text-gray-500 mt-4">
-                <EnvironmentOutlined />
-                <span>{vacancy.location}</span>
-              </div>
+                  <div className="mt-4 flex items-start gap-2 text-sm text-slate-500">
+                    <EnvironmentOutlined className="mt-1 text-blue-600" />
+                    <span>{vacancy.location}</span>
+                  </div>
 
-              {/* PRICE */}
-              <div className="flex items-center gap-2 text-gray-700 mt-3">
-                <DollarOutlined />
+                  <div className="mt-2 flex items-start gap-2 text-sm font-semibold text-slate-800">
+                    <DollarOutlined className="mt-1 text-blue-600" />
+                    <span>
+                      {vacancy.price || t("common.negotiable")}
+                    </span>
+                  </div>
 
-                <span className="font-medium">
-                  {vacancy.price ||
-                    t("common.negotiable")}
-                </span>
-              </div>
+                  <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-500">
+                    {vacancy.description}
+                  </p>
 
-              {/* DESCRIPTION */}
-              <p className="text-gray-500 mt-4 line-clamp-3">
-                {vacancy.description}
-              </p>
+                  <div className="mt-auto">
+                    <div className="my-4 border-t border-slate-100 pt-3">
+                      <p className="text-xs text-slate-400">
+                        {t("vacancies.postedBy")}
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-slate-800">
+                        {vacancy.usta?.name || t("common.master")}
+                      </p>
+                    </div>
 
-              {/* USTA */}
-              <div className="mt-5 pt-4 border-t border-gray-100">
-                <p className="text-sm text-gray-400">
-                  {t("vacancies.postedBy")}
-                </p>
+                    <Button
+                      block
+                      type="primary"
+                      icon={<ArrowRightOutlined />}
+                      onClick={() =>
+                        navigate(`/vakansiyalar/${vacancy._id}`)
+                      }
+                    >
+                      {t("common.viewDetail")}
+                    </Button>
+                  </div>
+                </article>
+              ))}
+            </div>
 
-                <p className="font-medium text-gray-800 mt-1">
-                  {vacancy.usta?.name ||
-                    t("common.master")}
-                </p>
-              </div>
-
-              {/* DETAIL BUTTON */}
+            {/* VIEW ALL */}
+            <div className="mt-7 flex justify-center">
               <Button
-                type="primary"
-                block
                 size="large"
-                className="mt-5"
-                icon={<ArrowRightOutlined />}
-                onClick={() =>
-                  navigate(
-                    `/vakansiyalar/${vacancy._id}`
-                  )
-                }
+                onClick={() => navigate("/vakansiyalar")}
               >
-                {t("common.viewDetail")}
+                {t("vacancies.viewAll")}
               </Button>
-            </Card>
-          ))}
-        </div>
-
-        <div className="flex justify-center mt-10">
-          <Button
-            size="large"
-            type="primary"
-            onClick={() => navigate("/vakansiyalar")}
-          >
-            {t("vacancies.viewAll")}
-          </Button>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

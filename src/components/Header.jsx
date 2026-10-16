@@ -10,7 +10,6 @@ import {
   FaUserCircle,
   FaBriefcase,
   FaInfoCircle,
-  FaTools,
   FaBookOpen,
   FaPhoneAlt,
 } from "react-icons/fa";
@@ -31,8 +30,7 @@ export default function Header() {
   // LOGIN HOLATINI TEKSHIRISH
   useEffect(() => {
     const checkUser = () => {
-      const currentUser = getCurrentUser();
-      setUser(currentUser);
+      setUser(getCurrentUser());
     };
 
     checkUser();
@@ -50,7 +48,7 @@ export default function Header() {
     localStorage.setItem("usta_language", language);
   };
 
-  // LANDING PAGE SECTIONIGA O'TISH
+  // BOSH SAHIFA BO'LIMLARIGA O'TISH
   const goToSection = (sectionId) => {
     setMenuOpen(false);
 
@@ -117,16 +115,6 @@ export default function Header() {
           >
             <FaInfoCircle />
             {t("navbar.about")}
-          </button>
-
-          {/* XIZMATLAR */}
-          <button
-            type="button"
-            onClick={() => goToSection("services")}
-            className="flex items-center gap-2 hover:text-white transition-colors"
-          >
-            <FaTools />
-            {t("navbar.services")}
           </button>
 
           {/* BLOG */}
@@ -252,16 +240,6 @@ export default function Header() {
             {t("navbar.about")}
           </button>
 
-          {/* XIZMATLAR */}
-          <button
-            type="button"
-            onClick={() => goToSection("services")}
-            className="flex items-center gap-2 hover:text-white text-left"
-          >
-            <FaTools />
-            {t("navbar.services")}
-          </button>
-
           {/* BLOG */}
           <button
             type="button"
@@ -284,7 +262,9 @@ export default function Header() {
 
           {/* TIL */}
           <div className="flex items-center gap-2 pt-3 border-t border-white/10">
-            <span className="text-sm">{t("navbar.language")}:</span>
+            <span className="text-sm">
+              {t("navbar.language")}:
+            </span>
 
             <button
               type="button"

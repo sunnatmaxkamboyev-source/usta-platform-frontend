@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 
 import Header from "./components/Header";
@@ -11,7 +12,6 @@ import Reviews from "./components/Reviews";
 import Blog from "./components/Blog";
 import FAQ from "./components/Faq";
 import CTABanner from "./components/CTABanner";
-import Newsletter from "./components/Newsletter";
 import Footer from "./components/Footer";
 
 import Login from "./pages/Login";
@@ -36,15 +36,14 @@ function HomePage() {
       <Header />
       <Hero />
       <AboutServices />
-      <ServicesGrid />
       <HomeVacancies />
+      <ServicesGrid />
       <GuaranteeBox />
       <HowItWorks />
       <Reviews />
       <Blog />
       <FAQ />
       <CTABanner />
-      <Newsletter />
       <Footer />
     </>
   );
@@ -53,24 +52,12 @@ function HomePage() {
 export default function App() {
   return (
     <Routes>
-      {/* =========================
-          PUBLIC ROUTES
-      ========================== */}
+      {/* PUBLIC ROUTES */}
+      <Route path="/" element={<HomePage />} />
 
-      <Route
-        path="/"
-        element={<HomePage />}
-      />
+      <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/login"
-        element={<Login />}
-      />
-
-      <Route
-        path="/register"
-        element={<Register />}
-      />
+      <Route path="/register" element={<Register />} />
 
       <Route
         path="/vakansiyalar"
@@ -82,15 +69,9 @@ export default function App() {
         element={<VacancyDetail />}
       />
 
-      <Route
-        path="/blog"
-        element={<BlogPage />}
-      />
+      <Route path="/blog" element={<BlogPage />} />
 
-      {/* =========================
-          USTA ROUTES
-      ========================== */}
-
+      {/* USTA ROUTES */}
       <Route
         path="/dashboard"
         element={
@@ -118,19 +99,13 @@ export default function App() {
         }
       />
 
-      {/* =========================
-          ADMIN LOGIN
-      ========================== */}
-
+      {/* ADMIN LOGIN */}
       <Route
         path="/admin/login"
         element={<AdminLogin />}
       />
 
-      {/* =========================
-          PROTECTED ADMIN ROUTES
-      ========================== */}
-
+      {/* PROTECTED ADMIN ROUTES */}
       <Route
         path="/admin/dashboard"
         element={

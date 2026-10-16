@@ -1,8 +1,7 @@
-import { useNavigate } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
 import {
   FaArrowLeft,
-  FaArrowRight,
   FaTools,
   FaHome,
   FaLightbulb,
@@ -13,31 +12,28 @@ const posts = [
     id: 1,
     image: "/images/blog-smart-home.png",
     category: "Texnik xizmat",
-    title:
-      "Uyda texnik xizmat ko‘rsatishda nimalarga e'tibor berish kerak?",
+    title: "Uy texnikasini to‘g‘ri parvarishlash",
     description:
-      "Uy jihozlari va texnik tizimlardan to‘g‘ri foydalanish hamda muammolarni vaqtida aniqlash bo‘yicha foydali maslahatlar.",
-    icon: <FaTools />,
+      "Uy jihozlarini asrash va muammolarni vaqtida aniqlash bo‘yicha maslahatlar.",
+    icon: FaTools,
   },
   {
     id: 2,
     image: "/images/blog-roof-guide.png",
     category: "Uy ta'miri",
-    title:
-      "Uy ta'mirini boshlashdan oldin bilishingiz kerak bo‘lgan narsalar",
+    title: "Ta'mirdan oldin nimalarni bilish kerak?",
     description:
-      "Ta'mirlash ishlarini rejalashtirish, kerakli xizmat turini aniqlash va mos mutaxassisni topish bo‘yicha qo‘llanma.",
-    icon: <FaHome />,
+      "Ishlarni rejalashtirish va kerakli xizmatni tanlash bo‘yicha qisqa qo‘llanma.",
+    icon: FaHome,
   },
   {
     id: 3,
     image: "/images/blog-master-tips.png",
-    category: "Foydali maslahat",
-    title:
-      "Uy uchun usta tanlashda nimalarga qarash kerak?",
+    category: "Maslahatlar",
+    title: "Yaxshi ustani qanday tanlash mumkin?",
     description:
-      "Vakansiya ma'lumotlarini o‘qish, xizmat tafsilotlarini tekshirish va usta bilan ish boshlashdan oldin nimalarni kelishib olish kerakligi haqida.",
-    icon: <FaLightbulb />,
+      "Usta bilan ish boshlashdan oldin xizmat va narxni kelishib oling.",
+    icon: FaLightbulb,
   },
 ];
 
@@ -45,14 +41,14 @@ export default function BlogPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* HEADER */}
       <header className="bg-navy text-white">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-6">
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="font-bold text-lg hover:text-brand transition-colors"
+            className="text-base font-bold transition-colors hover:text-blue-300"
           >
             Usta Platform
           </button>
@@ -60,87 +56,79 @@ export default function BlogPage() {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors"
+            className="flex items-center gap-2 text-sm text-slate-300 transition-colors hover:text-white"
           >
-            <FaArrowLeft />
+            <FaArrowLeft size={12} />
             Bosh sahifa
           </button>
         </div>
       </header>
 
-      {/* HERO */}
-      <section className="bg-white border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-6 py-16 text-center">
-          <p className="text-brand font-semibold text-sm mb-3">
-            USTA PLATFORM BLOGI
-          </p>
+      {/* INTRO */}
+      <section className="border-b border-slate-100 bg-white px-5 py-10 text-center sm:px-6 sm:py-12">
+        <p className="text-xs font-bold uppercase tracking-widest text-brand">
+          USTA PLATFORM BLOGI
+        </p>
 
-          <h1 className="text-3xl md:text-5xl font-bold text-navy mb-5">
-            Foydali ma'lumotlar
-          </h1>
+        <h1 className="mt-3 text-2xl font-extrabold text-navy sm:text-4xl">
+          Foydali maslahatlar
+        </h1>
 
-          <p className="text-gray-500 max-w-2xl mx-auto leading-7">
-            Uy ta'miri, xizmatlar va kerakli ustani
-            tanlash bo‘yicha foydali maslahatlar,
-            qo‘llanmalar va tavsiyalar.
-          </p>
-        </div>
+        <p className="mx-auto mt-3 max-w-lg text-sm leading-6 text-slate-500">
+          Uy ta'miri va ishonchli usta tanlash haqida.
+        </p>
       </section>
 
-      {/* POSTS */}
-      <main className="max-w-7xl mx-auto px-6 py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-          {posts.map((post) => (
-            <article
-              key={post.id}
-              className="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
-            >
-              <div className="relative">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-full h-56 object-cover"
-                />
+      {/* ARTICLES */}
+      <main className="mx-auto max-w-7xl px-5 py-10 sm:px-6 sm:py-12">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => {
+            const Icon = post.icon;
 
-                <span className="absolute top-4 left-4 flex items-center gap-2 bg-navy text-white text-xs rounded-full px-3 py-2">
-                  {post.icon}
-                  {post.category}
-                </span>
-              </div>
+            return (
+              <article
+                key={post.id}
+                className="overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+              >
+                <div className="relative">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    loading="lazy"
+                    className="h-44 w-full object-cover sm:h-48"
+                  />
 
-              <div className="p-6">
-                <p className="text-xs text-gray-400 mb-3">
-                  Usta Platform
-                </p>
+                  <span className="absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-lg bg-navy/90 px-3 py-2 text-xs font-medium text-white">
+                    <Icon size={12} />
+                    {post.category}
+                  </span>
+                </div>
 
-                <h2 className="text-xl font-semibold text-navy leading-snug mb-4">
-                  {post.title}
-                </h2>
+                <div className="p-5">
+                  <p className="text-xs font-medium text-brand">
+                    Usta Platform
+                  </p>
 
-                <p className="text-sm text-gray-500 leading-6 mb-6">
-                  {post.description}
-                </p>
+                  <h2 className="mt-2 text-lg font-bold leading-6 text-navy">
+                    {post.title}
+                  </h2>
 
-                <button
-                  type="button"
-                  className="inline-flex items-center gap-2 text-brand font-semibold text-sm hover:gap-3 transition-all"
-                >
-                  Maqolani o‘qish
-                  <FaArrowRight size={12} />
-                </button>
-              </div>
-            </article>
-          ))}
+                  <p className="mt-2 text-sm leading-6 text-slate-500">
+                    {post.description}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
         </div>
 
-        {/* BACK */}
-        <div className="text-center mt-12">
+        <div className="mt-8 text-center">
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="inline-flex items-center gap-2 bg-navy text-white rounded-full px-6 py-3 text-sm font-semibold hover:opacity-90 transition-opacity"
+            className="inline-flex items-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand"
           >
-            <FaArrowLeft size={13} />
+            <FaArrowLeft size={12} />
             Bosh sahifaga qaytish
           </button>
         </div>

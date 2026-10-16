@@ -1,18 +1,18 @@
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-
 import {
   FaChevronDown,
   FaUserTie,
-  FaPhoneAlt,
+  FaArrowRight,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 export default function FAQ() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
-  const [openIndex, setOpenIndex] = useState(null);
+  const [openIndex, setOpenIndex] = useState(0);
 
   const faqs = [
     {
@@ -41,129 +41,142 @@ export default function FAQ() {
     },
   ];
 
-  const toggleFAQ = (index) => {
-    setOpenIndex((current) => (current === index ? null : index));
-  };
-
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-5xl mx-auto px-6">
-        {/* HEADER */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="inline-block text-brand font-bold text-sm tracking-widest mb-3">
-            {t("faq.badge")}
-          </span>
+    <section
+      id="faq"
+      className="relative overflow-hidden bg-slate-50 py-20 sm:py-24"
+    >
+      {/* Decorative background */}
+      <div className="pointer-events-none absolute -left-32 top-20 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-80 w-80 rounded-full bg-cyan-200/20 blur-3xl" />
 
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mx-auto mb-14 max-w-2xl text-center">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
+            <FaQuestionCircle />
+            <span>{t("faq.badge")}</span>
+          </div>
+
+          <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
             {t("faq.title")}
           </h2>
 
-          <p className="text-gray-500 leading-7">
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-slate-500 sm:text-base">
             {t("faq.description")}
           </p>
+
+          <div className="mx-auto mt-6 h-1 w-16 rounded-full bg-blue-600" />
         </div>
 
-        {/* FAQ LIST */}
-        <div className="max-w-3xl mx-auto space-y-3">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
+        {/* FAQ layout */}
+        <div className="mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+          {/* Left information panel */}
+          <div className="rounded-3xl bg-[#0B1530] p-7 text-white shadow-xl shadow-slate-900/10 sm:p-9">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-300">
+              <FaQuestionCircle size={25} />
+            </div>
 
-            return (
-              <div
-                key={index}
-                className={`border rounded-2xl overflow-hidden transition-all duration-200 ${
-                  isOpen
-                    ? "border-brand shadow-sm"
-                    : "border-gray-200"
-                }`}
-              >
-                <button
-                  type="button"
-                  onClick={() => toggleFAQ(index)}
-                  className="w-full flex items-center justify-between gap-5 text-left px-6 py-5 bg-white hover:bg-gray-50 transition"
-                  aria-expanded={isOpen}
-                >
-                  <span className="font-semibold text-navy">
-                    {faq.question}
-                  </span>
+            <p className="mt-7 text-xs font-bold uppercase tracking-[0.2em] text-blue-300">
+              USTA PLATFORM
+            </p>
 
-                  <span
-                    className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
-                      isOpen
-                        ? "bg-brand text-white rotate-180"
-                        : "bg-gray-100 text-navy"
-                    }`}
-                  >
-                    <FaChevronDown size={12} />
-                  </span>
-                </button>
+            <h3 className="mt-3 text-2xl font-bold leading-snug sm:text-3xl">
+              {t("faq.title")}
+            </h3>
 
+            <p className="mt-4 text-sm leading-7 text-slate-300">
+              {t("faq.description")}
+            </p>
+
+            <div className="my-7 h-px bg-white/10" />
+
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-300">
+                <FaUserTie size={17} />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-white">
+                  {t("faq.actions.becomeMaster.title")}
+                </h4>
+                <p className="mt-1 text-sm leading-6 text-slate-400">
+                  {t("faq.actions.becomeMaster.description")}
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="mt-7 inline-flex w-full items-center justify-center gap-3 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-400/30"
+            >
+              {t("faq.actions.becomeMaster.button")}
+              <FaArrowRight size={13} />
+            </button>
+          </div>
+
+          {/* Questions */}
+          <div className="space-y-3">
+            {faqs.map((faq, index) => {
+              const isOpen = openIndex === index;
+
+              return (
                 <div
-                  className={`grid transition-all duration-300 ${
+                  key={index}
+                  className={`overflow-hidden rounded-2xl border bg-white transition-all duration-200 ${
                     isOpen
-                      ? "grid-rows-[1fr] opacity-100"
-                      : "grid-rows-[0fr] opacity-0"
+                      ? "border-blue-200 shadow-lg shadow-blue-900/5"
+                      : "border-slate-200 shadow-sm hover:border-slate-300"
                   }`}
                 >
-                  <div className="overflow-hidden">
-                    <div className="px-6 pb-5">
-                      <p className="text-sm text-gray-500 leading-7 border-t border-gray-100 pt-5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setOpenIndex(isOpen ? null : index)
+                    }
+                    aria-expanded={isOpen}
+                    className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left sm:px-6"
+                  >
+                    <span
+                      className={`text-sm font-bold leading-6 sm:text-base ${
+                        isOpen ? "text-blue-700" : "text-slate-800"
+                      }`}
+                    >
+                      <span className="mr-3 text-xs font-bold text-slate-400">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      {faq.question}
+                    </span>
+
+                    <span
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 ${
+                        isOpen
+                          ? "rotate-180 bg-blue-600 text-white"
+                          : "bg-slate-100 text-slate-500"
+                      }`}
+                    >
+                      <FaChevronDown size={12} />
+                    </span>
+                  </button>
+
+                  <div
+                    className={`grid transition-all duration-300 ${
+                      isOpen
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "grid-rows-[0fr] opacity-0"
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <p className="px-5 pb-5 pl-12 text-sm leading-7 text-slate-500 sm:px-6 sm:pb-6 sm:pl-14">
                         {faq.answer}
                       </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* QUICK ACTIONS */}
-        <div className="grid md:grid-cols-3 gap-5 mt-12">
-          {/* BECOME MASTER */}
-          <button
-            type="button"
-            onClick={() => navigate("/register")}
-            className="group text-left bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
-          >
-            <div className="w-11 h-11 rounded-xl bg-brand text-white flex items-center justify-center mb-5">
-              <FaUserTie />
-            </div>
-
-            <h3 className="font-bold text-navy mb-2">
-              {t("faq.actions.becomeMaster.title")}
-            </h3>
-
-            <p className="text-sm text-gray-500 leading-6">
-              {t("faq.actions.becomeMaster.description")}
-            </p>
-
-            <span className="inline-block mt-4 text-sm font-semibold text-brand group-hover:translate-x-1 transition-transform">
-              {t("faq.actions.becomeMaster.button")} →
-            </span>
-          </button>
-
-          {/* CONTACT */}
-          <a
-            href="tel:+998881234567"
-            className="group text-left bg-gray-50 border border-gray-100 rounded-2xl p-6 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
-          >
-            <div className="w-11 h-11 rounded-xl bg-navy text-white flex items-center justify-center mb-5">
-              <FaPhoneAlt />
-            </div>
-
-            <h3 className="font-bold text-navy mb-2">
-              {t("faq.actions.contact.title")}
-            </h3>
-
-            <p className="text-sm text-gray-500 leading-6">
-              {t("faq.actions.contact.description")}
-            </p>
-
-            <span className="inline-block mt-4 text-sm font-semibold text-brand group-hover:translate-x-1 transition-transform">
-              +998 88 123 45 67 →
-            </span>
-          </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

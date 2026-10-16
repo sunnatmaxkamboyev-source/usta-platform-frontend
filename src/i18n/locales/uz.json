@@ -6,7 +6,7 @@
     "blog": "Blog",
     "login": "Kirish",
     "register": "Ro‘yxatdan o‘tish",
-    "vacancies": "Vakansiyalar",
+    "vacancies": "Xizmat e’lonlari",
     "services": "Xizmatlar",
     "contact": "Aloqa",
     "service24": "24/7 xizmat",
@@ -31,10 +31,10 @@
     "viewDetail": "Batafsil ko‘rish",
     "searchPlaceholder": "Xizmat yoki usta qidiring...",
     "clearFilters": "Filtrlarni tozalash",
-    "errorFetchVacancies": "Vakansiyalarni yuklashda xatolik yuz berdi",
-    "loadingVacancies": "Vakansiyalar yuklanmoqda...",
-    "errorFetchVacancy": "Vakansiyani yuklashda xatolik yuz berdi",
-    "loadingVacancy": "Vakansiya yuklanmoqda..."
+    "errorFetchVacancies": "Xizmat e’lonlarini yuklashda xatolik yuz berdi",
+    "loadingVacancies": "Xizmat e’lonlari yuklanmoqda...",
+    "errorFetchVacancy": "Xizmat e’lonini yuklashda xatolik yuz berdi",
+    "loadingVacancy": "Xizmat e’loni yuklanmoqda..."
   },
   "home": {
     "title": "Ishonchli ustalarni toping",
@@ -65,6 +65,7 @@
   },
   "auth": {
     "login": "Kirish",
+    "masterLogin": "Usta sifatida kirish",
     "register": "Ro‘yxatdan o‘tish",
     "phone": "Telefon raqami",
     "password": "Parol",
@@ -151,7 +152,7 @@
     "previous": "Oldingi",
     "next": "Keyingi",
     "goTo": "{{number}}-fikrga o‘tish",
-    "viewVacancies": "Vakansiyalarni ko‘rish",
+    "viewVacancies": "Xizmat e’lonlarini ko‘rish",
     "items": {
       "kende": {
         "text": "Kerakli ustani juda tez topdim. Xizmat sifati ham a’lo darajada bo‘ldi."
@@ -209,8 +210,8 @@
         "description": "Usta haqidagi kerakli ma’lumotlar bilan tanishishingiz mumkin."
       },
       "detailedVacancies": {
-        "title": "Batafsil vakansiyalar",
-        "description": "Har bir vakansiyada ish haqida batafsil ma’lumot berilgan."
+        "title": "Batafsil xizmat e’lonlari",
+        "description": "Har bir e’londa xizmat turi, narxi va bajarilish shartlari haqida batafsil ma’lumot beriladi."
       },
       "localMasters": {
         "title": "Mahalliy ustalar",
@@ -231,14 +232,14 @@
     }
   },
   "footer": {
-    "description": "Malakali ustalarni topish va xizmatlarni boshqarish uchun zamonaviy platforma.",
+    "description": "Malakali ustalarni topish va ularning xizmatlari bilan tanishish uchun zamonaviy platforma.",
     "platformTitle": "Platforma",
     "companyTitle": "Kompaniya",
     "contactTitle": "Biz bilan bog‘laning",
     "contactDescription": "Savollaringiz bormi? Biz bilan bog‘laning.",
     "contactButton": "Bog‘lanish",
     "platform": {
-      "vacancies": "Vakansiyalar",
+      "vacancies": "Xizmat e’lonlari",
       "becomeMaster": "Usta bo‘lish",
       "masterLogin": "Usta paneli"
     },
@@ -271,15 +272,15 @@
       },
       "contact": {
         "question": "Usta bilan qanday bog‘lanaman?",
-        "answer": "Vakansiya sahifasida ko‘rsatilgan telefon raqami yoki Telegram orqali usta bilan bog‘lanishingiz mumkin."
+        "answer": "Xizmat e’loni sahifasida ko‘rsatilgan telefon raqami yoki Telegram orqali usta bilan bog‘lanishingiz mumkin."
       },
       "becomeMaster": {
         "question": "Qanday qilib usta bo‘lish mumkin?",
-        "answer": "Ro‘yxatdan o‘ting, profilingizni to‘ldiring va xizmatlaringiz haqidagi vakansiyalarni joylashtiring."
+        "answer": "Ro‘yxatdan o‘ting, profilingizni to‘ldiring va xizmatlaringiz haqidagi e’lonlarni joylashtiring."
       },
       "editVacancy": {
-        "question": "Vakansiyani tahrirlash mumkinmi?",
-        "answer": "Ha, usta paneli orqali o‘zingiz joylashtirgan vakansiyalarni tahrirlashingiz mumkin."
+        "question": "Xizmat e’lonini tahrirlash mumkinmi?",
+        "answer": "Ha, usta paneli orqali o‘zingiz joylashtirgan xizmat e’lonlarini tahrirlashingiz mumkin."
       },
       "payment": {
         "question": "Platformada to‘lov qanday amalga oshiriladi?",
@@ -308,7 +309,7 @@
     "title": "Kerakli ustani hoziroq toping",
     "description": "Malakali ustalar bilan tez va qulay bog‘laning.",
     "benefits": {
-      "availableVacancies": "Mavjud vakansiyalar",
+      "availableVacancies": "Mavjud xizmat e’lonlari",
       "directContact": "Bevosita aloqa"
     },
     "findMaster": "Usta topish",
@@ -341,10 +342,10 @@
     }
   },
   "vacancies": {
-    "subtitle": "Ustalar tomonidan joylashtirilgan vakansiyalar bilan tanishing.",
-    "latestTitle": "So‘nggi vakansiyalar",
-    "latestDescription": "Ustalar joylashtirgan eng yangi vakansiyalarni ko‘ring.",
-    "viewAll": "Barcha vakansiyalarni ko‘rish",
+    "subtitle": "Ustalar tomonidan joylashtirilgan xizmat e’lonlari bilan tanishing.",
+    "latestTitle": "So‘nggi xizmat e’lonlari",
+    "latestDescription": "Ustalar joylashtirgan eng yangi xizmat e’lonlarini ko‘ring.",
+    "viewAll": "Barcha xizmat e’lonlarini ko‘rish",
     "categories": {
       "all": "Barchasi",
       "electrician": "Elektrik",
@@ -354,17 +355,17 @@
       "painter": "Bo‘yoqchi",
       "other": "Boshqa"
     },
-    "available": "Mavjud ustalar",
-    "count": "{{count}} ta vakansiya",
-    "emptyNoVacancies": "Hozircha vakansiyalar mavjud emas",
-    "emptyNoResults": "Qidiruvingiz bo‘yicha vakansiya topilmadi",
+    "available": "Mavjud xizmat e’lonlari",
+    "count": "{{count}} ta e’lon",
+    "emptyNoVacancies": "Hozircha xizmat e’lonlari mavjud emas",
+    "emptyNoResults": "Qidiruvingiz bo‘yicha xizmat e’loni topilmadi",
     "postedBy": "Joylashtirgan:",
-    "notFoundTitle": "Vakansiya topilmadi",
-    "notFoundDescription": "Siz qidirayotgan vakansiya mavjud emas yoki o‘chirib tashlangan.",
-    "backToVacancies": "Vakansiyalarga qaytish",
+    "notFoundTitle": "Xizmat e’loni topilmadi",
+    "notFoundDescription": "Siz qidirayotgan xizmat e’loni mavjud emas yoki o‘chirib tashlangan.",
+    "backToVacancies": "Xizmat e’lonlariga qaytish",
     "noPhone": "Telefon raqami ko‘rsatilmagan",
     "noTelegram": "Telegram manzili ko‘rsatilmagan",
-    "detailsTitle": "Vakansiya tafsilotlari",
+    "detailsTitle": "Xizmat e’loni tafsilotlari",
     "serviceType": "Xizmat turi",
     "address": "Manzil",
     "price": "Narx",
@@ -375,14 +376,14 @@
     "telegramButton": "Telegram orqali bog‘lanish"
   },
   "newVacancy": {
-    "title": "Yangi vakansiya joylashtirish",
+    "title": "Yangi xizmat e’lonini joylashtirish",
     "loginRequired": "Avval tizimga kiring",
     "sessionExpired": "Sessiya muddati tugadi. Iltimos, qayta tizimga kiring.",
-    "createError": "Vakansiyani joylashtirishda xatolik yuz berdi",
-    "success": "Vakansiya muvaffaqiyatli joylashtirildi!",
+    "createError": "Xizmat e’lonini joylashtirishda xatolik yuz berdi",
+    "success": "Xizmat e’loni muvaffaqiyatli joylashtirildi!",
     "fields": {
-      "title": "Vakansiya nomi",
-      "titlePlaceholder": "Masalan: Uyga elektrik kerak",
+      "title": "Xizmat e’loni sarlavhasi",
+      "titlePlaceholder": "Masalan: Uyga elektrik xizmati kerak",
       "category": "Xizmat turi",
       "categoryPlaceholder": "Xizmat turini tanlang",
       "location": "Manzil",
@@ -393,20 +394,20 @@
       "contactPhonePlaceholder": "+998 90 123 45 67",
       "telegram": "Telegram foydalanuvchi nomi",
       "telegramPlaceholder": "username",
-      "description": "Vakansiya tavsifi",
-      "descriptionPlaceholder": "Ish haqida batafsil ma’lumot yozing..."
+      "description": "Xizmat tavsifi",
+      "descriptionPlaceholder": "Ko‘rsatiladigan xizmat haqida batafsil yozing..."
     },
     "validation": {
-      "titleRequired": "Vakansiya nomini kiriting",
+      "titleRequired": "Xizmat e’loni sarlavhasini kiriting",
       "categoryRequired": "Xizmat turini tanlang",
       "locationRequired": "Manzilni kiriting",
       "phoneRequired": "Telefon raqamingizni kiriting",
       "telegramRequired": "Telegram foydalanuvchi nomini kiriting",
-      "descriptionRequired": "Vakansiya tavsifini kiriting"
+      "descriptionRequired": "Xizmat tavsifini kiriting"
     },
     "buttons": {
       "cancel": "Bekor qilish",
-      "submit": "Vakansiyani joylashtirish"
+      "submit": "Xizmat e’lonini joylashtirish"
     },
     "categories": {
       "plumber": "Santexnik",
@@ -425,19 +426,19 @@
     }
   },
   "editVacancy": {
-    "title": "Vakansiyani tahrirlash",
-    "loading": "Vakansiya yuklanmoqda...",
+    "title": "Xizmat e’lonini tahrirlash",
+    "loading": "Xizmat e’loni yuklanmoqda...",
     "messages": {
-      "fetchError": "Vakansiyani olishda xatolik yuz berdi",
-      "notFound": "Vakansiya topilmadi",
-      "loadError": "Vakansiyani yuklashda xatolik yuz berdi",
+      "fetchError": "Xizmat e’lonini olishda xatolik yuz berdi",
+      "notFound": "Xizmat e’loni topilmadi",
+      "loadError": "Xizmat e’lonini yuklashda xatolik yuz berdi",
       "loginRequired": "Avval tizimga kiring",
-      "updateError": "Vakansiyani yangilashda xatolik yuz berdi",
-      "updateSuccess": "Vakansiya muvaffaqiyatli yangilandi!"
+      "updateError": "Xizmat e’lonini yangilashda xatolik yuz berdi",
+      "updateSuccess": "Xizmat e’loni muvaffaqiyatli yangilandi!"
     },
     "form": {
-      "title": "Vakansiya nomi",
-      "titlePlaceholder": "Masalan: Uyga elektrik kerak",
+      "title": "Xizmat e’loni sarlavhasi",
+      "titlePlaceholder": "Masalan: Uyga elektrik xizmati kerak",
       "category": "Xizmat turi",
       "categoryPlaceholder": "Xizmat turini tanlang",
       "location": "Manzil",
@@ -448,16 +449,16 @@
       "phonePlaceholder": "+998 90 123 45 67",
       "telegram": "Telegram foydalanuvchi nomi",
       "telegramPlaceholder": "username",
-      "description": "Vakansiya tavsifi",
-      "descriptionPlaceholder": "Ish haqida batafsil ma’lumot yozing..."
+      "description": "Xizmat tavsifi",
+      "descriptionPlaceholder": "Ko‘rsatiladigan xizmat haqida batafsil yozing..."
     },
     "validation": {
-      "titleRequired": "Vakansiya nomini kiriting",
+      "titleRequired": "Xizmat e’loni sarlavhasini kiriting",
       "categoryRequired": "Xizmat turini tanlang",
       "locationRequired": "Manzilni kiriting",
       "phoneRequired": "Telefon raqamingizni kiriting",
       "telegramRequired": "Telegram foydalanuvchi nomini kiriting",
-      "descriptionRequired": "Vakansiya tavsifini kiriting"
+      "descriptionRequired": "Xizmat tavsifini kiriting"
     },
     "buttons": {
       "cancel": "Bekor qilish",
@@ -467,10 +468,10 @@
   "ustaDashboard": {
     "loading": "Usta paneli yuklanmoqda...",
     "title": "Usta paneli",
-    "description": "Vakansiyalaringizni shu yerdan boshqaring.",
-    "newVacancy": "Yangi vakansiya",
-    "empty": "Siz hali vakansiya joylashtirmagansiz",
-    "firstVacancy": "Birinchi vakansiyani joylashtirish",
+    "description": "Xizmat e’lonlaringizni shu yerdan boshqaring.",
+    "newVacancy": "Yangi xizmat e’loni",
+    "empty": "Siz hali xizmat e’loni joylashtirmagansiz",
+    "firstVacancy": "Birinchi xizmat e’lonini joylashtirish",
     "profile": {
       "defaultName": "Usta",
       "noProfession": "Kasb ko‘rsatilmagan",
@@ -480,20 +481,20 @@
     "messages": {
       "sessionExpired": "Sessiya muddati tugadi. Iltimos, qayta tizimga kiring.",
       "userFetchError": "Foydalanuvchi ma’lumotlarini olishda xatolik yuz berdi",
-      "vacanciesFetchError": "Vakansiyalarni yuklashda xatolik yuz berdi",
-      "dashboardFetchError": "Boshqaruv paneli ma’lumotlarini yuklashda xatolik yuz berdi",
+      "vacanciesFetchError": "Xizmat e’lonlarini yuklashda xatolik yuz berdi",
+      "dashboardFetchError": "Usta paneli ma’lumotlarini yuklashda xatolik yuz berdi",
       "logoutSuccess": "Tizimdan muvaffaqiyatli chiqdingiz",
       "profileUpdateError": "Profilni yangilashda xatolik yuz berdi",
       "profileUpdateSuccess": "Profil muvaffaqiyatli yangilandi.",
       "passwordUpdateError": "Parolni o‘zgartirishda xatolik yuz berdi",
       "passwordUpdateSuccess": "Parol muvaffaqiyatli o‘zgartirildi.",
-      "deletePermission": "Bu vakansiyani o‘chirish huquqingiz yo‘q.",
-      "deleteVacancyError": "Vakansiyani o‘chirishda xatolik yuz berdi",
-      "deleteSuccess": "Vakansiya o‘chirildi."
+      "deletePermission": "Bu xizmat e’lonini o‘chirish huquqingiz yo‘q.",
+      "deleteVacancyError": "Xizmat e’lonini o‘chirishda xatolik yuz berdi",
+      "deleteSuccess": "Xizmat e’loni o‘chirildi."
     },
     "deleteConfirm": {
-      "title": "Vakansiyani o‘chirmoqchimisiz?",
-      "description": "Ushbu vakansiya o‘chiriladi. Bu amalni ortga qaytarib bo‘lmaydi.",
+      "title": "Xizmat e’lonini o‘chirmoqchimisiz?",
+      "description": "Ushbu xizmat e’loni o‘chiriladi. Bu amalni ortga qaytarib bo‘lmaydi.",
       "yes": "Ha, o‘chirish",
       "no": "Bekor qilish"
     },

@@ -1,3 +1,4 @@
+
 {
   "navbar": {
     "home": "Home",
@@ -6,7 +7,7 @@
     "blog": "Blog",
     "login": "Login",
     "register": "Register",
-    "vacancies": "Vacancies",
+    "vacancies": "Masters",
     "services": "Services",
     "contact": "Contact",
     "service24": "24/7 Service",
@@ -31,10 +32,10 @@
     "viewDetail": "View Details",
     "searchPlaceholder": "Search for a service or master...",
     "clearFilters": "Clear Filters",
-    "errorFetchVacancies": "An error occurred while fetching vacancies",
-    "loadingVacancies": "Loading vacancies...",
-    "errorFetchVacancy": "An error occurred while fetching the vacancy",
-    "loadingVacancy": "Loading vacancy..."
+    "errorFetchVacancies": "An error occurred while fetching masters",
+    "loadingVacancies": "Loading masters...",
+    "errorFetchVacancy": "An error occurred while fetching master details",
+    "loadingVacancy": "Loading master details..."
   },
   "home": {
     "title": "Find Reliable Masters",
@@ -108,7 +109,7 @@
   "services": {
     "title": "Services",
     "description": "Choose the service you need and find suitable masters.",
-    "viewVacancies": "View Vacancies",
+    "viewVacancies": "Find Masters",
     "items": {
       "plumbing": {
         "title": "Plumbing",
@@ -152,7 +153,7 @@
     "previous": "Previous",
     "next": "Next",
     "goTo": "Go to review {{number}}",
-    "viewVacancies": "View Vacancies",
+    "viewVacancies": "Find Masters",
     "items": {
       "kende": {
         "text": "I found a master very quickly, and the quality of the service was excellent."
@@ -210,8 +211,8 @@
         "description": "View important information about a master before contacting them."
       },
       "detailedVacancies": {
-        "title": "Detailed Vacancies",
-        "description": "Each vacancy contains detailed information about the job."
+        "title": "Detailed Service Listings",
+        "description": "Each listing contains detailed information about the services offered."
       },
       "localMasters": {
         "title": "Local Masters",
@@ -239,7 +240,7 @@
     "contactDescription": "If you have any questions, feel free to contact us.",
     "contactButton": "Contact",
     "platform": {
-      "vacancies": "Vacancies",
+      "vacancies": "Masters",
       "becomeMaster": "Become a Master",
       "masterLogin": "Master Panel"
     },
@@ -272,15 +273,15 @@
       },
       "contact": {
         "question": "How can I contact a master?",
-        "answer": "You can contact the master by phone or Telegram using the contact details on the vacancy page."
+        "answer": "You can contact the master by phone or Telegram using the contact details on the master's service listing."
       },
       "becomeMaster": {
         "question": "How can I become a master?",
-        "answer": "Register, complete your master profile and post vacancies."
+        "answer": "Register, complete your master profile and publish your service listings."
       },
       "editVacancy": {
-        "question": "Can I edit a vacancy?",
-        "answer": "Yes, you can edit your vacancy from the master panel."
+        "question": "Can I edit a service listing?",
+        "answer": "Yes, you can edit your service listing from the master panel."
       },
       "payment": {
         "question": "How is payment handled on the platform?",
@@ -309,7 +310,7 @@
     "title": "Find the Right Master Now",
     "description": "Connect with professional masters quickly and conveniently.",
     "benefits": {
-      "availableVacancies": "Available Vacancies",
+      "availableVacancies": "Available Masters",
       "directContact": "Direct Contact"
     },
     "findMaster": "Find a Master",
@@ -342,10 +343,10 @@
     }
   },
   "vacancies": {
-    "subtitle": "Find vacancies posted by professional masters.",
-    "latestTitle": "Latest Vacancies",
-    "latestDescription": "View the latest vacancies posted by masters.",
-    "viewAll": "View All Vacancies",
+    "subtitle": "Find professional masters offering their services.",
+    "latestTitle": "Latest Masters",
+    "latestDescription": "Discover masters who recently joined the platform.",
+    "viewAll": "View All Masters",
     "categories": {
       "all": "All",
       "electrician": "Electrician",
@@ -355,35 +356,35 @@
       "painter": "Painter",
       "other": "Other"
     },
-    "available": "Available Vacancies",
-    "count": "{{count}} vacancies",
-    "emptyNoVacancies": "There are no vacancies yet",
-    "emptyNoResults": "No vacancies found for your search",
-    "postedBy": "Posted by:",
-    "notFoundTitle": "Vacancy Not Found",
-    "notFoundDescription": "The vacancy you are looking for does not exist or has been deleted.",
-    "backToVacancies": "Back to Vacancies",
+    "available": "Available Masters",
+    "count": "{{count}} masters",
+    "emptyNoVacancies": "No masters have been added yet",
+    "emptyNoResults": "No masters found for your search",
+    "postedBy": "Profile owner:",
+    "notFoundTitle": "Master Not Found",
+    "notFoundDescription": "The master you are looking for does not exist or is unavailable.",
+    "backToVacancies": "Back to Masters",
     "noPhone": "Phone number is not available",
     "noTelegram": "Telegram is not available",
-    "detailsTitle": "Vacancy Details",
+    "detailsTitle": "Master Details",
     "serviceType": "Service Type",
     "address": "Address",
     "price": "Price",
     "phone": "Phone",
-    "fullDescription": "Full Description",
+    "fullDescription": "About the Service",
     "contactMaster": "Contact Master",
     "callButton": "Call",
     "telegramButton": "Telegram"
   },
   "newVacancy": {
-    "title": "Create New Vacancy",
+    "title": "Create New Service Listing",
     "loginRequired": "Please log in first",
     "sessionExpired": "Session expired. Please log in again.",
-    "createError": "An error occurred while creating the vacancy",
-    "success": "Vacancy successfully posted!",
+    "createError": "An error occurred while publishing the service listing",
+    "success": "Service listing published successfully!",
     "fields": {
-      "title": "Vacancy Title",
-      "titlePlaceholder": "Example: Electrician needed for a house",
+      "title": "Service Title",
+      "titlePlaceholder": "Example: Electrical repair services",
       "category": "Service Type",
       "categoryPlaceholder": "Select a service type",
       "location": "Address",
@@ -394,20 +395,20 @@
       "contactPhonePlaceholder": "+998 90 123 45 67",
       "telegram": "Telegram Username",
       "telegramPlaceholder": "username",
-      "description": "Vacancy Description",
-      "descriptionPlaceholder": "Write detailed information about the job..."
+      "description": "Service Description",
+      "descriptionPlaceholder": "Write detailed information about the services you offer..."
     },
     "validation": {
-      "titleRequired": "Enter the vacancy title",
+      "titleRequired": "Enter the service title",
       "categoryRequired": "Select a service type",
       "locationRequired": "Enter the address",
       "phoneRequired": "Enter your phone number",
       "telegramRequired": "Enter your Telegram username",
-      "descriptionRequired": "Write the vacancy description"
+      "descriptionRequired": "Write the service description"
     },
     "buttons": {
       "cancel": "Cancel",
-      "submit": "Post Vacancy"
+      "submit": "Publish Service"
     },
     "categories": {
       "plumber": "Plumber",
@@ -426,19 +427,19 @@
     }
   },
   "editVacancy": {
-    "title": "Edit Vacancy",
-    "loading": "Loading vacancy...",
+    "title": "Edit Service Listing",
+    "loading": "Loading service listing...",
     "messages": {
-      "fetchError": "An error occurred while fetching the vacancy",
-      "notFound": "Vacancy not found",
-      "loadError": "An error occurred while loading the vacancy",
+      "fetchError": "An error occurred while fetching the service listing",
+      "notFound": "Service listing not found",
+      "loadError": "An error occurred while loading the service listing",
       "loginRequired": "Please log in first",
-      "updateError": "An error occurred while updating the vacancy",
-      "updateSuccess": "Vacancy successfully updated!"
+      "updateError": "An error occurred while updating the service listing",
+      "updateSuccess": "Service listing updated successfully!"
     },
     "form": {
-      "title": "Vacancy Title",
-      "titlePlaceholder": "Example: Electrician needed for a house",
+      "title": "Service Title",
+      "titlePlaceholder": "Example: Electrical repair services",
       "category": "Service Type",
       "categoryPlaceholder": "Select a service type",
       "location": "Address",
@@ -449,16 +450,16 @@
       "phonePlaceholder": "+998 90 123 45 67",
       "telegram": "Telegram Username",
       "telegramPlaceholder": "username",
-      "description": "Vacancy Description",
-      "descriptionPlaceholder": "Write detailed information about the job..."
+      "description": "Service Description",
+      "descriptionPlaceholder": "Write detailed information about the services you offer..."
     },
     "validation": {
-      "titleRequired": "Enter the vacancy title",
+      "titleRequired": "Enter the service title",
       "categoryRequired": "Select a service type",
       "locationRequired": "Enter the address",
       "phoneRequired": "Enter your phone number",
       "telegramRequired": "Enter your Telegram username",
-      "descriptionRequired": "Write the vacancy description"
+      "descriptionRequired": "Write the service description"
     },
     "buttons": {
       "cancel": "Cancel",
@@ -468,10 +469,10 @@
   "ustaDashboard": {
     "loading": "Master panel is loading...",
     "title": "Master Panel",
-    "description": "Manage your vacancies here.",
-    "newVacancy": "New Vacancy",
-    "empty": "You haven't added any vacancies yet",
-    "firstVacancy": "Add First Vacancy",
+    "description": "Manage your service listings here.",
+    "newVacancy": "Add New Service",
+    "empty": "You haven't published any services yet",
+    "firstVacancy": "Publish Your First Service",
     "profile": {
       "defaultName": "Master",
       "noProfession": "Profession not specified",
@@ -481,20 +482,20 @@
     "messages": {
       "sessionExpired": "Session expired. Please log in again.",
       "userFetchError": "Error retrieving user information",
-      "vacanciesFetchError": "An error occurred while fetching vacancies",
+      "vacanciesFetchError": "An error occurred while fetching your service listings",
       "dashboardFetchError": "Error retrieving dashboard information",
       "logoutSuccess": "You have successfully logged out",
       "profileUpdateError": "An error occurred while updating the profile",
       "profileUpdateSuccess": "Profile successfully updated.",
       "passwordUpdateError": "An error occurred while changing the password",
       "passwordUpdateSuccess": "Password successfully changed.",
-      "deletePermission": "You do not have permission to delete this vacancy.",
-      "deleteVacancyError": "An error occurred while deleting the vacancy",
-      "deleteSuccess": "Vacancy deleted."
+      "deletePermission": "You do not have permission to delete this service listing.",
+      "deleteVacancyError": "An error occurred while deleting the service listing",
+      "deleteSuccess": "Service listing deleted."
     },
     "deleteConfirm": {
-      "title": "Delete this vacancy?",
-      "description": "This vacancy will be deleted.",
+      "title": "Delete this service listing?",
+      "description": "This service listing will be deleted.",
       "yes": "Yes",
       "no": "No"
     },

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -5,31 +6,19 @@ import {
   FaArrowLeft,
   FaArrowRight,
   FaBriefcase,
+  FaQuoteLeft,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const reviews = [
-  {
-    name: "Kende Attila",
-    rating: 4,
-    key: "kende",
-  },
-  {
-    name: "Dilnoza Karimova",
-    rating: 5,
-    key: "dilnoza",
-  },
-  {
-    name: "Jasur Toshmatov",
-    rating: 4,
-    key: "jasur",
-  },
+  { name: "Kende Attila", rating: 4, key: "kende" },
+  { name: "Dilnoza Karimova", rating: 5, key: "dilnoza" },
+  { name: "Jasur Toshmatov", rating: 4, key: "jasur" },
 ];
 
 export default function Reviews() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
   const [index, setIndex] = useState(0);
 
   const review = reviews[index];
@@ -57,112 +46,145 @@ export default function Reviews() {
   }, []);
 
   return (
-    <section className="border-t border-b border-gray-100 py-16">
-      <div className="max-w-3xl mx-auto px-6 text-center">
+    <section className="relative overflow-hidden border-y border-slate-100 bg-white py-20 sm:py-24">
+      {/* Decorative background */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-32 top-10 h-72 w-72 rounded-full bg-blue-100/60 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-32 bottom-0 h-72 w-72 rounded-full bg-cyan-100/50 blur-3xl"
+      />
 
-        {/* TITLE */}
-        <h2 className="text-2xl md:text-3xl font-bold text-navy mb-4">
-          {t("reviews.title")}
-        </h2>
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        {/* Heading */}
+        <div className="mx-auto mb-12 max-w-2xl text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-xs font-bold uppercase tracking-wider text-blue-700">
+            <FaStar />
+            {t("reviews.trusted")}
+          </span>
 
-        {/* DESCRIPTION */}
-        <p className="text-gray-500 max-w-xl mx-auto mb-5">
-          {t("reviews.description")}
-        </p>
+          <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            {t("reviews.title")}
+          </h2>
 
-        {/* TRUST TEXT */}
-        <div className="inline-flex items-center gap-2 text-green-600 font-semibold mb-10">
-          <span className="text-yellow-400">★</span>
-
-          {t("reviews.trusted")}
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-500 sm:text-base">
+            {t("reviews.description")}
+          </p>
         </div>
 
-        {/* REVIEW */}
-        <div className="flex items-center justify-center gap-4">
+        {/* Review card */}
+        <div className="mx-auto max-w-3xl">
+          <div className="relative rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-10 lg:p-12">
+            <div className="absolute right-7 top-7 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 sm:right-10 sm:top-10">
+              <FaQuoteLeft size={19} />
+            </div>
 
-          {/* PREVIOUS */}
-          <button
-            type="button"
-            onClick={prev}
-            aria-label={t("reviews.previous")}
-            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-navy hover:bg-gray-50 transition"
-          >
-            <FaArrowLeft size={14} />
-          </button>
+            {/* Stars */}
+            <div className="flex gap-1 text-amber-400">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <FaStar
+                  key={i}
+                  size={16}
+                  className={
+                    i < review.rating
+                      ? "text-amber-400"
+                      : "text-slate-200"
+                  }
+                />
+              ))}
+            </div>
 
-          {/* CONTENT */}
-          <div className="flex-1">
-
-            <div className="min-h-[130px] flex items-center justify-center">
-              <p className="text-gray-600 leading-7">
-                "{t(`reviews.items.${review.key}.text`)}"
+            {/* Review text */}
+            <div
+              key={review.key}
+              className="mt-8 min-h-32 animate-[fadeIn_0.35s_ease-out]"
+            >
+              <p className="max-w-2xl text-lg font-medium leading-8 text-slate-700 sm:text-xl sm:leading-9">
+                “{t(`reviews.items.${review.key}.text`)}”
               </p>
             </div>
 
-            {/* NAME + STARS */}
-            <div className="flex flex-col items-center gap-3 mt-5">
+            {/* Reviewer */}
+            <div className="mt-8 flex flex-col gap-5 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-cyan-500 text-base font-extrabold text-white shadow-lg shadow-blue-600/15">
+                  {review.name
+                    .split(" ")
+                    .map((part) => part[0])
+                    .join("")
+                    .slice(0, 2)}
+                </div>
 
-              <span className="font-semibold text-navy">
-                {review.name}
-              </span>
+                <div>
+                  <p className="font-bold text-slate-900">
+                    {review.name}
+                  </p>
+                  <p className="mt-1 text-xs font-medium text-slate-400">
+                    Usta Platform foydalanuvchisi
+                  </p>
+                </div>
+              </div>
 
-              <div className="flex gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <FaStar
-                    key={i}
-                    size={14}
-                    className={
-                      i < review.rating
-                        ? "text-yellow-400"
-                        : "text-gray-200"
-                    }
-                  />
-                ))}
+              {/* Navigation */}
+              <div className="flex items-center gap-3">
+                <span className="mr-2 text-sm font-semibold tabular-nums text-slate-400">
+                  {String(index + 1).padStart(2, "0")} /{" "}
+                  {String(reviews.length).padStart(2, "0")}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={prev}
+                  aria-label={t("reviews.previous")}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <FaArrowLeft size={14} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={next}
+                  aria-label={t("reviews.next")}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-600/20 transition hover:-translate-y-0.5 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  <FaArrowRight size={14} />
+                </button>
               </div>
             </div>
           </div>
 
-          {/* NEXT */}
-          <button
-            type="button"
-            onClick={next}
-            aria-label={t("reviews.next")}
-            className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-navy hover:bg-gray-50 transition"
-          >
-            <FaArrowRight size={14} />
-          </button>
-        </div>
+          {/* Slide indicators */}
+          <div className="mt-6 flex items-center justify-center gap-2">
+            {reviews.map((item, i) => (
+              <button
+                key={item.key}
+                type="button"
+                onClick={() => setIndex(i)}
+                aria-label={t("reviews.goTo", { number: i + 1 })}
+                aria-current={i === index ? "true" : undefined}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === index
+                    ? "w-8 bg-blue-600"
+                    : "w-2 bg-slate-300 hover:bg-blue-300"
+                }`}
+              />
+            ))}
+          </div>
 
-        {/* DOTS */}
-        <div className="flex justify-center gap-2 mt-8">
-          {reviews.map((item, i) => (
+          {/* CTA */}
+          <div className="mt-10 text-center">
             <button
-              key={item.key}
               type="button"
-              onClick={() => setIndex(i)}
-              aria-label={t("reviews.goTo", {
-                number: i + 1,
-              })}
-              className={`w-2.5 h-2.5 rounded-full transition ${
-                i === index
-                  ? "bg-brand"
-                  : "bg-gray-300"
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* VACANCIES BUTTON */}
-        <div className="mt-10">
-          <button
-            type="button"
-            onClick={() => navigate("/vakansiyalar")}
-            className="inline-flex items-center gap-2 bg-brand text-white px-6 py-3 rounded-full font-semibold hover:opacity-90 transition"
-          >
-            <FaBriefcase />
-
-            {t("reviews.viewVacancies")}
-          </button>
+              onClick={() => navigate("/vakansiyalar")}
+              className="inline-flex min-h-12 items-center justify-center gap-3 rounded-xl bg-[#0B1530] px-6 py-3.5 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-900/15 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              <FaBriefcase size={15} />
+              {t("reviews.viewVacancies")}
+              <FaArrowRight size={12} />
+            </button>
+          </div>
         </div>
       </div>
     </section>

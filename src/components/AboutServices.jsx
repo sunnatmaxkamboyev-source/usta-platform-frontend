@@ -1,11 +1,6 @@
+
 import { useNavigate } from "react-router-dom";
-
-import {
-  FaCheck,
-  FaPhoneAlt,
-  FaUserPlus,
-} from "react-icons/fa";
-
+import { FaCheck, FaUserPlus } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 
 const features = [
@@ -24,91 +19,71 @@ export default function AboutServices() {
   return (
     <section
       id="about"
-      className="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+      className="mx-auto max-w-7xl px-5 py-12 sm:px-6 sm:py-16"
     >
-      {/* LEFT CONTENT */}
-      <div>
-        {/* SMALL TITLE */}
-        <p className="text-brand font-semibold text-sm mb-2">
-          {t("about.badge")}
-        </p>
+      <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+        {/* CONTENT */}
+        <div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-brand">
+            <span className="h-2 w-2 rounded-full bg-brand" />
+            Usta Platform
+          </span>
 
-        {/* TITLE */}
-        <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4 leading-tight">
-          {t("about.title")}
-        </h2>
+          <h2 className="mb-3 mt-4 text-2xl font-extrabold leading-tight tracking-tight text-navy sm:text-3xl">
+            {t("about.title")}
+          </h2>
 
-        {/* DESCRIPTION */}
-        <p className="text-gray-500 mb-6 max-w-lg leading-6">
-          {t("about.description")}
-        </p>
+          <p className="mb-5 max-w-lg text-sm leading-6 text-slate-500">
+            {t("about.description")}
+          </p>
 
-        {/* FEATURES */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mb-8">
-          {features.map((feature) => (
-            <div
-              key={feature}
-              className="flex items-center gap-2 text-sm text-navy font-medium"
-            >
-              <span className="w-5 h-5 rounded-full bg-blue-50 text-brand flex items-center justify-center shrink-0">
-                <FaCheck size={10} />
-              </span>
+          {/* SERVICES */}
+          <div className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {features.map((feature) => (
+              <div
+                key={feature}
+                className="flex items-center gap-2.5 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5"
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-100 text-brand">
+                  <FaCheck size={11} />
+                </span>
 
-              {t(`about.features.${feature}`)}
-            </div>
-          ))}
-        </div>
+                <span className="text-sm font-medium text-slate-700">
+                  {t(`about.features.${feature}`)}
+                </span>
+              </div>
+            ))}
+          </div>
 
-        {/* BECOME MASTER */}
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          {/* ACTION */}
           <button
             type="button"
             onClick={() => navigate("/register")}
-            className="inline-flex items-center justify-center gap-2 border border-navy text-navy hover:bg-navy hover:text-white transition-colors rounded-full px-6 py-3 font-semibold text-sm"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-navy px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand"
           >
-            <FaUserPlus />
+            <FaUserPlus size={14} />
             {t("about.becomeMaster")}
           </button>
         </div>
 
-        {/* PHONE */}
-        <a
-          href="tel:+998881234567"
-          className="inline-flex items-center gap-3 bg-navy text-white hover:bg-brand transition-colors rounded-xl px-5 py-4"
-        >
-          <span className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-            <FaPhoneAlt size={16} />
-          </span>
+        {/* IMAGE */}
+        <div className="relative">
+          <img
+            src="/images/about-roof.png"
+            alt={t("about.imageAlt")}
+            loading="lazy"
+            className="h-64 w-full rounded-2xl object-cover sm:h-80 lg:h-[380px]"
+          />
 
-          <div className="text-sm">
-            <p className="text-gray-300">
-              {t("about.contactText")}
+          <div className="absolute bottom-3 left-3 right-3 rounded-xl border border-white/70 bg-white/95 p-3 shadow-lg backdrop-blur-sm sm:bottom-4 sm:left-4 sm:right-4">
+            <p className="text-xs font-semibold text-brand">
+              Usta Platform
             </p>
 
-            <p className="font-semibold mt-1">
-              +998 88 123 45 67
+            <p className="mt-1 text-sm font-semibold leading-5 text-navy">
+              {t("about.imageTitle")}
             </p>
           </div>
-        </a>
-      </div>
-
-      {/* IMAGE */}
-      <div className="relative">
-        <img
-          src="/images/about-roof.png"
-          alt={t("about.imageAlt")}
-          className="w-full h-[420px] rounded-3xl object-cover"
-        />
-
-        {/* IMAGE BADGE */}
-        <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-          <p className="text-xs text-gray-400 mb-1">
-            Usta Platform
-          </p>
-
-          <p className="font-semibold text-navy">
-            {t("about.imageTitle")}
-          </p>
         </div>
       </div>
     </section>

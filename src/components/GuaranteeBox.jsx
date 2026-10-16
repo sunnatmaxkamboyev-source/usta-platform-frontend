@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
 
+import { useTranslation } from "react-i18next";
 import {
   FaUserTie,
   FaClipboardCheck,
@@ -14,75 +14,79 @@ export default function GuaranteeBox() {
 
   const items = [
     {
-      icon: <FaUserTie />,
+      icon: FaUserTie,
       title: t("guarantee.items.masterInfo.title"),
       description: t("guarantee.items.masterInfo.description"),
     },
     {
-      icon: <FaClipboardCheck />,
+      icon: FaClipboardCheck,
       title: t("guarantee.items.detailedVacancies.title"),
       description: t("guarantee.items.detailedVacancies.description"),
     },
     {
-      icon: <FaMapMarkerAlt />,
+      icon: FaMapMarkerAlt,
       title: t("guarantee.items.localMasters.title"),
       description: t("guarantee.items.localMasters.description"),
     },
     {
-      icon: <FaPhoneAlt />,
+      icon: FaPhoneAlt,
       title: t("guarantee.items.quickContact.title"),
       description: t("guarantee.items.quickContact.description"),
     },
     {
-      icon: <FaClock />,
+      icon: FaClock,
       title: t("guarantee.items.agreedTime.title"),
       description: t("guarantee.items.agreedTime.description"),
     },
     {
-      icon: <FaComments />,
+      icon: FaComments,
       title: t("guarantee.items.directCommunication.title"),
       description: t("guarantee.items.directCommunication.description"),
     },
   ];
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* HEADER */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="inline-block text-brand font-bold text-sm tracking-widest mb-3">
+    <section className="bg-slate-50 py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+        <div className="mb-8 text-center">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-600">
             {t("guarantee.badge")}
           </span>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
+          <h2 className="mt-2 text-2xl font-extrabold text-slate-900 sm:text-3xl">
             {t("guarantee.title")}
           </h2>
 
-          <p className="text-gray-500 leading-7">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-500">
             {t("guarantee.description")}
           </p>
         </div>
 
-        {/* CARDS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <div
-              key={item.title}
-              className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-            >
-              <div className="w-12 h-12 rounded-xl bg-navy text-white flex items-center justify-center mb-5">
-                {item.icon}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((item, index) => {
+            const Icon = item.icon;
+
+            return (
+              <div
+                key={index}
+                className="flex items-start gap-3 rounded-xl border border-slate-200/80 bg-white p-4 transition-colors hover:border-blue-200"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                  <Icon size={17} />
+                </div>
+
+                <div className="min-w-0">
+                  <h3 className="text-sm font-bold leading-5 text-slate-900">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-1 text-xs leading-5 text-slate-500 sm:text-sm">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-
-              <h3 className="text-lg font-bold text-navy mb-3">
-                {item.title}
-              </h3>
-
-              <p className="text-sm text-gray-500 leading-6">
-                {item.description}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
