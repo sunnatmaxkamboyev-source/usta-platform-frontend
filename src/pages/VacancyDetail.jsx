@@ -1,4 +1,3 @@
-
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
@@ -19,6 +18,7 @@ import {
   AppstoreOutlined,
   ToolOutlined,
   SafetyCertificateOutlined,
+  PictureOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -34,13 +34,20 @@ export default function VacancyDetail() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  // BACKENDDAN VAKANSIYA OLISH
+  const [workSamples, setWorkSamples] = useState([]);
+  const [samplesLoading, setSamplesLoading] = useState(false);
+
+  // ========================================
+  // VAKANSIYANI BACKENDDAN OLISH
+  // ========================================
+
   useEffect(() => {
     const fetchVacancy = async () => {
       try {
         setLoading(true);
         setNotFound(false);
         setVacancy(null);
+        setWorkSamples([]);
 
         const response = await fetch(`${API}/vacancies/${id}`);
         const data = await response.json();
@@ -53,7 +60,6 @@ export default function VacancyDetail() {
         setVacancy(data.vacancy);
       } catch (error) {
         console.error("Get vacancy detail error:", error);
-
         message.error(t("common.errorFetchVacancy"));
         setNotFound(true);
       } finally {
@@ -69,7 +75,57 @@ export default function VacancyDetail() {
     }
   }, [id, t]);
 
+  // ========================================
+  // USTANING ISH NAMUNALARINI OLISH
+  // ========================================
+
+  useEffect(() => {
+    const fetchWorkSamples = async () => {
+      const ustaId = vacancy?.usta?._id;
+
+      if (!ustaId) {
+        setWorkSamples([]);
+        return;
+      }
+
+      try {
+        setSamplesLoading(true);
+
+        const response = await fetch(
+          `${API}/work-samples/usta/${ustaId}`
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Ish namunalarini olishda xatolik"
+          );
+        }
+
+        // API arrayni turli shakllarda qaytarsa ham tekshiramiz
+        const samples = Array.isArray(data)
+          ? data
+          : data.workSamples || data.samples || [];
+
+        setWorkSamples(samples);
+      } catch (error) {
+        console.error("Get work samples error:", error);
+        setWorkSamples([]);
+      } finally {
+        setSamplesLoading(false);
+      }
+    };
+
+    if (vacancy) {
+      fetchWorkSamples();
+    }
+  }, [vacancy]);
+
+  // ========================================
   // LOADING
+  // ========================================
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
@@ -83,7 +139,10 @@ export default function VacancyDetail() {
     );
   }
 
+  // ========================================
   // VAKANSIYA TOPILMADI
+  // ========================================
+
   if (notFound || !vacancy) {
     return (
       <div className="min-h-screen bg-slate-50 px-4 py-10">
@@ -118,7 +177,10 @@ export default function VacancyDetail() {
     );
   }
 
+  // ========================================
   // TELEFON ORQALI BOG'LANISH
+  // ========================================
+
   const handleCall = () => {
     if (!vacancy.contactPhone) {
       message.warning(t("vacancies.noPhone"));
@@ -128,7 +190,10 @@ export default function VacancyDetail() {
     window.location.href = `tel:${vacancy.contactPhone}`;
   };
 
+  // ========================================
   // TELEGRAM ORQALI BOG'LANISH
+  // ========================================
+
   const handleTelegram = () => {
     if (!vacancy.telegram) {
       message.warning(t("vacancies.noTelegram"));
@@ -139,7 +204,7 @@ export default function VacancyDetail() {
       .trim()
       .replace(/^@/, "")
       .replace(/^https?:\/\/t\.me\//i, "")
-      .replace(/\/$/, "");
+      .replace(/\/+$/, "");
 
     if (!username) {
       message.warning(t("vacancies.noTelegram"));
@@ -153,7 +218,10 @@ export default function VacancyDetail() {
     );
   };
 
+  // ========================================
   // KATEGORIYA TARJIMASI
+  // ========================================
+
   const translatedCategory = t(
     `vacancies.categories.${vacancy.category}`,
     {
@@ -161,10 +229,34 @@ export default function VacancyDetail() {
     }
   );
 
+  // ========================================
   // USTA MA'LUMOTLARI
+  // ========================================
+
   const ustaName = vacancy.usta?.name || t("common.master");
+
   const ustaProfession =
     vacancy.usta?.profession || translatedCategory;
+
+  const ustaProfileImage = vacancy.usta?.profileImage || "";
+
+  // ========================================
+  // ISH NAMUNASI RASMLARI
+  // ========================================
+
+  const getSampleImages = (sample) => {
+    if (!Array.isArray(sample.images)) {
+      return [];
+    }
+
+    return sample.images.filter(
+      (image) => typeof image === "string" && image.trim() !== ""
+    );
+  };
+
+  // ========================================
+  // ASOSIY SAHIFA
+  // ========================================
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -181,9 +273,7 @@ export default function VacancyDetail() {
             </span>
 
             <span>
-              <span className="block font-bold">
-                Usta Platform
-              </span>
+              <span className="block font-bold">Usta Platform</span>
               <span className="block text-xs text-slate-400">
                 {t("vacancies.detailsTitle")}
               </span>
@@ -221,10 +311,7 @@ export default function VacancyDetail() {
 
             <div className="p-5 sm:p-8">
               {/* TITLE */}
-              <Tag
-                color="blue"
-                className="!mb-4 !rounded-md !px-2 !py-1"
-              >
+              <Tag color="blue" className="!mb-4 !rounded-md !px-2 !py-1">
                 <AppstoreOutlined className="mr-1" />
                 {translatedCategory}
               </Tag>
@@ -235,9 +322,7 @@ export default function VacancyDetail() {
 
               <div className="mt-4 flex items-start gap-2 text-sm text-slate-500">
                 <EnvironmentOutlined className="mt-1 text-blue-600" />
-                <span className="break-words">
-                  {vacancy.location}
-                </span>
+                <span className="break-words">{vacancy.location}</span>
               </div>
 
               <Divider className="!my-6" />
@@ -319,6 +404,90 @@ export default function VacancyDetail() {
               <p className="break-words whitespace-pre-line text-sm leading-7 text-slate-600 sm:text-base">
                 {vacancy.description}
               </p>
+
+              {/* ================================== */}
+              {/* USTANING ISH NAMUNALARI */}
+              {/* ================================== */}
+
+              <Divider className="!my-7" />
+
+              <div className="mb-5">
+                <h2 className="flex items-center gap-2 text-lg font-bold text-[#15233B]">
+                  <PictureOutlined className="text-blue-600" />
+                  Ish namunalari
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  Ustaning avval bajargan ishlari va ularning rasmlari.
+                </p>
+              </div>
+
+              {samplesLoading ? (
+                <div className="flex justify-center py-8">
+                  <Spin />
+                </div>
+              ) : workSamples.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center">
+                  <PictureOutlined className="text-2xl text-slate-400" />
+                  <p className="mt-3 text-sm text-slate-500">
+                    Hozircha ish namunalari qo‘shilmagan.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  {workSamples.map((sample) => {
+                    const images = getSampleImages(sample);
+
+                    return (
+                      <div
+                        key={sample._id}
+                        className="overflow-hidden rounded-xl border border-slate-200 bg-white"
+                      >
+                        <div className="p-4">
+                          <h3 className="break-words font-bold text-[#15233B]">
+                            {sample.title}
+                          </h3>
+
+                          {sample.description && (
+                            <p className="mt-2 whitespace-pre-line break-words text-sm leading-6 text-slate-600">
+                              {sample.description}
+                            </p>
+                          )}
+                        </div>
+
+                        {images.length > 0 ? (
+                          <div className="grid grid-cols-1 gap-2 px-4 pb-4 sm:grid-cols-2">
+                            {images.map((image, index) => (
+                              <a
+                                key={`${sample._id}-${index}`}
+                                href={image}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block overflow-hidden rounded-lg bg-slate-100"
+                                aria-label={`Ish namunasi rasmi ${index + 1}`}
+                              >
+                                <img
+                                  src={image}
+                                  alt={`${sample.title} — ${index + 1}`}
+                                  loading="lazy"
+                                  className="h-48 w-full object-cover transition duration-300 hover:scale-[1.02]"
+                                  onError={(event) => {
+                                    event.currentTarget.style.display = "none";
+                                  }}
+                                />
+                              </a>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="mx-4 mb-4 rounded-lg bg-slate-50 px-3 py-4 text-sm text-slate-500">
+                            Bu namunada rasm mavjud emas.
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 
@@ -336,6 +505,7 @@ export default function VacancyDetail() {
               <div className="flex items-center gap-3">
                 <Avatar
                   size={54}
+                  src={ustaProfileImage || undefined}
                   icon={<UserOutlined />}
                   className="!bg-blue-50 !text-blue-600"
                 />
@@ -344,6 +514,7 @@ export default function VacancyDetail() {
                   <p className="break-words font-bold text-[#15233B]">
                     {ustaName}
                   </p>
+
                   <p className="mt-1 break-words text-sm text-slate-500">
                     {ustaProfession}
                   </p>
@@ -368,8 +539,7 @@ export default function VacancyDetail() {
               </h2>
 
               <p className="mt-2 text-sm leading-6 text-slate-500">
-                {t("vacancies.phone")}:{" "}
-                {vacancy.contactPhone || "—"}
+                {t("vacancies.phone")}: {vacancy.contactPhone || "—"}
               </p>
 
               <div className="mt-5 flex flex-col gap-3">

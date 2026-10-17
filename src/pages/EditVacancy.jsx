@@ -9,6 +9,7 @@ import {
   message,
   Spin,
   Tag,
+  Space,
 } from "antd";
 import {
   ArrowLeftOutlined,
@@ -35,6 +36,8 @@ export default function EditVacancy() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
+    let active = true;
+
     const fetchVacancy = async () => {
       try {
         setLoading(true);
@@ -54,35 +57,44 @@ export default function EditVacancy() {
           throw new Error(t("editVacancy.messages.notFound"));
         }
 
-        form.setFieldsValue({
-          title: vacancy.title,
-          category: vacancy.category,
-          location: vacancy.location,
-          price: vacancy.price,
-          contactPhone: vacancy.contactPhone,
-          telegram: vacancy.telegram,
-          description: vacancy.description,
-        });
+        if (active) {
+          form.setFieldsValue({
+            title: vacancy.title ?? "",
+            category: vacancy.category ?? "",
+            location: vacancy.location ?? "",
+            price: vacancy.price ?? "",
+            contactPhone: vacancy.contactPhone ?? "",
+            telegram: vacancy.telegram ?? "",
+            description: vacancy.description ?? "",
+          });
+        }
       } catch (error) {
         console.error("Get vacancy for edit error:", error);
 
-        message.error(
-          error.message || t("editVacancy.messages.loadError")
-        );
-
-        navigate("/dashboard", { replace: true });
+        if (active) {
+          message.error(
+            error.message || t("editVacancy.messages.loadError")
+          );
+          navigate("/dashboard", { replace: true });
+        }
       } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
-    if (id) {
-      fetchVacancy();
-    } else {
+    if (!id) {
       setLoading(false);
       message.error(t("editVacancy.messages.notFound"));
       navigate("/dashboard", { replace: true });
+    } else {
+      fetchVacancy();
     }
+
+    return () => {
+      active = false;
+    };
   }, [id, form, navigate, t]);
 
   const onFinish = async (values) => {
@@ -253,18 +265,14 @@ export default function EditVacancy() {
                 rules={[
                   {
                     required: true,
-                    message: t(
-                      "editVacancy.validation.titleRequired"
-                    ),
+                    message: t("editVacancy.validation.titleRequired"),
                   },
                 ]}
               >
                 <Input
                   size="large"
                   prefix={<FileTextOutlined className="text-slate-400" />}
-                  placeholder={t(
-                    "editVacancy.form.titlePlaceholder"
-                  )}
+                  placeholder={t("editVacancy.form.titlePlaceholder")}
                 />
               </Form.Item>
 
@@ -274,18 +282,14 @@ export default function EditVacancy() {
                 rules={[
                   {
                     required: true,
-                    message: t(
-                      "editVacancy.validation.categoryRequired"
-                    ),
+                    message: t("editVacancy.validation.categoryRequired"),
                   },
                 ]}
               >
                 <Select
                   size="large"
                   options={categoryOptions}
-                  placeholder={t(
-                    "editVacancy.form.categoryPlaceholder"
-                  )}
+                  placeholder={t("editVacancy.form.categoryPlaceholder")}
                 />
               </Form.Item>
 
@@ -296,9 +300,7 @@ export default function EditVacancy() {
                   rules={[
                     {
                       required: true,
-                      message: t(
-                        "editVacancy.validation.locationRequired"
-                      ),
+                      message: t("editVacancy.validation.locationRequired"),
                     },
                   ]}
                 >
@@ -307,9 +309,7 @@ export default function EditVacancy() {
                     prefix={
                       <EnvironmentOutlined className="text-slate-400" />
                     }
-                    placeholder={t(
-                      "editVacancy.form.locationPlaceholder"
-                    )}
+                    placeholder={t("editVacancy.form.locationPlaceholder")}
                   />
                 </Form.Item>
 
@@ -319,12 +319,8 @@ export default function EditVacancy() {
                 >
                   <Input
                     size="large"
-                    prefix={
-                      <DollarOutlined className="text-slate-400" />
-                    }
-                    placeholder={t(
-                      "editVacancy.form.pricePlaceholder"
-                    )}
+                    prefix={<DollarOutlined className="text-slate-400" />}
+                    placeholder={t("editVacancy.form.pricePlaceholder")}
                   />
                 </Form.Item>
 
@@ -334,20 +330,14 @@ export default function EditVacancy() {
                   rules={[
                     {
                       required: true,
-                      message: t(
-                        "editVacancy.validation.phoneRequired"
-                      ),
+                      message: t("editVacancy.validation.phoneRequired"),
                     },
                   ]}
                 >
                   <Input
                     size="large"
-                    prefix={
-                      <PhoneOutlined className="text-slate-400" />
-                    }
-                    placeholder={t(
-                      "editVacancy.form.phonePlaceholder"
-                    )}
+                    prefix={<PhoneOutlined className="text-slate-400" />}
+                    placeholder={t("editVacancy.form.phonePlaceholder")}
                   />
                 </Form.Item>
 
@@ -357,20 +347,23 @@ export default function EditVacancy() {
                   rules={[
                     {
                       required: true,
-                      message: t(
-                        "editVacancy.validation.telegramRequired"
-                      ),
+                      message: t("editVacancy.validation.telegramRequired"),
                     },
                   ]}
                 >
-                  <Input
-                    size="large"
-                    addonBefore="@"
-                    prefix={<SendOutlined className="text-slate-400" />}
-                    placeholder={t(
-                      "editVacancy.form.telegramPlaceholder"
-                    )}
-                  />
+                  <Space.Compact className="w-full">
+                    <Input
+                      size="large"
+                      value="@"
+                      readOnly
+                      style={{ width: 55 }}
+                    />
+                    <Input
+                      size="large"
+                      prefix={<SendOutlined className="text-slate-400" />}
+                      placeholder={t("editVacancy.form.telegramPlaceholder")}
+                    />
+                  </Space.Compact>
                 </Form.Item>
               </div>
 
@@ -380,9 +373,7 @@ export default function EditVacancy() {
                 rules={[
                   {
                     required: true,
-                    message: t(
-                      "editVacancy.validation.descriptionRequired"
-                    ),
+                    message: t("editVacancy.validation.descriptionRequired"),
                   },
                 ]}
               >
@@ -390,9 +381,7 @@ export default function EditVacancy() {
                   rows={5}
                   showCount
                   maxLength={2000}
-                  placeholder={t(
-                    "editVacancy.form.descriptionPlaceholder"
-                  )}
+                  placeholder={t("editVacancy.form.descriptionPlaceholder")}
                   className="!resize-y"
                 />
               </Form.Item>

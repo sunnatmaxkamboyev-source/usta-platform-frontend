@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,14 +31,20 @@ import {
   EyeOutlined,
   ToolOutlined,
   SafetyCertificateOutlined,
+  CameraOutlined,
 } from "@ant-design/icons";
+
 import { logoutUser } from "../utils/auth";
+import WorkSamples from "../components/WorkSamples";
 
 const API = "https://usta-platform-backend.onrender.com/api";
+const PROFILE_IMAGE_KEY = "ustaProfileImage";
+const MAX_IMAGE_SIZE = 1024 * 1024;
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const fileInputRef = useRef(null);
 
   const [user, setUser] = useState(null);
   const [vacancies, setVacancies] = useState([]);
@@ -47,6 +53,14 @@ export default function Dashboard() {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
+
+  const [profileImage, setProfileImage] = useState(() => {
+    try {
+      return localStorage.getItem(PROFILE_IMAGE_KEY);
+    } catch {
+      return null;
+    }
+  });
 
   const [profileForm] = Form.useForm();
   const [passwordForm] = Form.useForm();
@@ -128,6 +142,110 @@ export default function Dashboard() {
     loadDashboard();
   }, [navigate, t]);
 
+  // Profil rasmini tanlash va saqlash
+  const handleChooseProfileImage = (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      message.error("Iltimos, rasm faylini tanlang.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      message.error(
+        "Rasm hajmi 1 MB dan oshmasligi kerak. Kichikroq rasm tanlang."
+      );
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const imageData = reader.result;
+
+        if (typeof imageData !== "string") {
+          message.error("Rasmni o‘qib bo‘lmadi.");
+          return;
+        }
+
+        localStorage.setItem(PROFILE_IMAGE_KEY, imageData);
+        setProfileImage(imageData);
+        message.success("Profil rasmi saqlandi!");
+      } catch (error) {
+        console.error("Profile image save error:", error);
+        message.error(
+          "Rasmni saqlab bo‘lmadi. Kichikroq rasm tanlab ko‘ring."
+        );
+      }
+    };
+
+    reader.onerror = () => {
+      message.error("Rasmni o‘qishda xatolik yuz berdi.");
+    };
+
+    reader.readAsDataURL(file);
+    event.target.value = "";
+  };
+
+  // Profil rasmini o‘chirish
+  const handleRemoveProfileImage = () => {
+    try {
+      localStorage.removeItem(PROFILE_IMAGE_KEY);
+      setProfileImage(null);
+      message.success("Profil rasmi o‘chirildi!");
+    } catch (error) {
+      console.error("Profile image remove error:", error);
+      message.error("Rasmni o‘chirib bo‘lmadi.");
+    }
+  };
+
+  // Profil rasmini boshqarish oynasi
+  const handleManageProfileImage = () => {
+    Modal.confirm({
+      title: "Profil rasmini boshqarish",
+      content: profileImage
+        ? "Rasmni almashtirishingiz yoki o‘chirishingiz mumkin."
+        : "Kompyuteringizdan yangi profil rasmi tanlang.",
+      icon: <CameraOutlined />,
+      okText: "Rasm tanlash",
+      cancelText: "Bekor qilish",
+      onOk: () => {
+        fileInputRef.current?.click();
+      },
+      footer: (_, { OkBtn, CancelBtn }) => (
+        <div className="flex flex-wrap justify-end gap-2">
+          <CancelBtn />
+
+          {profileImage && (
+            <Button
+              danger
+              onClick={() => {
+                Modal.confirm({
+                  title: "Rasmni o‘chirish",
+                  content: "Profil rasmini o‘chirishni xohlaysizmi?",
+                  okText: "Ha, o‘chirish",
+                  cancelText: "Bekor qilish",
+                  okButtonProps: { danger: true },
+                  onOk: handleRemoveProfileImage,
+                });
+              }}
+            >
+              Rasmni o‘chirish
+            </Button>
+          )}
+
+          <OkBtn />
+        </div>
+      ),
+    });
+  };
+
+  // Tizimdan chiqish
   const handleLogout = () => {
     logoutUser();
     setUser(null);
@@ -135,6 +253,7 @@ export default function Dashboard() {
     navigate("/login", { replace: true });
   };
 
+  // Profil oynasini ochish
   const handleOpenProfile = () => {
     profileForm.setFieldsValue({
       name: user?.name || "",
@@ -154,6 +273,7 @@ export default function Dashboard() {
     passwordForm.resetFields();
   };
 
+  // Profilni yangilash
   const handleUpdateProfile = async (values) => {
     try {
       setProfileLoading(true);
@@ -199,9 +319,7 @@ export default function Dashboard() {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("role", data.user.role);
 
-      message.success(
-        t("ustaDashboard.messages.profileUpdateSuccess")
-      );
+      message.success(t("ustaDashboard.messages.profileUpdateSuccess"));
     } catch (error) {
       console.error("Update profile error:", error);
       message.error(
@@ -213,6 +331,7 @@ export default function Dashboard() {
     }
   };
 
+  // Parolni almashtirish
   const handleChangePassword = async (values) => {
     try {
       setPasswordLoading(true);
@@ -257,10 +376,7 @@ export default function Dashboard() {
       }
 
       passwordForm.resetFields();
-
-      message.success(
-        t("ustaDashboard.messages.passwordUpdateSuccess")
-      );
+      message.success(t("ustaDashboard.messages.passwordUpdateSuccess"));
     } catch (error) {
       console.error("Change password error:", error);
       message.error(
@@ -272,6 +388,7 @@ export default function Dashboard() {
     }
   };
 
+  // E'lonni o‘chirish
   const handleDelete = async (id) => {
     try {
       setDeleteLoading(true);
@@ -301,9 +418,7 @@ export default function Dashboard() {
       }
 
       if (response.status === 403) {
-        message.error(
-          t("ustaDashboard.messages.deletePermission")
-        );
+        message.error(t("ustaDashboard.messages.deletePermission"));
         return;
       }
 
@@ -355,7 +470,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* HEADER */}
       <header className="bg-[#101D35] text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <button
@@ -383,30 +497,48 @@ export default function Dashboard() {
             onClick={handleLogout}
             className="!border-slate-600 !text-slate-200 hover:!border-red-400 hover:!text-red-300"
           >
-            <span className="hidden sm:inline">
-              {t("auth.logout")}
-            </span>
+            <span className="hidden sm:inline">{t("auth.logout")}</span>
           </Button>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        {/* PROFILE */}
+        {/* PROFIL */}
         <section className="mb-7 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
           <div className="h-1.5 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400" />
 
           <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div className="flex min-w-0 items-center gap-4">
-              <Avatar
-                size={64}
-                icon={<UserOutlined />}
-                className="!shrink-0 !bg-blue-50 !text-blue-700"
-              />
+              <div className="relative shrink-0">
+                <Avatar
+                  size={80}
+                  src={profileImage || undefined}
+                  icon={<UserOutlined />}
+                  className="!bg-blue-50 !text-blue-700"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleManageProfileImage}
+                  title="Profil rasmini boshqarish"
+                  aria-label="Profil rasmini boshqarish"
+                  className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-white shadow transition hover:bg-blue-700"
+                >
+                  <CameraOutlined />
+                </button>
+
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleChooseProfileImage}
+                />
+              </div>
 
               <div className="min-w-0">
                 <h2 className="break-words text-lg font-bold text-[#15233B] sm:text-xl">
-                  {user?.name ||
-                    t("ustaDashboard.profile.defaultName")}
+                  {user?.name || t("ustaDashboard.profile.defaultName")}
                 </h2>
 
                 <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
@@ -420,8 +552,7 @@ export default function Dashboard() {
                 <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
                   <PhoneOutlined />
                   <span>
-                    {user?.phone ||
-                      t("ustaDashboard.profile.noPhone")}
+                    {user?.phone || t("ustaDashboard.profile.noPhone")}
                   </span>
                 </p>
 
@@ -429,6 +560,10 @@ export default function Dashboard() {
                   <SafetyCertificateOutlined />
                   {t("ustaDashboard.title")}
                 </span>
+
+                <p className="mt-2 text-xs text-slate-400">
+                  Rasmni o‘zgartirish yoki o‘chirish uchun kamera belgisini bosing.
+                </p>
               </div>
             </div>
 
@@ -442,13 +577,15 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* PAGE TITLE */}
+        {/* ISH NAMUNALARI */}
+        <WorkSamples />
+
+        {/* SAHIFA SARLAVHASI */}
         <section className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-extrabold tracking-tight text-[#15233B] sm:text-3xl">
               {t("ustaDashboard.title")}
             </h1>
-
             <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
               {t("ustaDashboard.description")}
             </p>
@@ -465,13 +602,12 @@ export default function Dashboard() {
           </Button>
         </section>
 
-        {/* SUMMARY */}
+        {/* STATISTIKA */}
         <section className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
               <FileTextOutlined className="text-xl" />
             </div>
-
             <div>
               <p className="text-sm text-slate-500">
                 {t("ustaDashboard.title")}
@@ -489,14 +625,12 @@ export default function Dashboard() {
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
               <UserOutlined className="text-xl" />
             </div>
-
             <div className="min-w-0">
               <p className="text-sm text-slate-500">
                 {t("ustaDashboard.profile.edit")}
               </p>
               <p className="mt-1 truncate text-lg font-bold text-[#15233B]">
-                {user?.name ||
-                  t("ustaDashboard.profile.defaultName")}
+                {user?.name || t("ustaDashboard.profile.defaultName")}
               </p>
               <p className="text-xs text-slate-400">
                 {user?.profession ||
@@ -506,7 +640,7 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* VACANCIES TITLE */}
+        {/* E'LONLAR SARLAVHASI */}
         <section className="mb-4 flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-bold text-[#15233B] sm:text-xl">
@@ -522,7 +656,7 @@ export default function Dashboard() {
           </span>
         </section>
 
-        {/* VACANCIES */}
+        {/* E'LONLAR */}
         {vacancies.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-12 text-center">
             <Empty
@@ -552,7 +686,6 @@ export default function Dashboard() {
                 className="!overflow-hidden !rounded-2xl !border !border-slate-200 !shadow-sm transition-all duration-200 hover:!border-blue-200 hover:!shadow-md"
                 styles={{ body: { padding: 20 } }}
               >
-                {/* CARD HEADER */}
                 <div className="flex items-start gap-3">
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     <ToolOutlined className="text-lg" />
@@ -562,7 +695,6 @@ export default function Dashboard() {
                     <h3 className="break-words text-base font-bold leading-6 text-[#15233B] sm:text-lg">
                       {vacancy.title}
                     </h3>
-
                     <div className="mt-2">
                       <Tag color="blue" className="!m-0 !rounded-md">
                         {vacancy.category}
@@ -572,9 +704,7 @@ export default function Dashboard() {
 
                   <Popconfirm
                     title={t("ustaDashboard.deleteConfirm.title")}
-                    description={t(
-                      "ustaDashboard.deleteConfirm.description"
-                    )}
+                    description={t("ustaDashboard.deleteConfirm.description")}
                     okText={t("ustaDashboard.deleteConfirm.yes")}
                     cancelText={t("ustaDashboard.deleteConfirm.no")}
                     okButtonProps={{
@@ -587,22 +717,16 @@ export default function Dashboard() {
                       danger
                       type="text"
                       icon={<DeleteOutlined />}
-                      aria-label={t(
-                        "ustaDashboard.deleteConfirm.title"
-                      )}
+                      aria-label={t("ustaDashboard.deleteConfirm.title")}
                     />
                   </Popconfirm>
                 </div>
 
-                {/* LOCATION */}
                 <div className="mt-5 flex items-start gap-2 text-sm text-slate-500">
                   <EnvironmentOutlined className="mt-1 shrink-0 text-blue-600" />
-                  <span className="break-words">
-                    {vacancy.location}
-                  </span>
+                  <span className="break-words">{vacancy.location}</span>
                 </div>
 
-                {/* PRICE */}
                 <div className="mt-4 rounded-xl bg-slate-50 p-3">
                   <p className="text-xs font-medium text-slate-500">
                     {t("ustaDashboard.vacancy.price")}
@@ -612,12 +736,10 @@ export default function Dashboard() {
                   </p>
                 </div>
 
-                {/* DESCRIPTION */}
                 <p className="mt-4 line-clamp-3 min-h-[60px] text-sm leading-5 text-slate-500">
                   {vacancy.description}
                 </p>
 
-                {/* CONTACT */}
                 <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
                   <div className="flex items-center gap-2 text-sm text-slate-600">
                     <PhoneOutlined className="shrink-0 text-slate-400" />
@@ -636,7 +758,6 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                {/* ACTIONS */}
                 <Divider className="!my-4" />
 
                 <div className="grid grid-cols-2 gap-2">
@@ -663,7 +784,7 @@ export default function Dashboard() {
         )}
       </main>
 
-      {/* PROFILE MODAL */}
+      {/* PROFIL VA PAROL SOZLAMALARI */}
       <Modal
         title={t("ustaDashboard.profileModal.title")}
         open={profileModalOpen}
@@ -678,9 +799,7 @@ export default function Dashboard() {
             {t("ustaDashboard.profileModal.personalTitle")}
           </h3>
           <p className="mt-1 text-sm leading-5 text-slate-500">
-            {t(
-              "ustaDashboard.profileModal.personalDescription"
-            )}
+            {t("ustaDashboard.profileModal.personalDescription")}
           </p>
         </div>
 
@@ -706,9 +825,7 @@ export default function Dashboard() {
           >
             <Input
               size="large"
-              placeholder={t(
-                "ustaDashboard.form.namePlaceholder"
-              )}
+              placeholder={t("ustaDashboard.form.namePlaceholder")}
               prefix={<UserOutlined />}
             />
           </Form.Item>
@@ -736,23 +853,17 @@ export default function Dashboard() {
             rules={[
               {
                 required: true,
-                message: t(
-                  "ustaDashboard.validation.professionRequired"
-                ),
+                message: t("ustaDashboard.validation.professionRequired"),
               },
               {
                 min: 2,
-                message: t(
-                  "ustaDashboard.validation.professionMin"
-                ),
+                message: t("ustaDashboard.validation.professionMin"),
               },
             ]}
           >
             <Input
               size="large"
-              placeholder={t(
-                "ustaDashboard.form.professionPlaceholder"
-              )}
+              placeholder={t("ustaDashboard.form.professionPlaceholder")}
               prefix={<ToolOutlined />}
             />
           </Form.Item>
@@ -792,17 +903,13 @@ export default function Dashboard() {
             rules={[
               {
                 required: true,
-                message: t(
-                  "ustaDashboard.validation.currentPasswordRequired"
-                ),
+                message: t("ustaDashboard.validation.currentPasswordRequired"),
               },
             ]}
           >
             <Input.Password
               size="large"
-              placeholder={t(
-                "ustaDashboard.password.currentPlaceholder"
-              )}
+              placeholder={t("ustaDashboard.password.currentPlaceholder")}
               prefix={<LockOutlined />}
             />
           </Form.Item>
@@ -813,23 +920,17 @@ export default function Dashboard() {
             rules={[
               {
                 required: true,
-                message: t(
-                  "ustaDashboard.validation.newPasswordRequired"
-                ),
+                message: t("ustaDashboard.validation.newPasswordRequired"),
               },
               {
                 min: 6,
-                message: t(
-                  "ustaDashboard.validation.newPasswordMin"
-                ),
+                message: t("ustaDashboard.validation.newPasswordMin"),
               },
             ]}
           >
             <Input.Password
               size="large"
-              placeholder={t(
-                "ustaDashboard.password.newPlaceholder"
-              )}
+              placeholder={t("ustaDashboard.password.newPlaceholder")}
               prefix={<LockOutlined />}
             />
           </Form.Item>
@@ -841,9 +942,7 @@ export default function Dashboard() {
             rules={[
               {
                 required: true,
-                message: t(
-                  "ustaDashboard.validation.confirmPasswordRequired"
-                ),
+                message: t("ustaDashboard.validation.confirmPasswordRequired"),
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -856,9 +955,7 @@ export default function Dashboard() {
 
                   return Promise.reject(
                     new Error(
-                      t(
-                        "ustaDashboard.validation.passwordMismatch"
-                      )
+                      t("ustaDashboard.validation.passwordMismatch")
                     )
                   );
                 },
@@ -867,9 +964,7 @@ export default function Dashboard() {
           >
             <Input.Password
               size="large"
-              placeholder={t(
-                "ustaDashboard.password.confirmPlaceholder"
-              )}
+              placeholder={t("ustaDashboard.password.confirmPlaceholder")}
               prefix={<LockOutlined />}
             />
           </Form.Item>

@@ -1,9 +1,7 @@
+
 import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import { Form, Input, Button, Card, message } from "antd";
-
 import {
   UserOutlined,
   LockOutlined,
@@ -12,7 +10,6 @@ import {
 
 const AdminLogin = () => {
   const navigate = useNavigate();
-
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (values) => {
@@ -42,32 +39,20 @@ const AdminLogin = () => {
       }
 
       // Admin JWT token
-      localStorage.setItem(
-        "admin_token",
-        data.token
-      );
+      localStorage.setItem("admin_token", data.token);
 
       // Admin ma'lumotlari
-      localStorage.setItem(
-        "admin",
-        JSON.stringify(data.admin)
-      );
+      localStorage.setItem("admin", JSON.stringify(data.admin));
 
       // Admin role
-      localStorage.setItem(
-        "admin_role",
-        data.admin.role
-      );
+      localStorage.setItem("admin_role", data.admin.role);
 
-      message.success(
-        "Admin sifatida muvaffaqiyatli kirdingiz"
-      );
+      message.success("Admin sifatida muvaffaqiyatli kirdingiz");
 
       navigate("/admin/dashboard");
     } catch (error) {
       message.error(
-        error.message ||
-          "Server bilan bog'lanishda xatolik"
+        error.message || "Server bilan bog'lanishda xatolik"
       );
     } finally {
       setLoading(false);
@@ -78,7 +63,7 @@ const AdminLogin = () => {
     <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
       <Card
         className="w-full max-w-md shadow-xl"
-        bordered={false}
+        variant="borderless"
       >
         <div className="text-center mb-8">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-900 flex items-center justify-center">
