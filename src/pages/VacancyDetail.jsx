@@ -1,3 +1,4 @@
+
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
@@ -25,6 +26,21 @@ import { useTranslation } from "react-i18next";
 
 const API = "https://usta-platform-backend.onrender.com/api";
 
+function getUstaId(usta) {
+  if (typeof usta === "string") return usta;
+  return usta?._id || usta?.id || "";
+}
+
+function getSampleImages(sample) {
+  if (!Array.isArray(sample?.images)) return [];
+
+  return sample.images.filter(
+    (image) =>
+      typeof image === "string" &&
+      image.trim().length > 0
+  );
+}
+
 export default function VacancyDetail() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -38,34 +54,44 @@ export default function VacancyDetail() {
   const [samplesLoading, setSamplesLoading] = useState(false);
 
   // ========================================
-  // VAKANSIYANI BACKENDDAN OLISH
+  // VAKANSIYANI OLISH
   // ========================================
 
   useEffect(() => {
-    const fetchVacancy = async () => {
-      try {
-        setLoading(true);
-        setNotFound(false);
-        setVacancy(null);
-        setWorkSamples([]);
+    const controller = new AbortController();
 
-        const response = await fetch(`${API}/vacancies/${id}`);
+    async function fetchVacancy() {
+      setLoading(true);
+      setNotFound(false);
+      setVacancy(null);
+      setWorkSamples([]);
+
+      try {
+        const response = await fetch(
+          `${API}/vacancies/${id}`,
+          { signal: controller.signal }
+        );
+
         const data = await response.json();
 
-        if (!response.ok || !data.vacancy) {
+        if (!response.ok || !data?.vacancy) {
           setNotFound(true);
           return;
         }
 
         setVacancy(data.vacancy);
       } catch (error) {
+        if (error.name === "AbortError") return;
+
         console.error("Get vacancy detail error:", error);
         message.error(t("common.errorFetchVacancy"));
         setNotFound(true);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
-    };
+    }
 
     if (id) {
       fetchVacancy();
@@ -73,6 +99,8 @@ export default function VacancyDetail() {
       setLoading(false);
       setNotFound(true);
     }
+
+    return () => controller.abort();
   }, [id, t]);
 
   // ========================================
@@ -80,46 +108,73 @@ export default function VacancyDetail() {
   // ========================================
 
   useEffect(() => {
-    const fetchWorkSamples = async () => {
-      const ustaId = vacancy?.usta?._id;
+    const controller = new AbortController();
+    const ustaId = getUstaId(vacancy?.usta);
 
+    async function fetchWorkSamples() {
       if (!ustaId) {
+        console.warn(
+          "Vakansiya ma'lumotida usta ID topilmadi:",
+          vacancy
+        );
         setWorkSamples([]);
+        setSamplesLoading(false);
         return;
       }
 
-      try {
-        setSamplesLoading(true);
+      setSamplesLoading(true);
+      setWorkSamples([]);
 
+      try {
         const response = await fetch(
-          `${API}/work-samples/usta/${ustaId}`
+          `${API}/work-samples/usta/${encodeURIComponent(ustaId)}`,
+          { signal: controller.signal }
         );
 
         const data = await response.json();
 
         if (!response.ok) {
           throw new Error(
-            data.message || "Ish namunalarini olishda xatolik"
+            data?.message ||
+              `Ish namunalarini olishda xatolik: ${response.status}`
           );
         }
 
-        // API arrayni turli shakllarda qaytarsa ham tekshiramiz
         const samples = Array.isArray(data)
           ? data
-          : data.workSamples || data.samples || [];
+          : Array.isArray(data?.samples)
+            ? data.samples
+            : Array.isArray(data?.workSamples)
+              ? data.workSamples
+              : [];
 
         setWorkSamples(samples);
+
+        console.log(
+          "Ustaning ish namunalari:",
+          samples.length,
+          samples
+        );
       } catch (error) {
+        if (error.name === "AbortError") return;
+
         console.error("Get work samples error:", error);
         setWorkSamples([]);
       } finally {
-        setSamplesLoading(false);
+        if (!controller.signal.aborted) {
+          setSamplesLoading(false);
+        }
       }
-    };
+    }
 
     if (vacancy) {
       fetchWorkSamples();
+    } else {
+      setWorkSamples([]);
+      setSamplesLoading(false);
     }
+
+    return () => controller.abort();
   }, [vacancy]);
 
   // ========================================
@@ -178,7 +233,7 @@ export default function VacancyDetail() {
   }
 
   // ========================================
-  // TELEFON ORQALI BOG'LANISH
+  // BOG'LANISH
   // ========================================
 
   const handleCall = () => {
@@ -189,10 +244,6 @@ export default function VacancyDetail() {
 
     window.location.href = `tel:${vacancy.contactPhone}`;
   };
-
-  // ========================================
-  // TELEGRAM ORQALI BOG'LANISH
-  // ========================================
 
   const handleTelegram = () => {
     if (!vacancy.telegram) {
@@ -219,48 +270,34 @@ export default function VacancyDetail() {
   };
 
   // ========================================
-  // KATEGORIYA TARJIMASI
+  // USTA VA KATEGORIYA
   // ========================================
 
   const translatedCategory = t(
     `vacancies.categories.${vacancy.category}`,
-    {
-      defaultValue: vacancy.category,
-    }
+    { defaultValue: vacancy.category }
   );
 
-  // ========================================
-  // USTA MA'LUMOTLARI
-  // ========================================
-
-  const ustaName = vacancy.usta?.name || t("common.master");
+  const ustaName =
+    typeof vacancy.usta === "object" && vacancy.usta
+      ? vacancy.usta.name || t("common.master")
+      : t("common.master");
 
   const ustaProfession =
-    vacancy.usta?.profession || translatedCategory;
+    (typeof vacancy.usta === "object" && vacancy.usta?.profession) ||
+    translatedCategory;
 
-  const ustaProfileImage = vacancy.usta?.profileImage || "";
-
-  // ========================================
-  // ISH NAMUNASI RASMLARI
-  // ========================================
-
-  const getSampleImages = (sample) => {
-    if (!Array.isArray(sample.images)) {
-      return [];
-    }
-
-    return sample.images.filter(
-      (image) => typeof image === "string" && image.trim() !== ""
-    );
-  };
+  const ustaProfileImage =
+    typeof vacancy.usta === "object"
+      ? vacancy.usta?.profileImage || ""
+      : "";
 
   // ========================================
-  // ASOSIY SAHIFA
+  // SAHIFA
   // ========================================
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* HEADER */}
       <header className="bg-[#101D35] text-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
           <button
@@ -294,7 +331,6 @@ export default function VacancyDetail() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 sm:py-9">
-        {/* BACK BUTTON */}
         <Button
           type="text"
           icon={<ArrowLeftOutlined />}
@@ -305,12 +341,11 @@ export default function VacancyDetail() {
         </Button>
 
         <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_320px]">
-          {/* MAIN INFORMATION */}
+          {/* ASOSIY MA'LUMOTLAR */}
           <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="h-1.5 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400" />
 
             <div className="p-5 sm:p-8">
-              {/* TITLE */}
               <Tag color="blue" className="!mb-4 !rounded-md !px-2 !py-1">
                 <AppstoreOutlined className="mr-1" />
                 {translatedCategory}
@@ -327,7 +362,6 @@ export default function VacancyDetail() {
 
               <Divider className="!my-6" />
 
-              {/* VACANCY DETAILS */}
               <h2 className="mb-5 text-lg font-bold text-[#15233B]">
                 {t("vacancies.detailsTitle")}
               </h2>
@@ -337,7 +371,6 @@ export default function VacancyDetail() {
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     <AppstoreOutlined />
                   </div>
-
                   <div className="min-w-0">
                     <p className="text-sm text-slate-400">
                       {t("vacancies.serviceType")}
@@ -352,7 +385,6 @@ export default function VacancyDetail() {
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     <EnvironmentOutlined />
                   </div>
-
                   <div className="min-w-0">
                     <p className="text-sm text-slate-400">
                       {t("vacancies.address")}
@@ -367,7 +399,6 @@ export default function VacancyDetail() {
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                     <DollarOutlined />
                   </div>
-
                   <div className="min-w-0">
                     <p className="text-sm text-slate-400">
                       {t("vacancies.price")}
@@ -382,7 +413,6 @@ export default function VacancyDetail() {
                   <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     <PhoneOutlined />
                   </div>
-
                   <div className="min-w-0">
                     <p className="text-sm text-slate-400">
                       {t("vacancies.phone")}
@@ -396,7 +426,6 @@ export default function VacancyDetail() {
 
               <Divider className="!my-7" />
 
-              {/* DESCRIPTION */}
               <h2 className="mb-4 text-lg font-bold text-[#15233B]">
                 {t("vacancies.fullDescription")}
               </h2>
@@ -405,10 +434,7 @@ export default function VacancyDetail() {
                 {vacancy.description}
               </p>
 
-              {/* ================================== */}
               {/* USTANING ISH NAMUNALARI */}
-              {/* ================================== */}
-
               <Divider className="!my-7" />
 
               <div className="mb-5">
@@ -435,12 +461,12 @@ export default function VacancyDetail() {
                 </div>
               ) : (
                 <div className="space-y-5">
-                  {workSamples.map((sample) => {
+                  {workSamples.map((sample, sampleIndex) => {
                     const images = getSampleImages(sample);
 
                     return (
                       <div
-                        key={sample._id}
+                        key={sample._id || sample.id || sampleIndex}
                         className="overflow-hidden rounded-xl border border-slate-200 bg-white"
                       >
                         <div className="p-4">
@@ -459,7 +485,7 @@ export default function VacancyDetail() {
                           <div className="grid grid-cols-1 gap-2 px-4 pb-4 sm:grid-cols-2">
                             {images.map((image, index) => (
                               <a
-                                key={`${sample._id}-${index}`}
+                                key={`${sample._id || sample.id || sampleIndex}-${index}`}
                                 href={image}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -468,10 +494,14 @@ export default function VacancyDetail() {
                               >
                                 <img
                                   src={image}
-                                  alt={`${sample.title} — ${index + 1}`}
+                                  alt={`${sample.title || "Ish namunasi"} — ${index + 1}`}
                                   loading="lazy"
                                   className="h-48 w-full object-cover transition duration-300 hover:scale-[1.02]"
                                   onError={(event) => {
+                                    console.error(
+                                      "Ish namunasi rasmi yuklanmadi:",
+                                      image
+                                    );
                                     event.currentTarget.style.display = "none";
                                   }}
                                 />
@@ -491,9 +521,8 @@ export default function VacancyDetail() {
             </div>
           </div>
 
-          {/* MASTER / CONTACT SIDEBAR */}
+          {/* USTA VA ALOQA */}
           <aside className="flex flex-col gap-5">
-            {/* MASTER CARD */}
             <Card
               className="!rounded-2xl !border-slate-200 !shadow-sm"
               styles={{ body: { padding: 22 } }}
@@ -514,7 +543,6 @@ export default function VacancyDetail() {
                   <p className="break-words font-bold text-[#15233B]">
                     {ustaName}
                   </p>
-
                   <p className="mt-1 break-words text-sm text-slate-500">
                     {ustaProfession}
                   </p>
@@ -529,7 +557,6 @@ export default function VacancyDetail() {
               </div>
             </Card>
 
-            {/* CONTACT CARD */}
             <Card
               className="!rounded-2xl !border-slate-200 !shadow-sm"
               styles={{ body: { padding: 22 } }}
