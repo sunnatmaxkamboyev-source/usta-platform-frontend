@@ -1,7 +1,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import {
   Avatar,
   Button,
@@ -39,555 +38,682 @@ import WorkSamples from "../components/WorkSamples";
 
 const API = "https://usta-platform-backend.onrender.com/api";
 const PROFILE_IMAGE_KEY = "ustaProfileImage";
-const MAX_IMAGE_SIZE = 1024 * 1024;
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+];
 
-export default function Dashboard() {
+// Profil rasmini brauzerning o'zida kichraytirish va siqish
+const compressProfileImage = (file) =>
+  new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+
+    image.onload = () => {
+      try {
+        const maxDimension = 400;
+        const scale = Math.min(
+          1,
+          maxDimension / Math.max(image.width, image.height)
+        );
+
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          throw new Error("Rasmni qayta ishlash imkoni bo'lmadi.");
+        }
+
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        const compressedImage = canvas.toDataURL("image/jpeg", 0.7);
+
+        URL.revokeObjectURL(objectUrl);
+
+        if (!compressedImage.startsWith("data:image/jpeg;base64,")) {
+          reject(new Error("Rasmni siqishda xatolik yuz berdi."));
+          return;
+        }
+
+        resolve(compressedImage);
+      } catch (error) {
+        URL.revokeObjectURL(objectUrl);
+        reject(error);
+      }
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Rasmni ochib bo'lmadi. Boshqa rasm tanlang."));
+    };
+
+    image.src = objectUrl;
+  });
+
+function Dashboard() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+
+  const [profileForm] = Form.useForm();
+  const [passwordForm] = Form.useForm();
   const fileInputRef = useRef(null);
 
   const [user, setUser] = useState(null);
   const [vacancies, setVacancies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [vacanciesLoading, setVacanciesLoading] = useState(false);
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [profileImage, setProfileImage] = useState(
+    localStorage.getItem(PROFILE_IMAGE_KEY) || ""
+  );
   const [profileModalOpen, setProfileModalOpen] = useState(false);
-  const [profileLoading, setProfileLoading] = useState(false);
-  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
-  const [profileImage, setProfileImage] = useState(() => {
+  // API so'rovlari uchun umumiy funksiya
+  const apiRequest = async (url, options = {}) => {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API}${url}`, {
+      ...options,
+      headers: {
+        ...(options.body instanceof FormData
+          ? {}
+          : { "Content-Type": "application/json" }),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options.headers,
+      },
+    });
+
+    let data = {};
+
     try {
-      return localStorage.getItem(PROFILE_IMAGE_KEY);
+      data = await response.json();
     } catch {
-      return null;
+      data = {};
     }
-  });
 
-  const [profileForm] = Form.useForm();
-  const [passwordForm] = Form.useForm();
+    if (response.status === 401) {
+      logoutUser();
+      navigate("/login", { replace: true });
+      throw new Error("Sessiya tugadi. Qaytadan tizimga kiring.");
+    }
 
+    if (!response.ok) {
+      throw new Error(
+        data.message ||
+          data.error ||
+          "So'rovni bajarishda xatolik yuz berdi."
+      );
+    }
+
+    return data;
+  };
+
+  // Foydalanuvchi va e'lonlarni olish
   useEffect(() => {
+    let cancelled = false;
+
     const loadDashboard = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        navigate("/login", { replace: true });
+        return;
+      }
+
       try {
         setLoading(true);
 
-        const token = localStorage.getItem("token");
+        const userData = await apiRequest("/auth/me");
 
-        if (!token) {
-          navigate("/login", { replace: true });
-          return;
+        if (cancelled) return;
+
+        const currentUser = userData.user || userData;
+
+        setUser(currentUser);
+        localStorage.setItem("user", JSON.stringify(currentUser));
+
+        if (currentUser.role) {
+          localStorage.setItem("role", currentUser.role);
         }
 
-        const userResponse = await fetch(`${API}/auth/me`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const savedImage = currentUser.profileImage || "";
+
+        setProfileImage(savedImage);
+
+        if (savedImage) {
+          localStorage.setItem(PROFILE_IMAGE_KEY, savedImage);
+        } else {
+          localStorage.removeItem(PROFILE_IMAGE_KEY);
+        }
+
+        profileForm.setFieldsValue({
+          name: currentUser.name || "",
+          phone: currentUser.phone || "",
+          profession: currentUser.profession || "",
         });
 
-        const userData = await userResponse.json();
+        setVacanciesLoading(true);
 
-        if (userResponse.status === 401) {
-          logoutUser();
-          message.error(t("ustaDashboard.messages.sessionExpired"));
-          navigate("/login", { replace: true });
-          return;
+        try {
+          const vacancyData = await apiRequest("/vacancies/my");
+
+          if (cancelled) return;
+
+          const myVacancies = Array.isArray(vacancyData)
+            ? vacancyData
+            : vacancyData.vacancies || vacancyData.data || [];
+
+          setVacancies(myVacancies);
+        } catch (error) {
+          if (!cancelled) {
+            console.error("E'lonlarni olishda xatolik:", error);
+            message.error(
+              error.message || "E'lonlarni yuklab bo'lmadi."
+            );
+          }
+        } finally {
+          if (!cancelled) setVacanciesLoading(false);
         }
-
-        if (!userResponse.ok) {
-          throw new Error(
-            userData.message ||
-              t("ustaDashboard.messages.userFetchError")
-          );
-        }
-
-        setUser(userData.user);
-        localStorage.setItem("user", JSON.stringify(userData.user));
-        localStorage.setItem("role", userData.user.role);
-
-        const vacancyResponse = await fetch(`${API}/vacancies/my`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const vacancyData = await vacancyResponse.json();
-
-        if (vacancyResponse.status === 401) {
-          logoutUser();
-          message.error(t("ustaDashboard.messages.sessionExpired"));
-          navigate("/login", { replace: true });
-          return;
-        }
-
-        if (!vacancyResponse.ok) {
-          throw new Error(
-            vacancyData.message ||
-              t("ustaDashboard.messages.vacanciesFetchError")
-          );
-        }
-
-        setVacancies(vacancyData.vacancies || []);
       } catch (error) {
-        console.error("Dashboard loading error:", error);
-        message.error(
-          error.message ||
-            t("ustaDashboard.messages.dashboardFetchError")
-        );
+        if (!cancelled) {
+          console.error("Dashboard yuklashda xatolik:", error);
+          message.error(
+            error.message || "Ma'lumotlarni yuklab bo'lmadi."
+          );
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     loadDashboard();
-  }, [navigate, t]);
 
-  // Profil rasmini tanlash va saqlash
-  const handleChooseProfileImage = (event) => {
-    const file = event.target.files?.[0];
+    return () => {
+      cancelled = true;
+    };
+  }, [navigate, profileForm]);
+
+  // Profil rasmini tanlash, siqish va backend'ga saqlash
+  const handleChooseProfileImage = async (event) => {
+    const input = event.target;
+    const file = input.files?.[0];
+
+    // Bir xil rasmni qaytadan tanlash mumkin
+    input.value = "";
 
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      message.error("Iltimos, rasm faylini tanlang.");
-      event.target.value = "";
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      message.error("JPG, PNG, WEBP yoki GIF formatidagi rasm tanlang.");
       return;
     }
 
     if (file.size > MAX_IMAGE_SIZE) {
-      message.error(
-        "Rasm hajmi 1 MB dan oshmasligi kerak. Kichikroq rasm tanlang."
-      );
-      event.target.value = "";
+      message.error("Rasm hajmi 10 MB dan oshmasligi kerak.");
       return;
     }
 
-    const reader = new FileReader();
+    const token = localStorage.getItem("token");
 
-    reader.onload = () => {
-      try {
-        const imageData = reader.result;
+    if (!token || !user) {
+      message.error("Avval akkauntingizga kiring.");
+      navigate("/login", { replace: true });
+      return;
+    }
 
-        if (typeof imageData !== "string") {
-          message.error("Rasmni o‘qib bo‘lmadi.");
-          return;
-        }
-
-        localStorage.setItem(PROFILE_IMAGE_KEY, imageData);
-        setProfileImage(imageData);
-        message.success("Profil rasmi saqlandi!");
-      } catch (error) {
-        console.error("Profile image save error:", error);
-        message.error(
-          "Rasmni saqlab bo‘lmadi. Kichikroq rasm tanlab ko‘ring."
-        );
-      }
-    };
-
-    reader.onerror = () => {
-      message.error("Rasmni o‘qishda xatolik yuz berdi.");
-    };
-
-    reader.readAsDataURL(file);
-    event.target.value = "";
-  };
-
-  // Profil rasmini o‘chirish
-  const handleRemoveProfileImage = () => {
     try {
-      localStorage.removeItem(PROFILE_IMAGE_KEY);
-      setProfileImage(null);
-      message.success("Profil rasmi o‘chirildi!");
+      setProfileSaving(true);
+
+      // Asl rasmni emas, siqilgan rasmni yuboramiz
+      const imageData = await compressProfileImage(file);
+
+      const data = await apiRequest("/auth/profile", {
+        method: "PUT",
+        body: JSON.stringify({
+          name: user.name,
+          phone: user.phone,
+          profession: user.profession,
+          profileImage: imageData,
+        }),
+      });
+
+      const savedUser = data.user || data;
+      const savedImage = savedUser.profileImage || imageData;
+
+      setUser(savedUser);
+      setProfileImage(savedImage);
+
+      localStorage.setItem("user", JSON.stringify(savedUser));
+      localStorage.setItem(PROFILE_IMAGE_KEY, savedImage);
+
+      message.success("Profil rasmi muvaffaqiyatli saqlandi!");
     } catch (error) {
-      console.error("Profile image remove error:", error);
-      message.error("Rasmni o‘chirib bo‘lmadi.");
+      console.error("Profil rasmini saqlashda xatolik:", error);
+      message.error(
+        error.message || "Rasmni saqlashda xatolik yuz berdi."
+      );
+    } finally {
+      setProfileSaving(false);
     }
   };
 
-  // Profil rasmini boshqarish oynasi
+  // Profil rasmini backend'dan o'chirish
+  const handleRemoveProfileImage = async () => {
+    if (!user) return;
+
+    try {
+      setProfileSaving(true);
+
+      const data = await apiRequest("/auth/profile", {
+        method: "PUT",
+        body: JSON.stringify({
+          name: user.name,
+          phone: user.phone,
+          profession: user.profession,
+          profileImage: "",
+        }),
+      });
+
+      const updatedUser = data.user || data;
+
+      setUser(updatedUser);
+      setProfileImage("");
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      localStorage.removeItem(PROFILE_IMAGE_KEY);
+
+      message.success("Profil rasmi o'chirildi!");
+    } catch (error) {
+      console.error("Profil rasmini o'chirishda xatolik:", error);
+      message.error(
+        error.message || "Profil rasmini o'chirib bo'lmadi."
+      );
+    } finally {
+      setProfileSaving(false);
+    }
+  };
+
+  // Avatar boshqaruvi
   const handleManageProfileImage = () => {
     Modal.confirm({
-      title: "Profil rasmini boshqarish",
+      title: "Profil rasmi",
       content: profileImage
-        ? "Rasmni almashtirishingiz yoki o‘chirishingiz mumkin."
-        : "Kompyuteringizdan yangi profil rasmi tanlang.",
-      icon: <CameraOutlined />,
+        ? "Rasmni almashtirish uchun yangi rasm tanlang yoki mavjud rasmni o'chiring."
+        : "Profilingiz uchun rasm tanlang.",
       okText: "Rasm tanlash",
       cancelText: "Bekor qilish",
-      onOk: () => {
-        fileInputRef.current?.click();
-      },
+      onOk: () => fileInputRef.current?.click(),
       footer: (_, { OkBtn, CancelBtn }) => (
-        <div className="flex flex-wrap justify-end gap-2">
+        <>
           <CancelBtn />
-
           {profileImage && (
             <Button
               danger
+              loading={profileSaving}
               onClick={() => {
                 Modal.confirm({
-                  title: "Rasmni o‘chirish",
-                  content: "Profil rasmini o‘chirishni xohlaysizmi?",
-                  okText: "Ha, o‘chirish",
+                  title: "Rasmni o'chirish",
+                  content: "Profil rasmini o'chirmoqchimisiz?",
+                  okText: "Ha, o'chirish",
                   cancelText: "Bekor qilish",
                   okButtonProps: { danger: true },
                   onOk: handleRemoveProfileImage,
                 });
               }}
             >
-              Rasmni o‘chirish
+              Rasmni o'chirish
             </Button>
           )}
-
           <OkBtn />
-        </div>
+        </>
       ),
     });
   };
 
-  // Tizimdan chiqish
-  const handleLogout = () => {
-    logoutUser();
-    setUser(null);
-    message.success(t("ustaDashboard.messages.logoutSuccess"));
-    navigate("/login", { replace: true });
-  };
-
-  // Profil oynasini ochish
-  const handleOpenProfile = () => {
-    profileForm.setFieldsValue({
-      name: user?.name || "",
-      phone: user?.phone || "",
-      profession: user?.profession || "",
-    });
-
-    passwordForm.resetFields();
-    setProfileModalOpen(true);
-  };
-
-  const handleCloseProfile = () => {
-    if (profileLoading || passwordLoading) return;
-
-    setProfileModalOpen(false);
-    profileForm.resetFields();
-    passwordForm.resetFields();
-  };
-
-  // Profilni yangilash
+  // Profil ma'lumotlarini yangilash
   const handleUpdateProfile = async (values) => {
     try {
-      setProfileLoading(true);
+      setProfileSaving(true);
 
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        logoutUser();
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      const response = await fetch(`${API}/auth/profile`, {
+      const data = await apiRequest("/auth/profile", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
-          name: values.name,
-          phone: values.phone,
-          profession: values.profession,
+          name: values.name?.trim(),
+          phone: values.phone?.trim(),
+          profession: values.profession?.trim(),
         }),
       });
 
-      const data = await response.json();
+      const updatedUser = data.user || data;
 
-      if (response.status === 401) {
-        logoutUser();
-        message.error(t("ustaDashboard.messages.sessionExpired"));
-        navigate("/login", { replace: true });
-        return;
-      }
+      setUser(updatedUser);
+      setProfileImage(updatedUser.profileImage || "");
 
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-            t("ustaDashboard.messages.profileUpdateError")
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      if (updatedUser.profileImage) {
+        localStorage.setItem(
+          PROFILE_IMAGE_KEY,
+          updatedUser.profileImage
         );
+      } else {
+        localStorage.removeItem(PROFILE_IMAGE_KEY);
       }
 
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      localStorage.setItem("role", data.user.role);
-
-      message.success(t("ustaDashboard.messages.profileUpdateSuccess"));
+      message.success("Profil ma'lumotlari yangilandi!");
+      setProfileModalOpen(false);
     } catch (error) {
-      console.error("Update profile error:", error);
-      message.error(
-        error.message ||
-          t("ustaDashboard.messages.profileUpdateError")
-      );
+      console.error("Profilni yangilashda xatolik:", error);
+      message.error(error.message || "Profilni yangilab bo'lmadi.");
     } finally {
-      setProfileLoading(false);
+      setProfileSaving(false);
     }
   };
 
-  // Parolni almashtirish
+  // Parolni o'zgartirish
   const handleChangePassword = async (values) => {
     try {
-      setPasswordLoading(true);
+      setPasswordSaving(true);
 
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        logoutUser();
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      const response = await fetch(`${API}/auth/password`, {
+      await apiRequest("/auth/password", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify({
           currentPassword: values.currentPassword,
           newPassword: values.newPassword,
         }),
       });
 
-      const data = await response.json();
-
-      if (response.status === 401) {
-        logoutUser();
-        message.error(
-          data.message ||
-            t("ustaDashboard.messages.sessionExpired")
-        );
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-            t("ustaDashboard.messages.passwordUpdateError")
-        );
-      }
-
+      message.success("Parol muvaffaqiyatli o'zgartirildi!");
       passwordForm.resetFields();
-      message.success(t("ustaDashboard.messages.passwordUpdateSuccess"));
+      setPasswordModalOpen(false);
     } catch (error) {
-      console.error("Change password error:", error);
+      console.error("Parolni o'zgartirishda xatolik:", error);
       message.error(
-        error.message ||
-          t("ustaDashboard.messages.passwordUpdateError")
+        error.message || "Parolni o'zgartirib bo'lmadi."
       );
     } finally {
-      setPasswordLoading(false);
+      setPasswordSaving(false);
     }
-  };
-
-  // E'lonni o‘chirish
-  const handleDelete = async (id) => {
-    try {
-      setDeleteLoading(true);
-
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        logoutUser();
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      const response = await fetch(`${API}/vacancies/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.status === 401) {
-        logoutUser();
-        message.error(t("ustaDashboard.messages.sessionExpired"));
-        navigate("/login", { replace: true });
-        return;
-      }
-
-      if (response.status === 403) {
-        message.error(t("ustaDashboard.messages.deletePermission"));
-        return;
-      }
-
-      if (!response.ok) {
-        throw new Error(
-          data.message ||
-            t("ustaDashboard.messages.deleteVacancyError")
-        );
-      }
-
-      setVacancies((previous) =>
-        previous.filter((vacancy) => vacancy._id !== id)
-      );
-
-      message.success(t("ustaDashboard.messages.deleteSuccess"));
-    } catch (error) {
-      console.error("Delete vacancy error:", error);
-      message.error(
-        error.message ||
-          t("ustaDashboard.messages.deleteVacancyError")
-      );
-    } finally {
-      setDeleteLoading(false);
-    }
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/vacancies/edit/${id}`);
   };
 
   const handleCreate = () => {
     navigate("/vacancies/new");
   };
 
-  const handleDetail = (id) => {
-    navigate(`/vakansiyalar/${id}`);
+  const handleEdit = (vacancy) => {
+    navigate(`/vacancies/edit/${vacancy._id || vacancy.id}`);
+  };
+
+  const handleDetail = (vacancy) => {
+    navigate(`/vakansiyalar/${vacancy._id || vacancy.id}`);
+  };
+
+  // E'lonni o'chirish
+  const handleDelete = async (vacancyId) => {
+    try {
+      await apiRequest(`/vacancies/${vacancyId}`, {
+        method: "DELETE",
+      });
+
+      setVacancies((previous) =>
+        previous.filter(
+          (vacancy) => (vacancy._id || vacancy.id) !== vacancyId
+        )
+      );
+
+      message.success("E'lon muvaffaqiyatli o'chirildi!");
+    } catch (error) {
+      console.error("E'lonni o'chirishda xatolik:", error);
+      message.error(error.message || "E'lonni o'chirib bo'lmadi.");
+    }
+  };
+
+  // Tizimdan chiqish
+  const handleLogout = () => {
+    logoutUser();
+    localStorage.removeItem(PROFILE_IMAGE_KEY);
+    navigate("/login", { replace: true });
   };
 
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-50">
-        <Spin size="large" />
-        <p className="text-sm text-slate-500">
-          {t("ustaDashboard.loading")}
-        </p>
+      <div
+        style={{
+          minHeight: "70vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spin size="large" tip="Ma'lumotlar yuklanmoqda..." />
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-[#101D35] text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="flex min-w-0 items-center gap-3 text-left"
-          >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600">
-              <ToolOutlined className="text-xl text-white" />
-            </span>
-
-            <span>
-              <span className="block text-base font-bold tracking-tight sm:text-lg">
-                Usta Platform
-              </span>
-              <span className="block text-xs text-slate-400">
-                {t("ustaDashboard.title")}
-              </span>
-            </span>
-          </button>
-
-          <Button
-            ghost
-            icon={<LogoutOutlined />}
-            onClick={handleLogout}
-            className="!border-slate-600 !text-slate-200 hover:!border-red-400 hover:!text-red-300"
-          >
-            <span className="hidden sm:inline">{t("auth.logout")}</span>
+  if (!user) {
+    return (
+      <div style={{ padding: 40, textAlign: "center" }}>
+        <Empty description="Foydalanuvchi ma'lumotlari topilmadi">
+          <Button type="primary" onClick={() => navigate("/login")}>
+            Tizimga kirish
           </Button>
+        </Empty>
+      </div>
+    );
+  }
+
+  const displayName = user.name || "Usta";
+  const displayProfession = user.profession || "Usta";
+  const displayPhone = user.phone || "Telefon ko'rsatilmagan";
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f5f7fb",
+        paddingBottom: 40,
+      }}
+    >
+      <header
+        style={{
+          background: "#101828",
+          color: "#fff",
+          padding: "16px 24px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 16,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            fontSize: 20,
+            fontWeight: 700,
+          }}
+        >
+          <ToolOutlined style={{ fontSize: 25, color: "#60a5fa" }} />
+          <span>Usta Platform</span>
         </div>
+
+        <Button icon={<LogoutOutlined />} onClick={handleLogout}>
+          Chiqish
+        </Button>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        {/* PROFIL */}
-        <section className="mb-7 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="h-1.5 bg-gradient-to-r from-blue-700 via-blue-500 to-cyan-400" />
-
-          <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-            <div className="flex min-w-0 items-center gap-4">
-              <div className="relative shrink-0">
+      <main
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "28px 20px",
+        }}
+      >
+        <Card
+          bordered={false}
+          style={{
+            borderRadius: 16,
+            marginBottom: 24,
+            boxShadow: "0 4px 20px rgba(16,24,40,0.05)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 20,
+              flexWrap: "wrap",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 20,
+                flexWrap: "wrap",
+              }}
+            >
+              <div style={{ position: "relative" }}>
                 <Avatar
-                  size={80}
+                  size={100}
                   src={profileImage || undefined}
-                  icon={<UserOutlined />}
-                  className="!bg-blue-50 !text-blue-700"
+                  icon={!profileImage ? <UserOutlined /> : undefined}
+                  style={{
+                    background: "#dbeafe",
+                    color: "#1d4ed8",
+                    border: "3px solid #fff",
+                    boxShadow: "0 0 0 2px #dbeafe",
+                  }}
                 />
 
-                <button
-                  type="button"
+                <Button
+                  type="primary"
+                  shape="circle"
+                  icon={<CameraOutlined />}
+                  size="small"
+                  loading={profileSaving}
                   onClick={handleManageProfileImage}
-                  title="Profil rasmini boshqarish"
-                  aria-label="Profil rasmini boshqarish"
-                  className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-white shadow transition hover:bg-blue-700"
-                >
-                  <CameraOutlined />
-                </button>
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                  }}
+                />
 
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
-                  className="hidden"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
                   onChange={handleChooseProfileImage}
+                  style={{ display: "none" }}
                 />
               </div>
 
-              <div className="min-w-0">
-                <h2 className="break-words text-lg font-bold text-[#15233B] sm:text-xl">
-                  {user?.name || t("ustaDashboard.profile.defaultName")}
+              <div>
+                <h2
+                  style={{
+                    margin: "0 0 8px",
+                    fontSize: 24,
+                    fontWeight: 700,
+                    color: "#101828",
+                  }}
+                >
+                  {displayName}
                 </h2>
 
-                <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
-                  <ToolOutlined />
-                  <span>
-                    {user?.profession ||
-                      t("ustaDashboard.profile.noProfession")}
-                  </span>
-                </p>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 8,
+                    marginBottom: 10,
+                  }}
+                >
+                  <Tag color="blue" icon={<ToolOutlined />}>
+                    {displayProfession}
+                  </Tag>
 
-                <p className="mt-1 flex items-center gap-2 text-sm text-slate-500">
-                  <PhoneOutlined />
-                  <span>
-                    {user?.phone || t("ustaDashboard.profile.noPhone")}
-                  </span>
-                </p>
+                  <Tag color="green" icon={<SafetyCertificateOutlined />}>
+                    Usta profili
+                  </Tag>
+                </div>
 
-                <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-                  <SafetyCertificateOutlined />
-                  {t("ustaDashboard.title")}
-                </span>
-
-                <p className="mt-2 text-xs text-slate-400">
-                  Rasmni o‘zgartirish yoki o‘chirish uchun kamera belgisini bosing.
-                </p>
+                <div style={{ color: "#667085" }}>
+                  <PhoneOutlined style={{ marginRight: 8 }} />
+                  {displayPhone}
+                </div>
               </div>
             </div>
 
-            <Button
-              icon={<SettingOutlined />}
-              onClick={handleOpenProfile}
-              className="!h-10 !rounded-lg !font-medium"
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
             >
-              {t("ustaDashboard.profile.edit")}
-            </Button>
-          </div>
-        </section>
+              <Button
+                icon={<EditOutlined />}
+                onClick={() => {
+                  profileForm.setFieldsValue({
+                    name: user.name || "",
+                    phone: user.phone || "",
+                    profession: user.profession || "",
+                  });
+                  setProfileModalOpen(true);
+                }}
+              >
+                Profilni tahrirlash
+              </Button>
 
-        {/* ISH NAMUNALARI */}
+              <Button
+                icon={<LockOutlined />}
+                onClick={() => setPasswordModalOpen(true)}
+              >
+                Parolni o'zgartirish
+              </Button>
+            </div>
+          </div>
+        </Card>
+
         <WorkSamples />
 
-        {/* SAHIFA SARLAVHASI */}
-        <section className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 16,
+            flexWrap: "wrap",
+            margin: "28px 0 20px",
+          }}
+        >
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-[#15233B] sm:text-3xl">
-              {t("ustaDashboard.title")}
+            <h1
+              style={{
+                margin: 0,
+                fontSize: 28,
+                fontWeight: 700,
+                color: "#101828",
+              }}
+            >
+              Mening e'lonlarim
             </h1>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500">
-              {t("ustaDashboard.description")}
+
+            <p style={{ margin: "8px 0 0", color: "#667085" }}>
+              E'lonlaringizni boshqaring va yangilarini joylashtiring.
             </p>
           </div>
 
@@ -596,353 +722,453 @@ export default function Dashboard() {
             size="large"
             icon={<PlusOutlined />}
             onClick={handleCreate}
-            className="!h-11 !rounded-xl !bg-blue-600 !font-semibold shadow-sm hover:!bg-blue-700"
           >
-            {t("ustaDashboard.newVacancy")}
+            E'lon yaratish
           </Button>
-        </section>
-
-        {/* STATISTIKA */}
-        <section className="mb-7 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-              <FileTextOutlined className="text-xl" />
-            </div>
-            <div>
-              <p className="text-sm text-slate-500">
-                {t("ustaDashboard.title")}
-              </p>
-              <p className="mt-1 text-2xl font-extrabold text-[#15233B]">
-                {vacancies.length}
-              </p>
-              <p className="text-xs text-slate-400">
-                {t("ustaDashboard.vacancy.price")}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
-              <UserOutlined className="text-xl" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm text-slate-500">
-                {t("ustaDashboard.profile.edit")}
-              </p>
-              <p className="mt-1 truncate text-lg font-bold text-[#15233B]">
-                {user?.name || t("ustaDashboard.profile.defaultName")}
-              </p>
-              <p className="text-xs text-slate-400">
-                {user?.profession ||
-                  t("ustaDashboard.profile.noProfession")}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* E'LONLAR SARLAVHASI */}
-        <section className="mb-4 flex items-center justify-between gap-3">
-          <div>
-            <h2 className="text-lg font-bold text-[#15233B] sm:text-xl">
-              {t("ustaDashboard.title")}
-            </h2>
-            <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-              {t("ustaDashboard.description")}
-            </p>
-          </div>
-
-          <span className="rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-bold text-blue-700">
-            {vacancies.length}
-          </span>
-        </section>
-
-        {/* E'LONLAR */}
-        {vacancies.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-12 text-center">
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={
-                <span className="text-sm text-slate-500">
-                  {t("ustaDashboard.empty")}
-                </span>
-              }
-            />
-
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={handleCreate}
-              className="!mt-3 !rounded-lg !bg-blue-600"
-            >
-              {t("ustaDashboard.firstVacancy")}
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {vacancies.map((vacancy) => (
-              <Card
-                key={vacancy._id}
-                bordered={false}
-                className="!overflow-hidden !rounded-2xl !border !border-slate-200 !shadow-sm transition-all duration-200 hover:!border-blue-200 hover:!shadow-md"
-                styles={{ body: { padding: 20 } }}
-              >
-                <div className="flex items-start gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <ToolOutlined className="text-lg" />
-                  </div>
-
-                  <div className="min-w-0 flex-1">
-                    <h3 className="break-words text-base font-bold leading-6 text-[#15233B] sm:text-lg">
-                      {vacancy.title}
-                    </h3>
-                    <div className="mt-2">
-                      <Tag color="blue" className="!m-0 !rounded-md">
-                        {vacancy.category}
-                      </Tag>
-                    </div>
-                  </div>
-
-                  <Popconfirm
-                    title={t("ustaDashboard.deleteConfirm.title")}
-                    description={t("ustaDashboard.deleteConfirm.description")}
-                    okText={t("ustaDashboard.deleteConfirm.yes")}
-                    cancelText={t("ustaDashboard.deleteConfirm.no")}
-                    okButtonProps={{
-                      danger: true,
-                      loading: deleteLoading,
-                    }}
-                    onConfirm={() => handleDelete(vacancy._id)}
-                  >
-                    <Button
-                      danger
-                      type="text"
-                      icon={<DeleteOutlined />}
-                      aria-label={t("ustaDashboard.deleteConfirm.title")}
-                    />
-                  </Popconfirm>
-                </div>
-
-                <div className="mt-5 flex items-start gap-2 text-sm text-slate-500">
-                  <EnvironmentOutlined className="mt-1 shrink-0 text-blue-600" />
-                  <span className="break-words">{vacancy.location}</span>
-                </div>
-
-                <div className="mt-4 rounded-xl bg-slate-50 p-3">
-                  <p className="text-xs font-medium text-slate-500">
-                    {t("ustaDashboard.vacancy.price")}
-                  </p>
-                  <p className="mt-1 break-words text-base font-bold text-blue-700">
-                    {vacancy.price || t("common.negotiable")}
-                  </p>
-                </div>
-
-                <p className="mt-4 line-clamp-3 min-h-[60px] text-sm leading-5 text-slate-500">
-                  {vacancy.description}
-                </p>
-
-                <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <PhoneOutlined className="shrink-0 text-slate-400" />
-                    <span className="break-all">
-                      {vacancy.contactPhone || "—"}
-                    </span>
-                  </div>
-
-                  {vacancy.telegram && (
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <SendOutlined className="shrink-0 text-sky-500" />
-                      <span className="break-all">
-                        @{vacancy.telegram.replace("@", "")}
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                <Divider className="!my-4" />
-
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => handleEdit(vacancy._id)}
-                    className="!h-10 !rounded-lg !font-medium"
-                  >
-                    {t("common.edit")}
-                  </Button>
-
-                  <Button
-                    type="primary"
-                    icon={<EyeOutlined />}
-                    onClick={() => handleDetail(vacancy._id)}
-                    className="!h-10 !rounded-lg !bg-blue-600 !font-medium hover:!bg-blue-700"
-                  >
-                    {t("common.viewDetail")}
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
-      </main>
-
-      {/* PROFIL VA PAROL SOZLAMALARI */}
-      <Modal
-        title={t("ustaDashboard.profileModal.title")}
-        open={profileModalOpen}
-        onCancel={handleCloseProfile}
-        footer={null}
-        destroyOnHidden
-        width={520}
-        centered
-      >
-        <div className="mb-5 rounded-xl bg-blue-50 p-4">
-          <h3 className="font-bold text-[#15233B]">
-            {t("ustaDashboard.profileModal.personalTitle")}
-          </h3>
-          <p className="mt-1 text-sm leading-5 text-slate-500">
-            {t("ustaDashboard.profileModal.personalDescription")}
-          </p>
         </div>
 
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: 16,
+            marginBottom: 28,
+          }}
+        >
+          <Card
+            bordered={false}
+            style={{
+              borderRadius: 14,
+              boxShadow: "0 4px 20px rgba(16,24,40,0.04)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 12,
+                  background: "#dbeafe",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#2563eb",
+                  fontSize: 22,
+                }}
+              >
+                <FileTextOutlined />
+              </div>
+
+              <div>
+                <div style={{ color: "#667085", marginBottom: 4 }}>
+                  Jami e'lonlar
+                </div>
+                <div
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 700,
+                    color: "#101828",
+                  }}
+                >
+                  {vacancies.length}
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          <Card
+            bordered={false}
+            style={{
+              borderRadius: 14,
+              boxShadow: "0 4px 20px rgba(16,24,40,0.04)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: 12,
+                  background: "#dcfce7",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#16a34a",
+                  fontSize: 22,
+                }}
+              >
+                <SettingOutlined />
+              </div>
+
+              <div>
+                <div style={{ color: "#667085", marginBottom: 4 }}>
+                  Profil holati
+                </div>
+                <div
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#16a34a",
+                  }}
+                >
+                  Faol
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        <Divider />
+
+        <div style={{ marginTop: 24 }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 20,
+              flexWrap: "wrap",
+            }}
+          >
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 22,
+                fontWeight: 700,
+                color: "#101828",
+              }}
+            >
+              Joylashtirilgan e'lonlar
+            </h2>
+
+            <Tag color="blue">{vacancies.length} ta e'lon</Tag>
+          </div>
+
+          {vacanciesLoading ? (
+            <div style={{ textAlign: "center", padding: 50 }}>
+              <Spin size="large" />
+            </div>
+          ) : vacancies.length === 0 ? (
+            <Card
+              bordered={false}
+              style={{
+                borderRadius: 16,
+                padding: "30px 0",
+              }}
+            >
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="Hozircha e'lonlaringiz yo'q"
+              >
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={handleCreate}
+                >
+                  Birinchi e'lonni yaratish
+                </Button>
+              </Empty>
+            </Card>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                gap: 20,
+              }}
+            >
+              {vacancies.map((vacancy) => {
+                const vacancyId = vacancy._id || vacancy.id;
+
+                return (
+                  <Card
+                    key={vacancyId}
+                    bordered={false}
+                    style={{
+                      borderRadius: 16,
+                      boxShadow: "0 4px 20px rgba(16,24,40,0.05)",
+                      height: "100%",
+                    }}
+                    styles={{
+                      body: {
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                      },
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        gap: 12,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <h3
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 700,
+                          color: "#101828",
+                          margin: 0,
+                          overflowWrap: "anywhere",
+                        }}
+                      >
+                        {vacancy.title || "Nomsiz e'lon"}
+                      </h3>
+
+                      <Tag color="blue">
+                        {vacancy.category || "Xizmat"}
+                      </Tag>
+                    </div>
+
+                    {vacancy.location && (
+                      <div
+                        style={{
+                          color: "#667085",
+                          marginBottom: 10,
+                          display: "flex",
+                          gap: 8,
+                        }}
+                      >
+                        <EnvironmentOutlined />
+                        <span>{vacancy.location}</span>
+                      </div>
+                    )}
+
+                    {vacancy.price !== undefined &&
+                      vacancy.price !== null &&
+                      vacancy.price !== "" && (
+                        <div
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 700,
+                            color: "#2563eb",
+                            marginBottom: 12,
+                          }}
+                        >
+                          {typeof vacancy.price === "number"
+                            ? vacancy.price.toLocaleString("uz-UZ")
+                            : vacancy.price}{" "}
+                          so'm
+                        </div>
+                      )}
+
+                    <p
+                      style={{
+                        color: "#667085",
+                        lineHeight: 1.6,
+                        marginBottom: 16,
+                        whiteSpace: "pre-wrap",
+                        overflowWrap: "anywhere",
+                        flex: 1,
+                      }}
+                    >
+                      {vacancy.description || "Tavsif kiritilmagan."}
+                    </p>
+
+                    {vacancy.contactPhone && (
+                      <div style={{ color: "#475467", marginBottom: 8 }}>
+                        <PhoneOutlined style={{ marginRight: 8 }} />
+                        {vacancy.contactPhone}
+                      </div>
+                    )}
+
+                    {vacancy.telegram && (
+                      <div style={{ color: "#475467", marginBottom: 12 }}>
+                        <SendOutlined style={{ marginRight: 8 }} />
+                        {vacancy.telegram}
+                      </div>
+                    )}
+
+                    <Divider style={{ margin: "12px 0" }} />
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 8,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <Button
+                        icon={<EyeOutlined />}
+                        onClick={() => handleDetail(vacancy)}
+                      >
+                        Ko'rish
+                      </Button>
+
+                      <Button
+                        icon={<EditOutlined />}
+                        onClick={() => handleEdit(vacancy)}
+                      >
+                        Tahrirlash
+                      </Button>
+
+                      <Popconfirm
+                        title="E'lonni o'chirish"
+                        description="Ushbu e'lonni o'chirmoqchimisiz?"
+                        okText="Ha, o'chirish"
+                        cancelText="Bekor qilish"
+                        okButtonProps={{ danger: true }}
+                        onConfirm={() => handleDelete(vacancyId)}
+                      >
+                        <Button danger icon={<DeleteOutlined />}>
+                          O'chirish
+                        </Button>
+                      </Popconfirm>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </main>
+
+      <Modal
+        title="Profil ma'lumotlarini tahrirlash"
+        open={profileModalOpen}
+        onCancel={() => setProfileModalOpen(false)}
+        footer={null}
+        destroyOnHidden={false}
+      >
         <Form
           form={profileForm}
           layout="vertical"
           onFinish={handleUpdateProfile}
-          requiredMark={false}
+          autoComplete="off"
         >
           <Form.Item
-            label={t("ustaDashboard.form.name")}
+            label="Ism"
             name="name"
             rules={[
-              {
-                required: true,
-                message: t("ustaDashboard.validation.nameRequired"),
-              },
+              { required: true, message: "Ismingizni kiriting." },
               {
                 min: 2,
-                message: t("ustaDashboard.validation.nameMin"),
+                message: "Ism kamida 2 ta belgidan iborat bo'lsin.",
               },
             ]}
           >
             <Input
-              size="large"
-              placeholder={t("ustaDashboard.form.namePlaceholder")}
               prefix={<UserOutlined />}
+              placeholder="Ism va familiyangiz"
+              maxLength={100}
             />
           </Form.Item>
 
           <Form.Item
-            label={t("ustaDashboard.form.phone")}
+            label="Telefon raqami"
             name="phone"
             rules={[
               {
                 required: true,
-                message: t("ustaDashboard.validation.phoneRequired"),
+                message: "Telefon raqamingizni kiriting.",
               },
             ]}
           >
             <Input
-              size="large"
-              placeholder="+998 90 123 45 67"
               prefix={<PhoneOutlined />}
+              placeholder="+998901234567"
+              maxLength={20}
             />
           </Form.Item>
 
           <Form.Item
-            label={t("ustaDashboard.form.profession")}
+            label="Kasbingiz"
             name="profession"
             rules={[
-              {
-                required: true,
-                message: t("ustaDashboard.validation.professionRequired"),
-              },
-              {
-                min: 2,
-                message: t("ustaDashboard.validation.professionMin"),
-              },
+              { required: true, message: "Kasbingizni kiriting." },
             ]}
           >
             <Input
-              size="large"
-              placeholder={t("ustaDashboard.form.professionPlaceholder")}
               prefix={<ToolOutlined />}
+              placeholder="Masalan: Elektrik, santexnik"
+              maxLength={100}
             />
           </Form.Item>
 
-          <Button
-            block
-            type="primary"
-            htmlType="submit"
-            loading={profileLoading}
-            icon={<EditOutlined />}
-            className="!h-11 !rounded-lg !bg-blue-600 !font-semibold"
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 8,
+            }}
           >
-            {t("ustaDashboard.form.saveProfile")}
-          </Button>
+            <Button onClick={() => setProfileModalOpen(false)}>
+              Bekor qilish
+            </Button>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={profileSaving}
+              icon={<EditOutlined />}
+            >
+              Saqlash
+            </Button>
+          </div>
         </Form>
+      </Modal>
 
-        <Divider />
-
-        <div className="mb-5">
-          <h3 className="font-bold text-[#15233B]">
-            {t("ustaDashboard.password.title")}
-          </h3>
-          <p className="mt-1 text-sm leading-5 text-slate-500">
-            {t("ustaDashboard.password.description")}
-          </p>
-        </div>
-
+      <Modal
+        title="Parolni o'zgartirish"
+        open={passwordModalOpen}
+        onCancel={() => {
+          setPasswordModalOpen(false);
+          passwordForm.resetFields();
+        }}
+        footer={null}
+        destroyOnHidden={false}
+      >
         <Form
           form={passwordForm}
           layout="vertical"
           onFinish={handleChangePassword}
-          requiredMark={false}
+          autoComplete="off"
         >
           <Form.Item
-            label={t("ustaDashboard.password.current")}
+            label="Joriy parol"
             name="currentPassword"
             rules={[
               {
                 required: true,
-                message: t("ustaDashboard.validation.currentPasswordRequired"),
+                message: "Joriy parolingizni kiriting.",
               },
             ]}
           >
             <Input.Password
-              size="large"
-              placeholder={t("ustaDashboard.password.currentPlaceholder")}
               prefix={<LockOutlined />}
+              placeholder="Joriy parol"
             />
           </Form.Item>
 
           <Form.Item
-            label={t("ustaDashboard.password.new")}
+            label="Yangi parol"
             name="newPassword"
             rules={[
-              {
-                required: true,
-                message: t("ustaDashboard.validation.newPasswordRequired"),
-              },
+              { required: true, message: "Yangi parolni kiriting." },
               {
                 min: 6,
-                message: t("ustaDashboard.validation.newPasswordMin"),
+                message: "Parol kamida 6 ta belgidan iborat bo'lsin.",
               },
             ]}
           >
             <Input.Password
-              size="large"
-              placeholder={t("ustaDashboard.password.newPlaceholder")}
               prefix={<LockOutlined />}
+              placeholder="Yangi parol"
             />
           </Form.Item>
 
           <Form.Item
-            label={t("ustaDashboard.password.confirm")}
+            label="Yangi parolni tasdiqlang"
             name="confirmPassword"
             dependencies={["newPassword"]}
             rules={[
               {
                 required: true,
-                message: t("ustaDashboard.validation.confirmPasswordRequired"),
+                message: "Yangi parolni qayta kiriting.",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -954,33 +1180,47 @@ export default function Dashboard() {
                   }
 
                   return Promise.reject(
-                    new Error(
-                      t("ustaDashboard.validation.passwordMismatch")
-                    )
+                    new Error("Parollar bir-biriga mos kelmadi.")
                   );
                 },
               }),
             ]}
           >
             <Input.Password
-              size="large"
-              placeholder={t("ustaDashboard.password.confirmPlaceholder")}
               prefix={<LockOutlined />}
+              placeholder="Yangi parolni qayta kiriting"
             />
           </Form.Item>
 
-          <Button
-            block
-            type="primary"
-            htmlType="submit"
-            loading={passwordLoading}
-            icon={<LockOutlined />}
-            className="!h-11 !rounded-lg !bg-blue-600 !font-semibold"
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 8,
+            }}
           >
-            {t("ustaDashboard.password.change")}
-          </Button>
+            <Button
+              onClick={() => {
+                setPasswordModalOpen(false);
+                passwordForm.resetFields();
+              }}
+            >
+              Bekor qilish
+            </Button>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={passwordSaving}
+              icon={<LockOutlined />}
+            >
+              Parolni saqlash
+            </Button>
+          </div>
         </Form>
       </Modal>
     </div>
   );
 }
+
+export default Dashboard;
