@@ -8,8 +8,8 @@ import {
   Input,
   Modal,
   Popconfirm,
-  Upload,
   message,
+  Spin,
 } from "antd";
 import {
   PlusOutlined,
@@ -18,17 +18,9 @@ import {
   PictureOutlined,
 } from "@ant-design/icons";
 
-const STORAGE_KEY = "ustaWorkSamples";
+const API = "https://usta-platform-backend.onrender.com/api";
 const MAX_IMAGES = 3;
 const MAX_IMAGE_SIZE = 1024 * 1024;
-
-function readSamples() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
 
 function readImage(file) {
   return new Promise((resolve, reject) => {
@@ -47,8 +39,39 @@ function readImage(file) {
   });
 }
 
+async function apiRequest(path, token, options = {}) {
+  const response = await fetch(`${API}${path}`, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...options.headers,
+    },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || data.error || `Server xatosi: ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+function normalizeSample(sample) {
+  return {
+    ...sample,
+    id: sample._id || sample.id,
+    images: Array.isArray(sample.images) ? sample.images : [],
+    description: sample.description || "",
+  };
+}
+
 export default function WorkSamples() {
-  const [samples, setSamples] = useState(readSamples);
+  const [samples, setSamples] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -56,19 +79,44 @@ export default function WorkSamples() {
   const [form] = Form.useForm();
   const fileInputRef = useRef(null);
 
-  const persistSamples = (nextSamples) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nextSamples));
-      setSamples(nextSamples);
-      return true;
-    } catch (error) {
-      console.error("Ish namunalarini saqlash xatosi:", error);
-      message.error(
-        "Brauzer xotirasi to‘ldi. Rasmlar hajmini kamaytirib ko‘ring."
-      );
-      return false;
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function fetchSamples() {
+      if (!token) {
+        setLoading(false);
+        message.warning("Namunalarni ko‘rish uchun tizimga kiring.");
+        return;
+      }
+
+      try {
+        const data = await apiRequest("/work-samples/my", token);
+
+        if (cancelled) return;
+
+        const list = Array.isArray(data)
+          ? data
+          : data.samples || data.workSamples || [];
+
+        setSamples(list.map(normalizeSample));
+      } catch (error) {
+        if (!cancelled) {
+          console.error("Ish namunalarini yuklash xatosi:", error);
+          message.error(error.message || "Ish namunalarini yuklab bo‘lmadi.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
-  };
+
+    fetchSamples();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
 
   const openCreateModal = () => {
     setEditingId(null);
@@ -79,6 +127,7 @@ export default function WorkSamples() {
 
   const openEditModal = (sample) => {
     setEditingId(sample.id);
+
     setImages(
       sample.images.map((image, index) => ({
         uid: `${sample.id}-${index}`,
@@ -88,15 +137,18 @@ export default function WorkSamples() {
         dataUrl: image,
       }))
     );
+
     form.setFieldsValue({
       title: sample.title,
       description: sample.description,
     });
+
     setModalOpen(true);
   };
 
   const closeModal = () => {
     if (saving) return;
+
     setModalOpen(false);
     setEditingId(null);
     setImages([]);
@@ -116,15 +168,13 @@ export default function WorkSamples() {
       return;
     }
 
-    const selectedFiles = files.slice(0, remaining);
-
     if (files.length > remaining) {
       message.warning(`Faqat yana ${remaining} ta rasm qo‘shish mumkin.`);
     }
 
     const newImages = [];
 
-    for (const file of selectedFiles) {
+    for (const file of files.slice(0, remaining)) {
       if (!file.type.startsWith("image/")) {
         message.error(`${file.name}: rasm faylini tanlang.`);
         continue;
@@ -150,14 +200,23 @@ export default function WorkSamples() {
       }
     }
 
-    setImages((previous) => [...previous, ...newImages].slice(0, MAX_IMAGES));
+    setImages((previous) =>
+      [...previous, ...newImages].slice(0, MAX_IMAGES)
+    );
   };
 
   const removeImage = (uid) => {
-    setImages((previous) => previous.filter((image) => image.uid !== uid));
+    setImages((previous) =>
+      previous.filter((image) => image.uid !== uid)
+    );
   };
 
   const handleSave = async (values) => {
+    if (!token) {
+      message.error("Sessiyangiz tugagan. Qaytadan tizimga kiring.");
+      return;
+    }
+
     if (images.length === 0) {
       message.warning("Kamida bitta rasm tanlang.");
       return;
@@ -166,34 +225,90 @@ export default function WorkSamples() {
     setSaving(true);
 
     try {
-      const sample = {
-        id: editingId || `${Date.now()}`,
+      const payload = {
         title: values.title.trim(),
-        description: values.description?.trim() || "",
+        description: values.description.trim(),
         images: images.map((image) => image.dataUrl || image.url),
-        updatedAt: new Date().toISOString(),
       };
 
-      const nextSamples = editingId
-        ? samples.map((item) => (item.id === editingId ? sample : item))
-        : [sample, ...samples];
+      const data = await apiRequest(
+        editingId
+          ? `/work-samples/${encodeURIComponent(editingId)}`
+          : "/work-samples",
+        token,
+        {
+          method: editingId ? "PUT" : "POST",
+          body: JSON.stringify(payload),
+        }
+      );
 
-      if (persistSamples(nextSamples)) {
-        message.success(
-          editingId ? "Namuna yangilandi!" : "Ish namunasi qo‘shildi!"
+      let savedSample =
+        data.sample ||
+        data.workSample ||
+        data.data ||
+        data;
+
+      if (!savedSample?._id && !savedSample?.id) {
+        // Server faqat muvaffaqiyat xabarini qaytarsa,
+        // namunalar ro‘yxatini qaytadan yuklaymiz.
+        const refreshed = await apiRequest("/work-samples/my", token);
+        const list = Array.isArray(refreshed)
+          ? refreshed
+          : refreshed.samples || refreshed.workSamples || [];
+
+        setSamples(list.map(normalizeSample));
+      } else {
+        savedSample = normalizeSample(savedSample);
+
+        setSamples((previous) =>
+          editingId
+            ? previous.map((item) =>
+                item.id === editingId ? savedSample : item
+              )
+            : [savedSample, ...previous]
         );
-        setModalOpen(false);
-        setEditingId(null);
-        setImages([]);
-        form.resetFields();
       }
+
+      message.success(
+        editingId ? "Namuna yangilandi!" : "Ish namunasi qo‘shildi!"
+      );
+
+      setModalOpen(false);
+      setEditingId(null);
+      setImages([]);
+      form.resetFields();
+    } catch (error) {
+      console.error("Ish namunasini saqlash xatosi:", error);
+      message.error(
+        error.message || "Namuna saqlanmadi. Qayta urinib ko‘ring."
+      );
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = (id) => {
-    persistSamples(samples.filter((sample) => sample.id !== id));
+  const handleDelete = async (id) => {
+    if (!token) {
+      message.error("Qaytadan tizimga kiring.");
+      return;
+    }
+
+    try {
+      await apiRequest(
+        `/work-samples/${encodeURIComponent(id)}`,
+        token,
+        { method: "DELETE" }
+      );
+
+      setSamples((previous) =>
+        previous.filter((sample) => sample.id !== id)
+      );
+
+      message.success("Ish namunasi o‘chirildi.");
+    } catch (error) {
+      console.error("Ish namunasini o‘chirish xatosi:", error);
+      message.error(error.message || "Namunani o‘chirib bo‘lmadi.");
+    }
   };
 
   return (
@@ -218,7 +333,13 @@ export default function WorkSamples() {
         </Button>
       </div>
 
-      {samples.length === 0 ? (
+      {loading ? (
+        <Card className="!rounded-2xl !border-slate-200">
+          <div className="flex justify-center py-8">
+            <Spin size="large" />
+          </div>
+        </Card>
+      ) : samples.length === 0 ? (
         <Card className="!rounded-2xl !border-slate-200">
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -315,13 +436,13 @@ export default function WorkSamples() {
             rules={[
               { required: true, message: "Ish nomini kiriting." },
               { min: 2, message: "Kamida 2 ta belgi kiriting." },
-              { max: 80, message: "Nom 80 ta belgidan oshmasin." },
+              { max: 100, message: "Nom 100 ta belgidan oshmasin." },
             ]}
           >
             <Input
               size="large"
               placeholder="Masalan: Hammom ta’mirlash"
-              maxLength={80}
+              maxLength={100}
             />
           </Form.Item>
 
@@ -329,13 +450,14 @@ export default function WorkSamples() {
             label="Izoh"
             name="description"
             rules={[
-              { max: 500, message: "Izoh 500 ta belgidan oshmasin." },
+              { required: true, message: "Ish haqida izoh kiriting." },
+              { max: 2000, message: "Izoh 2000 ta belgidan oshmasin." },
             ]}
           >
             <Input.TextArea
               rows={3}
               placeholder="Bu ish haqida qisqacha yozing..."
-              maxLength={500}
+              maxLength={2000}
               showCount
             />
           </Form.Item>
@@ -391,7 +513,7 @@ export default function WorkSamples() {
 
           <p className="mt-3 text-xs leading-5 text-slate-500">
             JPG, PNG yoki boshqa rasm formatlari. Har bir rasm 1 MB dan
-            oshmasin. Hozircha ma’lumotlar faqat shu brauzerda saqlanadi.
+            oshmasin. Namunalar server bazasiga saqlanadi.
           </p>
 
           <div className="mt-6 flex justify-end gap-2">
